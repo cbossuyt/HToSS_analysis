@@ -16,6 +16,7 @@
 #include <cmath>
 #include <iomanip>
 #include <iostream>
+#include <fstream>      // std::ifstream
 #include <random>
 #include <sstream>
 #include <string>
