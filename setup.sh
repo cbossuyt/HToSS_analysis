@@ -4,4 +4,6 @@ export LHAPDF_DATA_PATH=/cvmfs/sft.cern.ch/lcg/views/LCG_95/x86_64-slc6-gcc8-opt
 export TQZ_TOOLS_PATH='.'
 
 # Enable newrt gcc and python
-source /cvmfs/sft.cern.ch/lcg/views/setupViews.sh LCG_95 x86_64-slc6-gcc8-opt 
+#source /cvmfs/sft.cern.ch/lcg/views/setupViews.sh LCG_95 x86_64-slc6-gcc8-opt 
+
+source /cvmfs/sft.cern.ch/lcg/views/LCG_95/x86_64-slc6-gcc8-opt/setup.sh 
