@@ -4,9 +4,9 @@ locations:
 total_events: 1000
 cross_section: 0.006185
 mc: true
-histogram: "ggHZ_ggHZ_HToSS_MS40_ctauS1000"
+histogram: "ggHZ_HToSS_MS40_ctauS1000"
 colour: "#a65628"
-label: "ggHZ_ggHZ_HToSS_MS40_ctauS1000"
+label: "ggHZ_HToSS_MS40_ctauS1000"
 plot_type: "f"
 
 name: "ggHZ_HToSSTouuuu_MS40_ctauS1000"
@@ -15,7 +15,7 @@ locations:
 total_events: 1000
 cross_section: 0.006185
 mc: true
-histogram: "ggHZ_ggHZ_HToSS_MS40_ctauS1000"
+histogram: "ggHZ_HToSS_MS40_ctauS1000"
 colour: "#a65628"
 label: "ggHZ_HToSS_MS40_ctauS1000"
 plot_type: "f"
@@ -26,7 +26,7 @@ locations:
 total_events: 1000
 cross_section: 0.006185
 mc: true
-histogram: "ggHZ_ggHZ_HToSS_MS40_ctauS1000"
+histogram: "ggHZ_HToSS_MS40_ctauS1000"
 colour: "#a65628"
 label: "ggHZ_HToSS_MS40_ctauS1000"
 plot_type: "f"
@@ -37,7 +37,7 @@ locations:
 total_events: 1000
 cross_section: 0.006185
 mc: true
-histogram: "ggHZ_ggHZ_HToSS_MS40_ctauS1000"
+histogram: "ggHZ_HToSS_MS40_ctauS1000"
 colour: "#a65628"
 label: "ggHZ_HToSS_MS40_ctauS1000"
 plot_type: "f"
@@ -48,7 +48,7 @@ locations:
 total_events: 1000
 cross_section: 0.006185
 mc: true
-histogram: "ggHZ_ggHZ_HToSS_MS40_ctauS1000"
+histogram: "ggHZ_HToSS_MS40_ctauS1000"
 colour: "#a65628"
 label: "ggHZ_HToSS_MS40_ctauS1000"
 plot_type: "f"

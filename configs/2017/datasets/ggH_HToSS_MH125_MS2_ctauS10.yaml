@@ -4,9 +4,9 @@ locations:
 total_events: 10000
 cross_section: 21.46
 mc: true
-histogram: "ggH_ggH_HToSS_MS2_ctauS10"
+histogram: "ggH_HToSS_MS2_ctauS10"
 colour: "#cc0000"
-label: "ggH_ggH_HToSS_MS2_ctauS10"
+label: "ggH_HToSS_MS2_ctauS10"
 plot_type: "f"
 
 name: "ggH_HToSSTouuuu_MS2_ctauS10"
@@ -15,7 +15,7 @@ locations:
 total_events: 1000
 cross_section: 21.46
 mc: true
-histogram: "ggH_ggH_HToSS_MS2_ctauS10"
+histogram: "ggH_HToSS_MS2_ctauS10"
 colour: "#cc0000"
 label: "ggH_HToSS_MS2_ctauS10"
 plot_type: "f"
@@ -26,7 +26,7 @@ locations:
 total_events: 1000
 cross_section: 21.46
 mc: true
-histogram: "ggH_ggH_HToSS_MS2_ctauS10"
+histogram: "ggH_HToSS_MS2_ctauS10"
 colour: "#cc0000"
 label: "ggH_HToSS_MS2_ctauS10"
 plot_type: "f"
