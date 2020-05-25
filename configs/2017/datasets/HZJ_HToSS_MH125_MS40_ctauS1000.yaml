@@ -1,0 +1,55 @@
+name: "HZJ_HToSSTodddd_MS40_ctauS1000"
+locations:
+    - "/vols/cms/adm10/skims2017/HZJ/NLO_HToSSTodddd_MH125_MS40_ctauS1000/"
+total_events: 1000
+cross_section: 0.006185
+mc: true
+histogram: "HZJ_HToSS_MS40_ctauS1000"
+colour: "#a65628"
+label: "HZJ_HToSS_MS40_ctauS1000"
+plot_type: "f"
+
+name: "HZJ_HToSSTouuuu_MS40_ctauS1000"
+locations:
+    - "/vols/cms/adm10/skims2017/HZJ/NLO_HToSSTouuuu_MH125_MS40_ctauS1000/"
+total_events: 1000
+cross_section: 0.006185
+mc: true
+histogram: "HZJ_HToSS_MS40_ctauS1000"
+colour: "#a65628"
+label: "HZJ_HToSS_MS40_ctauS1000"
+plot_type: "f"
+
+name: "HZJ_HToSSTossss_MS40_ctauS1000"
+locations:
+    - "/vols/cms/adm10/skims2017/HZJ/NLO_HToSSTossss_MH125_MS40_ctauS1000/"
+total_events: 1000
+cross_section: 0.006185
+mc: true
+histogram: "HZJ_HToSS_MS40_ctauS1000"
+colour: "#a65628"
+label: "HZJ_HToSS_MS40_ctauS1000"
+plot_type: "f"
+
+name: "HZJ_HToSSTocccc_MS40_ctauS1000"
+locations:
+    - "/vols/cms/adm10/skims2017/HZJ/NLO_HToSSTocccc_MH125_MS40_ctauS1000/"
+total_events: 1000
+cross_section: 0.006185
+mc: true
+histogram: "HZJ_HToSS_MS40_ctauS1000"
+colour: "#a65628"
+label: "HZJ_HToSS_MS40_ctauS1000"
+plot_type: "f"
+
+name: "HZJ_HToSSTobbbb_MS40_ctauS1000"
+locations:
+    - "/vols/cms/adm10/skims2017/HZJ/NLO_HToSSTouuuu_MH125_MS40_ctauS1000/"
+total_events: 1000
+cross_section: 0.006185
+mc: true
+histogram: "HZJ_HToSS_MS40_ctauS1000"
+colour: "#a65628"
+label: "HZJ_HToSS_MS40_ctauS1000"
+plot_type: "f"
+

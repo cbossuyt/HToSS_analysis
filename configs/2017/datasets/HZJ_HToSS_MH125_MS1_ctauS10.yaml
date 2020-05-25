@@ -1,0 +1,21 @@
+name: "HZJ_HToSSTodddd_MS1_ctauS10"
+locations:
+    - "/vols/cms/adm10/skims2017/HZJ/NLO_HToSSTodddd_MH125_MS1_ctauS10/"
+total_events: 1000
+cross_section: 0.006185
+mc: true
+histogram: "HZJ_HToSS_MS1_ctauS10"
+colour: "#a65628"
+label: "HZJ_HToSS_MS1_ctauS10"
+plot_type: "f"
+
+name: "HZJ_HToSSTouuuu_MS1_ctauS10"
+locations:
+    - "/vols/cms/adm10/skims2017/HZJ/NLO_HToSSTouuuu_MH125_MS1_ctauS10/"
+total_events: 1000
+cross_section: 0.006185
+mc: true
+histogram: "HZJ_HToSS_MS1_ctauS10"
+colour: "#a65628"
+label: "HZJ_HToSS_MS1_ctauS10"
+plot_type: "f"
