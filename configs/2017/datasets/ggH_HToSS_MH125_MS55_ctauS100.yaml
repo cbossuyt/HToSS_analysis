@@ -1,0 +1,55 @@
+name: "ggH_HToSSTodddd_MS55_ctauS100"
+locations:
+    - "/vols/cms/adm10/skims2017/ggH/NLO_HToSSTodddd_MH125_MS55_ctauS100/"
+total_events: 1000
+cross_section: 21.46
+mc: true
+histogram: "ggH_ggH_HToSS_MS55_ctauS100"
+colour: "#cc0000"
+label: "ggH_ggH_HToSS_MS55_ctauS100"
+plot_type: "f"
+
+name: "ggH_HToSSTouuuu_MS55_ctauS100"
+locations:
+    - "/vols/cms/adm10/skims2017/ggH/NLO_HToSSTouuuu_MH125_MS55_ctauS100/"
+total_events: 1000
+cross_section: 21.46
+mc: true
+histogram: "ggH_ggH_HToSS_MS55_ctauS100"
+colour: "#cc0000"
+label: "ggH_HToSS_MS55_ctauS100"
+plot_type: "f"
+
+name: "ggH_HToSSTossss_MS55_ctauS100"
+locations:
+    - "/vols/cms/adm10/skims2017/ggH/NLO_HToSSTossss_MH125_MS55_ctauS100/"
+total_events: 1000
+cross_section: 21.46
+mc: true
+histogram: "ggH_ggH_HToSS_MS55_ctauS100"
+colour: "#cc0000"
+label: "ggH_HToSS_MS55_ctauS100"
+plot_type: "f"
+
+name: "ggH_HToSSTocccc_MS55_ctauS100"
+locations:
+    - "/vols/cms/adm10/skims2017/ggH/NLO_HToSSTocccc_MH125_MS55_ctauS100/"
+total_events: 1000
+cross_section: 21.46
+mc: true
+histogram: "ggH_ggH_HToSS_MS55_ctauS100"
+colour: "#cc0000"
+label: "ggH_HToSS_MS55_ctauS100"
+plot_type: "f"
+
+name: "ggH_HToSSTobbbb_MS55_ctauS100"
+locations:
+    - "/vols/cms/adm10/skims2017/ggH/NLO_HToSSTouuuu_MH125_MS55_ctauS100/"
+total_events: 1000
+cross_section: 21.46
+mc: true
+histogram: "ggH_ggH_HToSS_MS55_ctauS100"
+colour: "#cc0000"
+label: "ggH_HToSS_MS55_ctauS100"
+plot_type: "f"
+
