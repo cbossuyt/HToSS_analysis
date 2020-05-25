@@ -1,7 +1,7 @@
 name: "ggHZ_HToSSTodddd_MS40_ctauS1"
 locations:
     - "/vols/cms/adm10/skims2017/ggHZ/NLO_HToSSTodddd_MH125_MS40_ctauS1/"
-total_events: 1000
+total_events: 500
 cross_section: 0.006185
 mc: true
 histogram: "ggHZ_HToSS_MS40_ctauS1"
@@ -12,7 +12,7 @@ plot_type: "f"
 name: "ggHZ_HToSSTouuuu_MS40_ctauS1"
 locations:
     - "/vols/cms/adm10/skims2017/ggHZ/NLO_HToSSTouuuu_MH125_MS40_ctauS1/"
-total_events: 1000
+total_events: 500
 cross_section: 0.006185
 mc: true
 histogram: "ggHZ_HToSS_MS40_ctauS1"
@@ -23,7 +23,7 @@ plot_type: "f"
 name: "ggHZ_HToSSTossss_MS40_ctauS1"
 locations:
     - "/vols/cms/adm10/skims2017/ggHZ/NLO_HToSSTossss_MH125_MS40_ctauS1/"
-total_events: 1000
+total_events: 500
 cross_section: 0.006185
 mc: true
 histogram: "ggHZ_HToSS_MS40_ctauS1"
@@ -34,7 +34,7 @@ plot_type: "f"
 name: "ggHZ_HToSSTocccc_MS40_ctauS1"
 locations:
     - "/vols/cms/adm10/skims2017/ggHZ/NLO_HToSSTocccc_MH125_MS40_ctauS1/"
-total_events: 1000
+total_events: 500
 cross_section: 0.006185
 mc: true
 histogram: "ggHZ_HToSS_MS40_ctauS1"
@@ -45,7 +45,7 @@ plot_type: "f"
 name: "ggHZ_HToSSTobbbb_MS40_ctauS1"
 locations:
     - "/vols/cms/adm10/skims2017/ggHZ/NLO_HToSSTouuuu_MH125_MS40_ctauS1/"
-total_events: 1000
+total_events: 500
 cross_section: 0.006185
 mc: true
 histogram: "ggHZ_HToSS_MS40_ctauS1"

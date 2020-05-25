@@ -1,7 +1,7 @@
 name: "HZJ_HToSSTodddd_MS2_ctauS1"
 locations:
     - "/vols/cms/adm10/skims2017/HZJ/NLO_HToSSTodddd_MH125_MS2_ctauS1/"
-total_events: 1000
+total_events: 500
 cross_section: 0.07924
 mc: true
 histogram: "HZJ_HToSS_MS2_ctauS1"
@@ -12,7 +12,7 @@ plot_type: "f"
 name: "HZJ_HToSSTouuuu_MS2_ctauS1"
 locations:
     - "/vols/cms/adm10/skims2017/HZJ/NLO_HToSSTouuuu_MH125_MS2_ctauS1/"
-total_events: 1000
+total_events: 500
 cross_section: 0.07924
 mc: true
 histogram: "HZJ_HToSS_MS2_ctauS1"
@@ -23,7 +23,7 @@ plot_type: "f"
 name: "HZJ_HToSSTossss_MS2_ctauS1"
 locations:
     - "/vols/cms/adm10/skims2017/HZJ/NLO_HToSSTossss_MH125_MS2_ctauS1/"
-total_events: 1000
+total_events: 500
 cross_section: 0.07924
 mc: true
 histogram: "HZJ_HToSS_MS2_ctauS1"
