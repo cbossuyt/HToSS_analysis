@@ -1,0 +1,32 @@
+name: "ggHZ_HToSSTodddd_MS2_ctauS1"
+locations:
+    - "/vols/cms/adm10/skims2017/ggHZ/NLO_HToSSTodddd_MH125_MS2_ctauS1/"
+total_events: 1000
+cross_section: 0.006185
+mc: true
+histogram: "ggHZ_ggHZ_HToSS_MS2_ctauS1"
+colour: "#a65628"
+label: "ggHZ_ggHZ_HToSS_MS2_ctauS1"
+plot_type: "f"
+
+name: "ggHZ_HToSSTouuuu_MS2_ctauS1"
+locations:
+    - "/vols/cms/adm10/skims2017/ggHZ/NLO_HToSSTouuuu_MH125_MS2_ctauS1/"
+total_events: 1000
+cross_section: 0.006185
+mc: true
+histogram: "ggHZ_ggHZ_HToSS_MS2_ctauS1"
+colour: "#a65628"
+label: "ggHZ_HToSS_MS2_ctauS1"
+plot_type: "f"
+
+name: "ggHZ_HToSSTossss_MS2_ctauS1"
+locations:
+    - "/vols/cms/adm10/skims2017/ggHZ/NLO_HToSSTossss_MH125_MS2_ctauS1/"
+total_events: 1000
+cross_section: 0.006185
+mc: true
+histogram: "ggHZ_ggHZ_HToSS_MS2_ctauS1"
+colour: "#a65628"
+label: "ggHZ_HToSS_MS2_ctauS1"
+plot_type: "f"
