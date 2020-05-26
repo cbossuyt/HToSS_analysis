@@ -1,6 +1,6 @@
 name: "ggHZ_HToSSTodddd_MS40_ctauS1000"
 locations:
-    - "/vols/cms/adm10/skims2017/ggHZ/NLO_HToSSTodddd_MH125_MS40_ctauS1000/"
+    - "/vols/cms/adm10/skims2017/ggHZ/NLO_ggHZ_HToSSTodddd_Vleptonic_M125_MS40_ctauS1000/"
 total_events: 500
 cross_section: 0.006185
 mc: true
@@ -11,7 +11,7 @@ plot_type: "f"
 
 name: "ggHZ_HToSSTouuuu_MS40_ctauS1000"
 locations:
-    - "/vols/cms/adm10/skims2017/ggHZ/NLO_HToSSTouuuu_MH125_MS40_ctauS1000/"
+    - "/vols/cms/adm10/skims2017/ggHZ/NLO_ggHZ_HToSSTouuuu_Vleptonic_M125_MS40_ctauS1000/"
 total_events: 500
 cross_section: 0.006185
 mc: true
@@ -22,7 +22,7 @@ plot_type: "f"
 
 name: "ggHZ_HToSSTossss_MS40_ctauS1000"
 locations:
-    - "/vols/cms/adm10/skims2017/ggHZ/NLO_HToSSTossss_MH125_MS40_ctauS1000/"
+    - "/vols/cms/adm10/skims2017/ggHZ/NLO_ggHZ_HToSSTossss_Vleptonic_M125_MS40_ctauS1000/"
 total_events: 500
 cross_section: 0.006185
 mc: true
@@ -33,7 +33,7 @@ plot_type: "f"
 
 name: "ggHZ_HToSSTocccc_MS40_ctauS1000"
 locations:
-    - "/vols/cms/adm10/skims2017/ggHZ/NLO_HToSSTocccc_MH125_MS40_ctauS1000/"
+    - "/vols/cms/adm10/skims2017/ggHZ/NLO_ggHZ_HToSSTocccc_Vleptonic_M125_MS40_ctauS1000/"
 total_events: 500
 cross_section: 0.006185
 mc: true
@@ -44,7 +44,7 @@ plot_type: "f"
 
 name: "ggHZ_HToSSTobbbb_MS40_ctauS1000"
 locations:
-    - "/vols/cms/adm10/skims2017/ggHZ/NLO_HToSSTouuuu_MH125_MS40_ctauS1000/"
+    - "/vols/cms/adm10/skims2017/ggHZ/NLO_ggHZ_HToSSTouuuu_Vleptonic_M125_MS40_ctauS1000/"
 total_events: 500
 cross_section: 0.006185
 mc: true
