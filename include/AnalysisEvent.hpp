@@ -1169,6 +1169,63 @@ class AnalysisEvent
     TBranch* b_tauPF2PATPt; //!
     TBranch* b_tauPF2PATPhi; //!
     TBranch* b_tauPF2PATEta; //!
+    TBranch* b_numPhotonPF2PAT; //!
+    TBranch* b_phoPF2PATE; //!
+    TBranch* b_phoPF2PATSigmaE; //!
+    TBranch* b_phoPF2PATET; //!
+    TBranch* b_phoPF2PATPhi; //!
+    TBranch* b_phoPF2PATEta; //!
+    TBranch* b_phoPF2PATTheta; //!
+    TBranch* b_phoPF2PATPt; //!
+    TBranch* b_phoPF2PATPx; //!
+    TBranch* b_phoPF2PATPy; //!
+    TBranch* b_phoPF2PATPz; //!
+    TBranch* b_phoPF2PATCalibE; //!
+    TBranch* b_phoPF2PATCalibEt; //!
+    TBranch* b_phoPF2PATSCE; //!
+    TBranch* b_phoPF2PATSCRawE; //!
+    TBranch* b_phoPF2PATESEnP1; //!
+    TBranch* b_phoPF2PATESEnP2; //!
+    TBranch* b_phoPF2PATSCEta; //!
+    TBranch* b_phoPF2PATSCEtaWidth; //!
+    TBranch* b_phoPF2PATSCPhi; //!
+    TBranch* b_phoPF2PATSCPhiWidth; //!
+    TBranch* b_phoPF2PATSCBrem; //!
+    TBranch* b_phoPF2PATHasPixelSeed; //!
+    TBranch* b_phoPF2PATEleVeto; //!
+    TBranch* b_phoPF2PATR9; //!
+    TBranch* b_phoPF2PATHoverE; //!
+    TBranch* b_phoPF2PATESEffSigmaRR; //!
+    TBranch* b_phoPF2PATSigmaIEtaIEtaFull5x5; //!
+    TBranch* b_phoPF2PATSigmaIEtaIPhiFull5x5; //!
+    TBranch* b_phoPF2PATSigmaIPhiIPhiFull5x5; //!
+    TBranch* b_phoPF2PATE2x2Full5x5; //!
+    TBranch* b_phoPF2PATE5x5Full5x5; //!
+    TBranch* b_phoPF2PATR9Full5x5; //!
+    TBranch* b_phoPF2PATPFChIso; //!
+    TBranch* b_phoPF2PATPFPhoIso ; //!
+    TBranch* b_phoPF2PATPFNeuIso; //!
+    TBranch* b_phoPF2PATPFChWorstIso; //!
+    TBranch* b_phoPF2PATMIPTotEnergy; //!
+    TBranch* b_phoPF2PATCutIdLoose; //!
+    TBranch* b_phoPF2PATCutIdMedium; //!
+    TBranch* b_phoPF2PATCutIdTight; //!
+    TBranch* b_phoPF2PATMvaIdWp80; //!
+    TBranch* b_phoPF2PATMvaIdWp90; //!
+    TBranch* b_genPhoPF2PATPt; //!
+    TBranch* b_genPhoPF2PATET; //!
+    TBranch* b_genPhoPF2PATEta; //!
+    TBranch* b_genPhoPF2PATTheta; //!
+    TBranch* b_genPhoPF2PATPhi; //!
+    TBranch* b_genPhoPF2PATPx; //!
+    TBranch* b_genPhoPF2PATPy; //!
+    TBranch* b_genPhoPF2PATPz; //!
+    TBranch* b_genPhoPF2PATCharge; //!
+    TBranch* b_genPhoPF2PATPdgId; //!
+    TBranch* b_genPhoPF2PATMotherId; //!
+    TBranch* b_genPhoPF2PATIsPhoton; //!
+    TBranch* b_genPhoPF2PATIsConvertedPhoton; //!
+    TBranch* b_genPhoPF2PATIsJet; //!
     TBranch* b_numGeneralTracks; //!
     TBranch* b_generalTracksPt; //!
     TBranch* b_generalTracksEta; //!
@@ -2065,6 +2122,67 @@ inline AnalysisEvent::AnalysisEvent(const bool isMC,
    fChain->SetBranchAddress("tauPF2PATPt", &tauPF2PATPt, &b_tauPF2PATPt);
    fChain->SetBranchAddress("tauPF2PATPhi", &tauPF2PATPhi, &b_tauPF2PATPhi);
    fChain->SetBranchAddress("tauPF2PATEta", &tauPF2PATEta, &b_tauPF2PATEta);
+
+   fChain->SetBranchAddress("numPhotonPF2PAT", &numPhotonPF2PAT, &b_numPhotonPF2PAT);
+   fChain->SetBranchAddress("phoPF2PATE", &phoPF2PATE, &b_phoPF2PATE);
+   fChain->SetBranchAddress("phoPF2PATSigmaE", &phoPF2PATSigmaE, &b_phoPF2PATSigmaE);
+   fChain->SetBranchAddress("phoPF2PATET", &phoPF2PATET, &b_phoPF2PATET);
+   fChain->SetBranchAddress("phoPF2PATPhi", &phoPF2PATPhi, &b_phoPF2PATPhi);
+   fChain->SetBranchAddress("phoPF2PATEta", &phoPF2PATEta, &b_phoPF2PATEta);
+   fChain->SetBranchAddress("phoPF2PATTheta", &phoPF2PATTheta, &b_phoPF2PATTheta);
+   fChain->SetBranchAddress("phoPF2PATPt", &phoPF2PATPt, &b_phoPF2PATPt);
+   fChain->SetBranchAddress("phoPF2PATPx", &phoPF2PATPx, &b_phoPF2PATPx);
+   fChain->SetBranchAddress("phoPF2PATPy", &phoPF2PATPy, &b_phoPF2PATPy);
+   fChain->SetBranchAddress("phoPF2PATPz", &phoPF2PATPz, &b_phoPF2PATPz);
+   fChain->SetBranchAddress("phoPF2PATCalibE", &phoPF2PATCalibE, &b_phoPF2PATCalibE);
+   fChain->SetBranchAddress("phoPF2PATCalibEt", &phoPF2PATCalibEt, &b_phoPF2PATCalibEt);
+   fChain->SetBranchAddress("phoPF2PATSCE", &phoPF2PATSCE, &b_phoPF2PATSCE);
+   fChain->SetBranchAddress("phoPF2PATSCRawE", &phoPF2PATSCRawE, &b_phoPF2PATSCRawE);
+   fChain->SetBranchAddress("phoPF2PATESEnP1", &phoPF2PATESEnP1, &b_phoPF2PATESEnP1);
+   fChain->SetBranchAddress("phoPF2PATESEnP2", &phoPF2PATESEnP2, &b_phoPF2PATESEnP1);
+   fChain->SetBranchAddress("phoPF2PATSCEta", &phoPF2PATSCEta, &b_phoPF2PATSCEta);
+   fChain->SetBranchAddress("phoPF2PATSCEtaWidth", &phoPF2PATSCEtaWidth, &b_phoPF2PATSCEtaWidth);
+   fChain->SetBranchAddress("phoPF2PATSCPhi", &phoPF2PATSCPhi, &b_phoPF2PATSCPhi);
+   fChain->SetBranchAddress("phoPF2PATSCPhiWidth", &phoPF2PATSCPhiWidth, &b_phoPF2PATSCPhiWidth);
+   fChain->SetBranchAddress("phoPF2PATSCBrem", &phoPF2PATSCBrem, &b_phoPF2PATSCBrem);
+   fChain->SetBranchAddress("phoPF2PATHasPixelSeed", &phoPF2PATHasPixelSeed, &b_phoPF2PATHasPixelSeed);
+   fChain->SetBranchAddress("phoPF2PATEleVeto", &phoPF2PATEleVeto, &b_phoPF2PATEleVeto);
+   fChain->SetBranchAddress("phoPF2PATR9", &phoPF2PATR9, &b_phoPF2PATR9);
+   fChain->SetBranchAddress("phoPF2PATHoverE", &phoPF2PATHoverE, &b_phoPF2PATHoverE);
+   fChain->SetBranchAddress("phoPF2PATESEffSigmaRR", &phoPF2PATESEffSigmaRR, &b_phoPF2PATESEffSigmaRR);
+   fChain->SetBranchAddress("phoPF2PATSigmaIEtaIEtaFull5x5", &phoPF2PATSigmaIEtaIEtaFull5x5, &b_phoPF2PATSigmaIEtaIEtaFull5x5);
+   fChain->SetBranchAddress("phoPF2PATSigmaIEtaIPhiFull5x5", &phoPF2PATSigmaIEtaIPhiFull5x5, &b_phoPF2PATSigmaIEtaIPhiFull5x5);
+   fChain->SetBranchAddress("phoPF2PATSigmaIPhiIPhiFull5x5", &phoPF2PATSigmaIPhiIPhiFull5x5, &b_phoPF2PATSigmaIPhiIPhiFull5x5);
+   fChain->SetBranchAddress("phoPF2PATE2x2Full5x5", &phoPF2PATE2x2Full5x5, &b_phoPF2PATE2x2Full5x5);
+   fChain->SetBranchAddress("phoPF2PATE5x5Full5x5", &phoPF2PATE5x5Full5x5, &b_phoPF2PATE5x5Full5x5);
+   fChain->SetBranchAddress("phoPF2PATR9Full5x5", &phoPF2PATR9Full5x5, &b_phoPF2PATR9Full5x5);
+   fChain->SetBranchAddress("phoPF2PATPFChIso", &phoPF2PATPFChIso, &b_phoPF2PATPFChIso);
+   fChain->SetBranchAddress("phoPF2PATPFPhoIso", &phoPF2PATPFPhoIso, &b_phoPF2PATPFPhoIso);
+   fChain->SetBranchAddress("phoPF2PATPFNeuIso", &phoPF2PATPFNeuIso, &b_phoPF2PATPFNeuIso);
+   fChain->SetBranchAddress("phoPF2PATPFChWorstIso", &phoPF2PATPFChWorstIso, &b_phoPF2PATPFChWorstIso);
+   fChain->SetBranchAddress("phoPF2PATMIPTotEnergy", &phoPF2PATMIPTotEnergy, &b_phoPF2PATMIPTotEnergy);
+   fChain->SetBranchAddress("phoPF2PATCutIdLoose", &phoPF2PATCutIdLoose, &b_phoPF2PATCutIdLoose);
+   fChain->SetBranchAddress("phoPF2PATCutIdMedium", &phoPF2PATCutIdMedium, &b_phoPF2PATCutIdMedium);
+   fChain->SetBranchAddress("phoPF2PATCutIdTight", &phoPF2PATCutIdTight, &b_phoPF2PATCutIdTight);
+   fChain->SetBranchAddress("phoPF2PATMvaIdWp80", &phoPF2PATMvaIdWp80, &b_phoPF2PATMvaIdWp80);
+   fChain->SetBranchAddress("phoPF2PATMvaIdWp90", &phoPF2PATMvaIdWp90, &b_phoPF2PATMvaIdWp90);
+   if (isMC) {
+      fChain->SetBranchAddress("genPhoPF2PATPt", &genPhoPF2PATPt, &b_genPhoPF2PATPt);
+      fChain->SetBranchAddress("genPhoPF2PATET", &genPhoPF2PATET, &b_genPhoPF2PATET);
+      fChain->SetBranchAddress("genPhoPF2PATEta", &genPhoPF2PATEta, &b_genPhoPF2PATEta);
+      fChain->SetBranchAddress("genPhoPF2PATTheta", &genPhoPF2PATTheta, &b_genPhoPF2PATTheta);
+      fChain->SetBranchAddress("genPhoPF2PATPhi", &genPhoPF2PATPhi, &b_genPhoPF2PATPhi);
+      fChain->SetBranchAddress("genPhoPF2PATPx", &genPhoPF2PATPx, &b_genPhoPF2PATPx);
+      fChain->SetBranchAddress("genPhoPF2PATPy", &genPhoPF2PATPy, &b_genPhoPF2PATPy);
+      fChain->SetBranchAddress("genPhoPF2PATPz", &genPhoPF2PATPz, &b_genPhoPF2PATPz);
+      fChain->SetBranchAddress("genPhoPF2PATCharge", &genPhoPF2PATCharge, &b_genPhoPF2PATCharge);
+      fChain->SetBranchAddress("genPhoPF2PATPdgId", &genPhoPF2PATPdgId, &b_genPhoPF2PATPdgId);
+      fChain->SetBranchAddress("genPhoPF2PATMotherId", &genPhoPF2PATMotherId, &b_genPhoPF2PATMotherId);
+      fChain->SetBranchAddress("genPhoPF2PATIsPhoton", &genPhoPF2PATIsPhoton, &b_genPhoPF2PATIsPhoton);
+      fChain->SetBranchAddress("genPhoPF2PATIsConvertedPhoton", &genPhoPF2PATIsConvertedPhoton, &b_genPhoPF2PATIsConvertedPhoton);
+      fChain->SetBranchAddress("genPhoPF2PATIsJet", &genPhoPF2PATIsJet, &b_genPhoPF2PATIsJet);
+   }
+
    fChain->SetBranchAddress("numGeneralTracks", &numGeneralTracks, &b_numGeneralTracks);
    fChain->SetBranchAddress("generalTracksPt", generalTracksPt, &b_generalTracksPt);
    fChain->SetBranchAddress("generalTracksEta", generalTracksEta, &b_generalTracksEta);
