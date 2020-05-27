@@ -589,6 +589,58 @@ class AnalysisEvent
     Int_t HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v4;
     Int_t HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v5;
 
+    // 2017 Displaced Jet Triggers
+//    Int_t HLT_HT430_DisplacedDijet40_DisplacedTrack_v10; // Already in MET trigger list
+//    Int_t HLT_HT430_DisplacedDijet60_DisplacedTrack_v10; // Already in MET trigger list
+//    Int_t HLT_HT430_DisplacedDijet80_DisplacedTrack_v10; // Already in MET trigger list
+    Int_t HLT_HT400_DisplacedDijet40_DisplacedTrack_v10;
+
+//    Int_t HLT_HT650_DisplacedDijet60_Inclusive_v10; // Already in MET trigger list
+    Int_t HLT_HT550_DisplacedDijet80_Inclusive_v8;
+    Int_t HLT_HT550_DisplacedDijet60_Inclusive_v10;
+//    Int_t HLT_HT650_DisplacedDijet80_Inclusive_v11; // Already in MET trigger list
+//    Int_t HLT_HT750_DisplacedDijet80_Inclusive_v11; // Already in MET trigger list
+
+    // 2017 Photon Triggers
+    Int_t HLT_DoublePhoton33_CaloIdL_v5;
+    Int_t HLT_DoublePhoton70_v5;
+    Int_t HLT_DoublePhoton85_v13;
+    Int_t HLT_TriplePhoton_20_20_20_CaloIdLV2_v2;
+    Int_t HLT_TriplePhoton_20_20_20_CaloIdLV2_R9IdVL_v2;
+    Int_t HLT_TriplePhoton_30_30_10_CaloIdLV2_v3;
+    Int_t HLT_TriplePhoton_30_30_10_CaloIdLV2_R9IdVL_v3;
+    Int_t HLT_TriplePhoton_35_35_5_CaloIdLV2_R9IdVL_v3;
+    Int_t HLT_Photon25_v2;
+    Int_t HLT_Photon33_v4;
+    Int_t HLT_Photon50_v12;
+    Int_t HLT_Photon75_v12;
+    Int_t HLT_Photon90_v12;
+    Int_t HLT_Photon120_v12;
+    Int_t HLT_Photon150_v5;
+    Int_t HLT_Photon175_v13;
+    Int_t HLT_Photon200_v12;
+    Int_t HLT_Photon50_R9Id90_HE10_IsoM_v13;
+    Int_t HLT_Photon75_R9Id90_HE10_IsoM_v13;
+    Int_t HLT_Photon90_R9Id90_HE10_IsoM_v13;
+    Int_t HLT_Photon120_R9Id90_HE10_IsoM_v13;
+    Int_t HLT_Photon165_R9Id90_HE10_IsoM_v14;
+    Int_t HLT_Photon90_CaloIdL_PFHT700_v12;
+
+    Int_t HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90_v12;
+    Int_t HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass95_v12;
+    Int_t HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55_v13;
+    Int_t HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_NoPixelVeto_Mass55_v12;
+    Int_t HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_NoPixelVeto_Mass55_v12;
+    Int_t HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55_v13;
+
+    Int_t HLT_Photon60_R9Id90_CaloIdL_IsoL_DisplacedIdL_v4;
+    Int_t HLT_Photon60_R9Id90_CaloIdL_IsoL_DisplacedIdL_PFHT350MinPFJet15_v7;
+    Int_t HLT_Photon20_HoverELoose_v9;
+    Int_t HLT_Photon30_HoverELoose_v9;
+    Int_t HLT_Photon40_HoverELoose_v9;
+    Int_t HLT_Photon50_HoverELoose_v9;
+    Int_t HLT_Photon60_HoverELoose_v9;
+
     // 2016 MET Triggers
     Int_t HLT_MET200_v1;
     Int_t HLT_MET200_v2;
@@ -652,38 +704,38 @@ class AnalysisEvent
     Int_t HLT_MET120_IsoTrk50_v6;
     Int_t HLT_MET120_IsoTrk50_v7;
     Int_t HLT_MET120_IsoTrk50_v8;
-    Int_t HLT_HT430_DisplacedDijet40_DisplacedTrack_v10;
+    Int_t HLT_HT430_DisplacedDijet40_DisplacedTrack_v10; // Already in Displaced Jets trigger list
     Int_t HLT_HT430_DisplacedDijet40_DisplacedTrack_v11;
     Int_t HLT_HT430_DisplacedDijet40_DisplacedTrack_v5;
     Int_t HLT_HT430_DisplacedDijet40_DisplacedTrack_v6;
     Int_t HLT_HT430_DisplacedDijet40_DisplacedTrack_v8;
     Int_t HLT_HT430_DisplacedDijet40_DisplacedTrack_v9;
-    Int_t HLT_HT430_DisplacedDijet60_DisplacedTrack_v10;
+    Int_t HLT_HT430_DisplacedDijet60_DisplacedTrack_v10; // Already in Displaced Jets trigger list
     Int_t HLT_HT430_DisplacedDijet60_DisplacedTrack_v11;
     Int_t HLT_HT430_DisplacedDijet60_DisplacedTrack_v5;
     Int_t HLT_HT430_DisplacedDijet60_DisplacedTrack_v6;
     Int_t HLT_HT430_DisplacedDijet60_DisplacedTrack_v8;
     Int_t HLT_HT430_DisplacedDijet60_DisplacedTrack_v9;
-    Int_t HLT_HT430_DisplacedDijet80_DisplacedTrack_v10;
+    Int_t HLT_HT430_DisplacedDijet80_DisplacedTrack_v10; // Already in Displaced Jets trigger list
     Int_t HLT_HT430_DisplacedDijet80_DisplacedTrack_v11;
     Int_t HLT_HT430_DisplacedDijet80_DisplacedTrack_v5;
     Int_t HLT_HT430_DisplacedDijet80_DisplacedTrack_v6;
     Int_t HLT_HT430_DisplacedDijet80_DisplacedTrack_v8;
     Int_t HLT_HT430_DisplacedDijet80_DisplacedTrack_v9;
-    Int_t HLT_HT650_DisplacedDijet60_Inclusive_v10;
+    Int_t HLT_HT650_DisplacedDijet60_Inclusive_v10; // Already in Displaced Jets trigger list
     Int_t HLT_HT650_DisplacedDijet60_Inclusive_v11;
     Int_t HLT_HT650_DisplacedDijet60_Inclusive_v5;
     Int_t HLT_HT650_DisplacedDijet60_Inclusive_v6;
     Int_t HLT_HT650_DisplacedDijet60_Inclusive_v8;
     Int_t HLT_HT650_DisplacedDijet60_Inclusive_v9;
     Int_t HLT_HT650_DisplacedDijet80_Inclusive_v10;
-    Int_t HLT_HT650_DisplacedDijet80_Inclusive_v11;
+    Int_t HLT_HT650_DisplacedDijet80_Inclusive_v11; // Already in Displaced Jets trigger list
     Int_t HLT_HT650_DisplacedDijet80_Inclusive_v12;
     Int_t HLT_HT650_DisplacedDijet80_Inclusive_v6;
     Int_t HLT_HT650_DisplacedDijet80_Inclusive_v7;
     Int_t HLT_HT650_DisplacedDijet80_Inclusive_v9;
     Int_t HLT_HT750_DisplacedDijet80_Inclusive_v10;
-    Int_t HLT_HT750_DisplacedDijet80_Inclusive_v11;
+    Int_t HLT_HT750_DisplacedDijet80_Inclusive_v11; // Already in Displaced Jets trigger list
     Int_t HLT_HT750_DisplacedDijet80_Inclusive_v12;
     Int_t HLT_HT750_DisplacedDijet80_Inclusive_v6;
     Int_t HLT_HT750_DisplacedDijet80_Inclusive_v7;
@@ -1336,6 +1388,56 @@ class AnalysisEvent
     TBranch* b_HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v10;
     TBranch* b_HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v11;
 
+//    TBranch* b_HLT_HT430_DisplacedDijet40_DisplacedTrack_v10; // Already in MET trigger list
+//    TBranch* b_HLT_HT430_DisplacedDijet60_DisplacedTrack_v10; // Already in MET trigger list
+//    TBranch* b_HLT_HT430_DisplacedDijet80_DisplacedTrack_v10; // Already in MET trigger list
+    TBranch* b_HLT_HT400_DisplacedDijet40_DisplacedTrack_v10;
+//    TBranch* b_HLT_HT650_DisplacedDijet60_Inclusive_v10; // Already in MET trigger list
+    TBranch* b_HLT_HT550_DisplacedDijet80_Inclusive_v8;
+    TBranch* b_HLT_HT550_DisplacedDijet60_Inclusive_v10;
+//    TBranch* b_HLT_HT650_DisplacedDijet80_Inclusive_v11; // Already in MET trigger list
+//    TBranch* b_HLT_HT750_DisplacedDijet80_Inclusive_v11; // Already in MET trigger list
+
+    TBranch* b_HLT_DoublePhoton33_CaloIdL_v5;
+    TBranch* b_HLT_DoublePhoton70_v5;
+    TBranch* b_HLT_DoublePhoton85_v13;
+    TBranch* b_HLT_TriplePhoton_20_20_20_CaloIdLV2_v2;
+    TBranch* b_HLT_TriplePhoton_20_20_20_CaloIdLV2_R9IdVL_v2;
+    TBranch* b_HLT_TriplePhoton_30_30_10_CaloIdLV2_v3;
+    TBranch* b_HLT_TriplePhoton_30_30_10_CaloIdLV2_R9IdVL_v3;
+    TBranch* b_HLT_TriplePhoton_35_35_5_CaloIdLV2_R9IdVL_v3;
+    TBranch* b_HLT_Photon25_v2;
+    TBranch* b_HLT_Photon33_v4;
+    TBranch* b_HLT_Photon50_v12;
+    TBranch* b_HLT_Photon75_v12;
+    TBranch* b_HLT_Photon90_v12;
+    TBranch* b_HLT_Photon120_v12;
+    TBranch* b_HLT_Photon150_v5;
+    TBranch* b_HLT_Photon175_v13;
+    TBranch* b_HLT_Photon200_v12;
+    TBranch* b_HLT_Photon50_R9Id90_HE10_IsoM_v13;
+    TBranch* b_HLT_Photon75_R9Id90_HE10_IsoM_v13;
+    TBranch* b_HLT_Photon90_R9Id90_HE10_IsoM_v13;
+    TBranch* b_HLT_Photon120_R9Id90_HE10_IsoM_v13;
+    TBranch* b_HLT_Photon165_R9Id90_HE10_IsoM_v14;
+    TBranch* b_HLT_Photon90_CaloIdL_PFHT700_v12;
+
+    TBranch* b_HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90_v12;
+    TBranch* b_HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass95_v12;
+    TBranch* b_HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55_v13;
+    TBranch* b_HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_NoPixelVeto_Mass55_v12;
+    TBranch* b_HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_NoPixelVeto_Mass55_v12;
+    TBranch* b_HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55_v13;
+
+    TBranch* b_HLT_Photon60_R9Id90_CaloIdL_IsoL_DisplacedIdL_v4;
+    TBranch* b_HLT_Photon60_R9Id90_CaloIdL_IsoL_DisplacedIdL_PFHT350MinPFJet15_v7;
+    TBranch* b_HLT_Photon20_HoverELoose_v9;
+    TBranch* b_HLT_Photon30_HoverELoose_v9;
+    TBranch* b_HLT_Photon40_HoverELoose_v9;
+    TBranch* b_HLT_Photon50_HoverELoose_v9;
+    TBranch* b_HLT_Photon60_HoverELoose_v9;
+
+
     TBranch* b_HLT_MET200_v1;
     TBranch* b_HLT_MET200_v2;
     TBranch* b_HLT_MET200_v3;
@@ -1397,38 +1499,38 @@ class AnalysisEvent
     TBranch* b_HLT_MET120_IsoTrk50_v6;
     TBranch* b_HLT_MET120_IsoTrk50_v7;
     TBranch* b_HLT_MET120_IsoTrk50_v8;
-    TBranch* b_HLT_HT430_DisplacedDijet40_DisplacedTrack_v10;
+    TBranch* b_HLT_HT430_DisplacedDijet40_DisplacedTrack_v10; // Already in Displaced Jets trigger list
     TBranch* b_HLT_HT430_DisplacedDijet40_DisplacedTrack_v11;
     TBranch* b_HLT_HT430_DisplacedDijet40_DisplacedTrack_v5;
     TBranch* b_HLT_HT430_DisplacedDijet40_DisplacedTrack_v6;
     TBranch* b_HLT_HT430_DisplacedDijet40_DisplacedTrack_v8;
     TBranch* b_HLT_HT430_DisplacedDijet40_DisplacedTrack_v9;
-    TBranch* b_HLT_HT430_DisplacedDijet60_DisplacedTrack_v10;
+    TBranch* b_HLT_HT430_DisplacedDijet60_DisplacedTrack_v10; // Already in Displaced Jets trigger list
     TBranch* b_HLT_HT430_DisplacedDijet60_DisplacedTrack_v11;
     TBranch* b_HLT_HT430_DisplacedDijet60_DisplacedTrack_v5;
     TBranch* b_HLT_HT430_DisplacedDijet60_DisplacedTrack_v6;
     TBranch* b_HLT_HT430_DisplacedDijet60_DisplacedTrack_v8;
     TBranch* b_HLT_HT430_DisplacedDijet60_DisplacedTrack_v9;
-    TBranch* b_HLT_HT430_DisplacedDijet80_DisplacedTrack_v10;
+    TBranch* b_HLT_HT430_DisplacedDijet80_DisplacedTrack_v10; // Already in Displaced Jets trigger list
     TBranch* b_HLT_HT430_DisplacedDijet80_DisplacedTrack_v11;
     TBranch* b_HLT_HT430_DisplacedDijet80_DisplacedTrack_v5;
     TBranch* b_HLT_HT430_DisplacedDijet80_DisplacedTrack_v6;
     TBranch* b_HLT_HT430_DisplacedDijet80_DisplacedTrack_v8;
     TBranch* b_HLT_HT430_DisplacedDijet80_DisplacedTrack_v9;
-    TBranch* b_HLT_HT650_DisplacedDijet60_Inclusive_v10;
+    TBranch* b_HLT_HT650_DisplacedDijet60_Inclusive_v10; // Already in Displaced Jets trigger list
     TBranch* b_HLT_HT650_DisplacedDijet60_Inclusive_v11;
     TBranch* b_HLT_HT650_DisplacedDijet60_Inclusive_v5;
     TBranch* b_HLT_HT650_DisplacedDijet60_Inclusive_v6;
     TBranch* b_HLT_HT650_DisplacedDijet60_Inclusive_v8;
     TBranch* b_HLT_HT650_DisplacedDijet60_Inclusive_v9;
     TBranch* b_HLT_HT650_DisplacedDijet80_Inclusive_v10;
-    TBranch* b_HLT_HT650_DisplacedDijet80_Inclusive_v11;
+    TBranch* b_HLT_HT650_DisplacedDijet80_Inclusive_v11; // Already in Displaced Jets trigger list
     TBranch* b_HLT_HT650_DisplacedDijet80_Inclusive_v12;
     TBranch* b_HLT_HT650_DisplacedDijet80_Inclusive_v6;
     TBranch* b_HLT_HT650_DisplacedDijet80_Inclusive_v7;
     TBranch* b_HLT_HT650_DisplacedDijet80_Inclusive_v9;
     TBranch* b_HLT_HT750_DisplacedDijet80_Inclusive_v10;
-    TBranch* b_HLT_HT750_DisplacedDijet80_Inclusive_v11;
+    TBranch* b_HLT_HT750_DisplacedDijet80_Inclusive_v11; // Already in Displaced Jets trigger list
     TBranch* b_HLT_HT750_DisplacedDijet80_Inclusive_v12;
     TBranch* b_HLT_HT750_DisplacedDijet80_Inclusive_v6;
     TBranch* b_HLT_HT750_DisplacedDijet80_Inclusive_v7;
@@ -2197,6 +2299,62 @@ inline AnalysisEvent::AnalysisEvent(const bool isMC,
    fChain->SetBranchAddress("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v3", &HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v3, &b_HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v3);
    fChain->SetBranchAddress("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v4", &HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v4, &b_HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v4);
    fChain->SetBranchAddress("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v5", &HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v5, &b_HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v5);
+
+   // Displacced jets trigger branches 2017
+   if ( !is2016 ) {
+//       fChain->SetBranchAddress("HLT_HT430_DisplacedDijet40_DisplacedTrack_v10", &HLT_HT430_DisplacedDijet40_DisplacedTrack_v10, &b_HLT_HT430_DisplacedDijet40_DisplacedTrack_v10); // Already in MET trigger list
+//       fChain->SetBranchAddress("HLT_HT430_DisplacedDijet60_DisplacedTrack_v10", &HLT_HT430_DisplacedDijet60_DisplacedTrack_v10, &b_HLT_HT430_DisplacedDijet60_DisplacedTrack_v10); // Already in MET trigger list
+//       fChain->SetBranchAddress("HLT_HT430_DisplacedDijet80_DisplacedTrack_v10", &HLT_HT430_DisplacedDijet80_DisplacedTrack_v10, &b_HLT_HT430_DisplacedDijet80_DisplacedTrack_v10); // Already in MET trigger list
+       fChain->SetBranchAddress("HLT_HT400_DisplacedDijet40_DisplacedTrack_v10", &HLT_HT400_DisplacedDijet40_DisplacedTrack_v10, &b_HLT_HT400_DisplacedDijet40_DisplacedTrack_v10);
+//       fChain->SetBranchAddress("HLT_HT650_DisplacedDijet60_Inclusive_v10", &HLT_HT650_DisplacedDijet60_Inclusive_v10, &b_HLT_HT650_DisplacedDijet60_Inclusive_v10); // Already in MET trigger list
+       fChain->SetBranchAddress("HLT_HT550_DisplacedDijet80_Inclusive_v8", &HLT_HT550_DisplacedDijet80_Inclusive_v8, &b_HLT_HT550_DisplacedDijet80_Inclusive_v8);
+       fChain->SetBranchAddress("HLT_HT550_DisplacedDijet60_Inclusive_v10", &HLT_HT550_DisplacedDijet60_Inclusive_v10, &b_HLT_HT550_DisplacedDijet60_Inclusive_v10);
+//       fChain->SetBranchAddress("HLT_HT650_DisplacedDijet80_Inclusive_v11", &HLT_HT650_DisplacedDijet80_Inclusive_v11, &b_HLT_HT650_DisplacedDijet80_Inclusive_v11); // Already in MET trigger list
+//       fChain->SetBranchAddress("HLT_HT750_DisplacedDijet80_Inclusive_v11", &HLT_HT750_DisplacedDijet80_Inclusive_v11, &b_HLT_HT750_DisplacedDijet80_Inclusive_v11); // Already in MET trigger list
+   }
+
+   // Photon trigger branches 2017
+   if ( !is2016 ) {
+       fChain->SetBranchAddress("HLT_DoublePhoton33_CaloIdL_v5", &HLT_DoublePhoton33_CaloIdL_v5, &b_HLT_DoublePhoton33_CaloIdL_v5);
+       fChain->SetBranchAddress("HLT_DoublePhoton70_v5", &HLT_DoublePhoton70_v5, &b_HLT_DoublePhoton70_v5);
+       fChain->SetBranchAddress("HLT_DoublePhoton85_v13", &HLT_DoublePhoton85_v13, &b_HLT_DoublePhoton85_v13);
+       fChain->SetBranchAddress("HLT_TriplePhoton_20_20_20_CaloIdLV2_v2", &HLT_TriplePhoton_20_20_20_CaloIdLV2_v2, &b_HLT_TriplePhoton_20_20_20_CaloIdLV2_v2);
+       fChain->SetBranchAddress("HLT_TriplePhoton_20_20_20_CaloIdLV2_R9IdVL_v2", &HLT_TriplePhoton_20_20_20_CaloIdLV2_R9IdVL_v2, &b_HLT_TriplePhoton_20_20_20_CaloIdLV2_R9IdVL_v2);
+       fChain->SetBranchAddress("HLT_TriplePhoton_30_30_10_CaloIdLV2_v3", &HLT_TriplePhoton_30_30_10_CaloIdLV2_v3, &b_HLT_TriplePhoton_30_30_10_CaloIdLV2_v3);
+       fChain->SetBranchAddress("HLT_TriplePhoton_30_30_10_CaloIdLV2_R9IdVL_v3", &HLT_TriplePhoton_30_30_10_CaloIdLV2_v3, &b_HLT_TriplePhoton_30_30_10_CaloIdLV2_R9IdVL_v3);
+       fChain->SetBranchAddress("HLT_TriplePhoton_35_35_5_CaloIdLV2_R9IdVL_v3", &HLT_TriplePhoton_35_35_5_CaloIdLV2_R9IdVL_v3, &b_HLT_TriplePhoton_35_35_5_CaloIdLV2_R9IdVL_v3);
+       fChain->SetBranchAddress("HLT_Photon25_v2", &HLT_Photon25_v2, &b_HLT_Photon25_v2);
+       fChain->SetBranchAddress("HLT_Photon33_v4", &HLT_Photon33_v4, &b_HLT_Photon33_v4);
+       fChain->SetBranchAddress("HLT_Photon50_v12", &HLT_Photon50_v12, &b_HLT_Photon50_v12);
+       fChain->SetBranchAddress("HLT_Photon75_v12", &HLT_Photon75_v12, &b_HLT_Photon75_v12);
+       fChain->SetBranchAddress("HLT_Photon90_v12", &HLT_Photon90_v12, &b_HLT_Photon90_v12);
+       fChain->SetBranchAddress("HLT_Photon120_v12", &HLT_Photon120_v12, &b_HLT_Photon120_v12);
+       fChain->SetBranchAddress("HLT_Photon150_v5", &HLT_Photon150_v5, &b_HLT_Photon150_v5);
+       fChain->SetBranchAddress("HLT_Photon175_v13", &HLT_Photon175_v13, &b_HLT_Photon175_v13);
+       fChain->SetBranchAddress("HLT_Photon200_v12", &HLT_Photon200_v12, &b_HLT_Photon200_v12);
+       fChain->SetBranchAddress("HLT_Photon50_R9Id90_HE10_IsoM_v13", &HLT_Photon50_R9Id90_HE10_IsoM_v13, &b_HLT_Photon50_R9Id90_HE10_IsoM_v13);
+       fChain->SetBranchAddress("HLT_Photon75_R9Id90_HE10_IsoM_v13", &HLT_Photon75_R9Id90_HE10_IsoM_v13, &b_HLT_Photon75_R9Id90_HE10_IsoM_v13);
+       fChain->SetBranchAddress("HLT_Photon90_R9Id90_HE10_IsoM_v13", &HLT_Photon90_R9Id90_HE10_IsoM_v13, &b_HLT_Photon90_R9Id90_HE10_IsoM_v13);
+       fChain->SetBranchAddress("HLT_Photon120_R9Id90_HE10_IsoM_v13", &HLT_Photon120_R9Id90_HE10_IsoM_v13, &b_HLT_Photon120_R9Id90_HE10_IsoM_v13);
+       fChain->SetBranchAddress("HLT_Photon165_R9Id90_HE10_IsoM_v14", &HLT_Photon165_R9Id90_HE10_IsoM_v14, &b_HLT_Photon165_R9Id90_HE10_IsoM_v14);
+       fChain->SetBranchAddress("HLT_Photon90_CaloIdL_PFHT700_v12", &HLT_Photon90_CaloIdL_PFHT700_v12, &b_HLT_Photon90_CaloIdL_PFHT700_v12);
+
+       fChain->SetBranchAddress("HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90_v12", &HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90_v12, &b_HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90_v12);
+       fChain->SetBranchAddress("HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass95_v12", &HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass95_v12, &b_HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass95_v12);
+       fChain->SetBranchAddress("HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55_v13", &HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55_v13, &b_HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55_v13);
+       fChain->SetBranchAddress("HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_NoPixelVeto_Mass55_v12", &HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_NoPixelVeto_Mass55_v12, &b_HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_NoPixelVeto_Mass55_v12);
+       fChain->SetBranchAddress("HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_NoPixelVeto_Mass55_v12", &HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_NoPixelVeto_Mass55_v12, &b_HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_NoPixelVeto_Mass55_v12);
+       fChain->SetBranchAddress("HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55_v13", &HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55_v13, &b_HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55_v13);
+   
+       fChain->SetBranchAddress("HLT_Photon60_R9Id90_CaloIdL_IsoL_DisplacedIdL_v4", &HLT_Photon60_R9Id90_CaloIdL_IsoL_DisplacedIdL_v4, &b_HLT_Photon60_R9Id90_CaloIdL_IsoL_DisplacedIdL_v4);
+       fChain->SetBranchAddress("HLT_Photon60_R9Id90_CaloIdL_IsoL_DisplacedIdL_PFHT350MinPFJet15_v7", &HLT_Photon60_R9Id90_CaloIdL_IsoL_DisplacedIdL_PFHT350MinPFJet15_v7, &b_HLT_Photon60_R9Id90_CaloIdL_IsoL_DisplacedIdL_PFHT350MinPFJet15_v7);
+       fChain->SetBranchAddress("HLT_Photon20_HoverELoose_v9", &HLT_Photon20_HoverELoose_v9, &b_HLT_Photon20_HoverELoose_v9);
+       fChain->SetBranchAddress("HLT_Photon30_HoverELoose_v9", &HLT_Photon30_HoverELoose_v9, &b_HLT_Photon30_HoverELoose_v9);
+       fChain->SetBranchAddress("HLT_Photon40_HoverELoose_v9", &HLT_Photon40_HoverELoose_v9, &b_HLT_Photon40_HoverELoose_v9);
+       fChain->SetBranchAddress("HLT_Photon50_HoverELoose_v9", &HLT_Photon50_HoverELoose_v9, &b_HLT_Photon50_HoverELoose_v9);
+       fChain->SetBranchAddress("HLT_Photon60_HoverELoose_v9", &HLT_Photon60_HoverELoose_v9, &b_HLT_Photon60_HoverELoose_v9);
+   }
+
    //MET trigger branches
    if (is2016)
    {
@@ -2263,38 +2421,38 @@ inline AnalysisEvent::AnalysisEvent(const bool isMC,
        fChain->SetBranchAddress("HLT_MET120_IsoTrk50_v6", &HLT_MET120_IsoTrk50_v6, &b_HLT_MET120_IsoTrk50_v6);
        fChain->SetBranchAddress("HLT_MET120_IsoTrk50_v7", &HLT_MET120_IsoTrk50_v7, &b_HLT_MET120_IsoTrk50_v7);
        fChain->SetBranchAddress("HLT_MET120_IsoTrk50_v8", &HLT_MET120_IsoTrk50_v8, &b_HLT_MET120_IsoTrk50_v8);
-       fChain->SetBranchAddress("HLT_HT430_DisplacedDijet40_DisplacedTrack_v10", &HLT_HT430_DisplacedDijet40_DisplacedTrack_v10, &b_HLT_HT430_DisplacedDijet40_DisplacedTrack_v10);
+       fChain->SetBranchAddress("HLT_HT430_DisplacedDijet40_DisplacedTrack_v10", &HLT_HT430_DisplacedDijet40_DisplacedTrack_v10, &b_HLT_HT430_DisplacedDijet40_DisplacedTrack_v10); // Already in Displaced Jets trigger list
        fChain->SetBranchAddress("HLT_HT430_DisplacedDijet40_DisplacedTrack_v11", &HLT_HT430_DisplacedDijet40_DisplacedTrack_v11, &b_HLT_HT430_DisplacedDijet40_DisplacedTrack_v11);
        fChain->SetBranchAddress("HLT_HT430_DisplacedDijet40_DisplacedTrack_v5", &HLT_HT430_DisplacedDijet40_DisplacedTrack_v5, &b_HLT_HT430_DisplacedDijet40_DisplacedTrack_v5);
        fChain->SetBranchAddress("HLT_HT430_DisplacedDijet40_DisplacedTrack_v6", &HLT_HT430_DisplacedDijet40_DisplacedTrack_v6, &b_HLT_HT430_DisplacedDijet40_DisplacedTrack_v6);
        fChain->SetBranchAddress("HLT_HT430_DisplacedDijet40_DisplacedTrack_v8", &HLT_HT430_DisplacedDijet40_DisplacedTrack_v8, &b_HLT_HT430_DisplacedDijet40_DisplacedTrack_v8);
        fChain->SetBranchAddress("HLT_HT430_DisplacedDijet40_DisplacedTrack_v9", &HLT_HT430_DisplacedDijet40_DisplacedTrack_v9, &b_HLT_HT430_DisplacedDijet40_DisplacedTrack_v9);
-       fChain->SetBranchAddress("HLT_HT430_DisplacedDijet60_DisplacedTrack_v10", &HLT_HT430_DisplacedDijet60_DisplacedTrack_v10, &b_HLT_HT430_DisplacedDijet60_DisplacedTrack_v10);
+       fChain->SetBranchAddress("HLT_HT430_DisplacedDijet60_DisplacedTrack_v10", &HLT_HT430_DisplacedDijet60_DisplacedTrack_v10, &b_HLT_HT430_DisplacedDijet60_DisplacedTrack_v10); // Already in Displaced Jets trigger list
        fChain->SetBranchAddress("HLT_HT430_DisplacedDijet60_DisplacedTrack_v11", &HLT_HT430_DisplacedDijet60_DisplacedTrack_v11, &b_HLT_HT430_DisplacedDijet60_DisplacedTrack_v11);
        fChain->SetBranchAddress("HLT_HT430_DisplacedDijet60_DisplacedTrack_v5", &HLT_HT430_DisplacedDijet60_DisplacedTrack_v5, &b_HLT_HT430_DisplacedDijet60_DisplacedTrack_v5);
        fChain->SetBranchAddress("HLT_HT430_DisplacedDijet60_DisplacedTrack_v6", &HLT_HT430_DisplacedDijet60_DisplacedTrack_v6, &b_HLT_HT430_DisplacedDijet60_DisplacedTrack_v6);
        fChain->SetBranchAddress("HLT_HT430_DisplacedDijet60_DisplacedTrack_v8", &HLT_HT430_DisplacedDijet60_DisplacedTrack_v8, &b_HLT_HT430_DisplacedDijet60_DisplacedTrack_v8);
        fChain->SetBranchAddress("HLT_HT430_DisplacedDijet60_DisplacedTrack_v9", &HLT_HT430_DisplacedDijet60_DisplacedTrack_v9, &b_HLT_HT430_DisplacedDijet60_DisplacedTrack_v9);
-       fChain->SetBranchAddress("HLT_HT430_DisplacedDijet80_DisplacedTrack_v10", &HLT_HT430_DisplacedDijet80_DisplacedTrack_v10, &b_HLT_HT430_DisplacedDijet80_DisplacedTrack_v10);
+       fChain->SetBranchAddress("HLT_HT430_DisplacedDijet80_DisplacedTrack_v10", &HLT_HT430_DisplacedDijet80_DisplacedTrack_v10, &b_HLT_HT430_DisplacedDijet80_DisplacedTrack_v10); // Already in Displaced Jet trigger list
        fChain->SetBranchAddress("HLT_HT430_DisplacedDijet80_DisplacedTrack_v11", &HLT_HT430_DisplacedDijet80_DisplacedTrack_v11, &b_HLT_HT430_DisplacedDijet80_DisplacedTrack_v11);
        fChain->SetBranchAddress("HLT_HT430_DisplacedDijet80_DisplacedTrack_v5", &HLT_HT430_DisplacedDijet80_DisplacedTrack_v5, &b_HLT_HT430_DisplacedDijet80_DisplacedTrack_v5);
        fChain->SetBranchAddress("HLT_HT430_DisplacedDijet80_DisplacedTrack_v6", &HLT_HT430_DisplacedDijet80_DisplacedTrack_v6, &b_HLT_HT430_DisplacedDijet80_DisplacedTrack_v6);
        fChain->SetBranchAddress("HLT_HT430_DisplacedDijet80_DisplacedTrack_v8", &HLT_HT430_DisplacedDijet80_DisplacedTrack_v8, &b_HLT_HT430_DisplacedDijet80_DisplacedTrack_v8);
        fChain->SetBranchAddress("HLT_HT430_DisplacedDijet80_DisplacedTrack_v9", &HLT_HT430_DisplacedDijet80_DisplacedTrack_v9, &b_HLT_HT430_DisplacedDijet80_DisplacedTrack_v9);
-       fChain->SetBranchAddress("HLT_HT650_DisplacedDijet60_Inclusive_v10", &HLT_HT650_DisplacedDijet60_Inclusive_v10, &b_HLT_HT650_DisplacedDijet60_Inclusive_v10);
+       fChain->SetBranchAddress("HLT_HT650_DisplacedDijet60_Inclusive_v10", &HLT_HT650_DisplacedDijet60_Inclusive_v10, &b_HLT_HT650_DisplacedDijet60_Inclusive_v10); // Already in Displaced Jet trigger list
        fChain->SetBranchAddress("HLT_HT650_DisplacedDijet60_Inclusive_v11", &HLT_HT650_DisplacedDijet60_Inclusive_v11, &b_HLT_HT650_DisplacedDijet60_Inclusive_v11);
        fChain->SetBranchAddress("HLT_HT650_DisplacedDijet60_Inclusive_v5", &HLT_HT650_DisplacedDijet60_Inclusive_v5, &b_HLT_HT650_DisplacedDijet60_Inclusive_v5);
        fChain->SetBranchAddress("HLT_HT650_DisplacedDijet60_Inclusive_v6", &HLT_HT650_DisplacedDijet60_Inclusive_v6, &b_HLT_HT650_DisplacedDijet60_Inclusive_v6);
        fChain->SetBranchAddress("HLT_HT650_DisplacedDijet60_Inclusive_v8", &HLT_HT650_DisplacedDijet60_Inclusive_v8, &b_HLT_HT650_DisplacedDijet60_Inclusive_v8);
        fChain->SetBranchAddress("HLT_HT650_DisplacedDijet60_Inclusive_v9", &HLT_HT650_DisplacedDijet60_Inclusive_v9, &b_HLT_HT650_DisplacedDijet60_Inclusive_v9);
        fChain->SetBranchAddress("HLT_HT650_DisplacedDijet80_Inclusive_v10", &HLT_HT650_DisplacedDijet80_Inclusive_v10, &b_HLT_HT650_DisplacedDijet80_Inclusive_v10);
-       fChain->SetBranchAddress("HLT_HT650_DisplacedDijet80_Inclusive_v11", &HLT_HT650_DisplacedDijet80_Inclusive_v11, &b_HLT_HT650_DisplacedDijet80_Inclusive_v11);
+       fChain->SetBranchAddress("HLT_HT650_DisplacedDijet80_Inclusive_v11", &HLT_HT650_DisplacedDijet80_Inclusive_v11, &b_HLT_HT650_DisplacedDijet80_Inclusive_v11); // Already in Displaced Jet trigger list
        fChain->SetBranchAddress("HLT_HT650_DisplacedDijet80_Inclusive_v12", &HLT_HT650_DisplacedDijet80_Inclusive_v12, &b_HLT_HT650_DisplacedDijet80_Inclusive_v12);
        fChain->SetBranchAddress("HLT_HT650_DisplacedDijet80_Inclusive_v6", &HLT_HT650_DisplacedDijet80_Inclusive_v6, &b_HLT_HT650_DisplacedDijet80_Inclusive_v6);
        fChain->SetBranchAddress("HLT_HT650_DisplacedDijet80_Inclusive_v7", &HLT_HT650_DisplacedDijet80_Inclusive_v7, &b_HLT_HT650_DisplacedDijet80_Inclusive_v7);
        fChain->SetBranchAddress("HLT_HT650_DisplacedDijet80_Inclusive_v9", &HLT_HT650_DisplacedDijet80_Inclusive_v9, &b_HLT_HT650_DisplacedDijet80_Inclusive_v9);
        fChain->SetBranchAddress("HLT_HT750_DisplacedDijet80_Inclusive_v10", &HLT_HT750_DisplacedDijet80_Inclusive_v10, &b_HLT_HT750_DisplacedDijet80_Inclusive_v10);
-       fChain->SetBranchAddress("HLT_HT750_DisplacedDijet80_Inclusive_v11", &HLT_HT750_DisplacedDijet80_Inclusive_v11, &b_HLT_HT750_DisplacedDijet80_Inclusive_v11);
+       fChain->SetBranchAddress("HLT_HT750_DisplacedDijet80_Inclusive_v11", &HLT_HT750_DisplacedDijet80_Inclusive_v11, &b_HLT_HT750_DisplacedDijet80_Inclusive_v11); // Already in Displaced Jet trigger list
        fChain->SetBranchAddress("HLT_HT750_DisplacedDijet80_Inclusive_v12", &HLT_HT750_DisplacedDijet80_Inclusive_v12, &b_HLT_HT750_DisplacedDijet80_Inclusive_v12);
        fChain->SetBranchAddress("HLT_HT750_DisplacedDijet80_Inclusive_v6", &HLT_HT750_DisplacedDijet80_Inclusive_v6, &b_HLT_HT750_DisplacedDijet80_Inclusive_v6);
        fChain->SetBranchAddress("HLT_HT750_DisplacedDijet80_Inclusive_v7", &HLT_HT750_DisplacedDijet80_Inclusive_v7, &b_HLT_HT750_DisplacedDijet80_Inclusive_v7);
