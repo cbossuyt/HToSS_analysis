@@ -94,9 +94,27 @@ class TriggerScaleFactors
 
     // trigger cuts
     bool metTriggerCut(const AnalysisEvent& event) const;
+    bool displacedJetsTriggerCut(const AnalysisEvent& event) const;
+    bool photonTriggerCut(const AnalysisEvent& event) const;
+    bool diphotonTriggerCut(const AnalysisEvent& event) const;
+    bool triphotonTriggerCut(const AnalysisEvent& event) const;
+    bool photonHETrig(const AnalysisEvent& event) const;
+    bool diphotonHETrig(const AnalysisEvent& event) const;
+    bool diphotonHEpixelVetoTrig(const AnalysisEvent& event) const;
+    bool diphotonHEnoPixelVetoTrig(const AnalysisEvent& event) const;
+    bool photonDisplacedIdTrig(const AnalysisEvent& event) const;
+    bool photonHoverETrig(const AnalysisEvent& event) const;
+
+    // met filter cuts
     bool metFilters(const AnalysisEvent& event, const bool isMC) const;
 
     // Efficiencies
+    double numberPassedDisplacedJets[2];
+    double numberTriggeredDisplacedJets[2];
+
+    double numberPassedPhotons[2];
+    double numberTriggeredPhotons[2];
+
     double numberPassedElectrons[2];
     double numberTriggeredDoubleElectrons[2];
 
@@ -107,10 +125,14 @@ class TriggerScaleFactors
     double numberTriggeredMuonElectrons[2];
 
     // Systematic variables
+    double numberSelectedDisplacedJets[2];
+    double numberSelectedPhotons[2];
     double numberSelectedElectrons[2];
     double numberSelectedMuons[2];
     double numberSelectedMuonElectrons[2];
 
+    double numberSelectedDisplacedJetsTriggered[2];
+    double numberSelectedPhotonsTriggered[2];
     double numberSelectedDoubleElectronsTriggered[2];
     double numberSelectedDoubleMuonsTriggered[2];
     double numberSelectedMuonElectronsTriggered[2]; // Double MuonEG

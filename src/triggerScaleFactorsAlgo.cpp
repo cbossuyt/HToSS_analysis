@@ -1444,6 +1444,125 @@ bool TriggerScaleFactors::metTriggerCut(const AnalysisEvent& event) const
     // clang-format on
 }
 
+bool TriggerScaleFactors::displacedJetsTriggerCut(const AnalysisEvent& event) const
+{
+    // clang-format off
+    return is2016_
+               ? false
+               : event.HLT_HT430_DisplacedDijet40_DisplacedTrack_v10 > 0
+                     || event.HLT_HT430_DisplacedDijet60_DisplacedTrack_v10 > 0 
+                     || event.HLT_HT430_DisplacedDijet80_DisplacedTrack_v10 > 0
+                     || event.HLT_HT400_DisplacedDijet40_DisplacedTrack_v10 > 0
+                     || event.HLT_HT650_DisplacedDijet60_Inclusive_v10 > 0
+                     || event.HLT_HT550_DisplacedDijet80_Inclusive_v8 > 0
+                     || event.HLT_HT550_DisplacedDijet60_Inclusive_v10 > 0
+                     || event.HLT_HT650_DisplacedDijet80_Inclusive_v11 > 0
+                     || event.HLT_HT750_DisplacedDijet80_Inclusive_v11 > 0;
+    // clang-format on
+}
+
+bool TriggerScaleFactors::photonTriggerCut(const AnalysisEvent& event) const
+{
+    // clang-format off
+    return is2016_
+               ? false
+               : event.HLT_Photon25_v2 > 0
+               || event.HLT_Photon33_v4 > 0
+               || event.HLT_Photon50_v12 > 0
+               || event.HLT_Photon75_v12 > 0
+               || event.HLT_Photon90_v12 > 0
+               || event.HLT_Photon120_v12 > 0
+               || event.HLT_Photon150_v5 > 0
+               || event.HLT_Photon175_v13 > 0
+               || event.HLT_Photon200_v12 > 0;
+    // clang-format on
+}
+
+bool TriggerScaleFactors::diphotonTriggerCut(const AnalysisEvent& event) const
+{
+    // clang-format off
+    return is2016_
+               ? false
+               : event.HLT_DoublePhoton33_CaloIdL_v5 > 0
+               || event.HLT_DoublePhoton70_v5 > 0
+               || event.HLT_DoublePhoton85_v13 > 0;
+    // clang-format on
+}
+
+bool TriggerScaleFactors::triphotonTriggerCut(const AnalysisEvent& event) const
+{
+    // clang-format off
+    return is2016_
+               ? false
+               : event.HLT_TriplePhoton_20_20_20_CaloIdLV2_v2 > 0
+               || event.HLT_TriplePhoton_20_20_20_CaloIdLV2_R9IdVL_v2 > 0
+               || event.HLT_TriplePhoton_30_30_10_CaloIdLV2_v3 > 0
+               || event.HLT_TriplePhoton_30_30_10_CaloIdLV2_R9IdVL_v3 > 0
+               || event.HLT_TriplePhoton_35_35_5_CaloIdLV2_R9IdVL_v3 > 0;
+    // clang-format on
+}
+
+bool TriggerScaleFactors::photonHETrig(const AnalysisEvent& event) const
+{
+    // clang-format off
+    return is2016_
+               ? false
+               : event.HLT_Photon50_R9Id90_HE10_IsoM_v13 > 0
+               || event.HLT_Photon75_R9Id90_HE10_IsoM_v13 > 0
+               || event.HLT_Photon90_R9Id90_HE10_IsoM_v13 > 0
+               || event.HLT_Photon120_R9Id90_HE10_IsoM_v13 > 0
+               || event.HLT_Photon165_R9Id90_HE10_IsoM_v14 > 0;
+    // clang-format on
+}
+bool TriggerScaleFactors::diphotonHETrig(const AnalysisEvent& event) const
+{
+    // clang-format off
+    return is2016_
+               ? false
+               : event.HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90_v12 > 0
+               || event.HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass95_v12 > 0;
+    // clang-format on
+}
+bool TriggerScaleFactors::diphotonHEpixelVetoTrig(const AnalysisEvent& event) const
+{
+    // clang-format off
+    return is2016_
+               ? false
+               : event.HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55_v13 > 0
+               || event.HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55_v13 > 0;
+    // clang-format on
+}
+bool TriggerScaleFactors::diphotonHEnoPixelVetoTrig(const AnalysisEvent& event) const
+{
+    // clang-format off
+    return is2016_
+               ? false
+               : event.HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_NoPixelVeto_Mass55_v12 > 0
+               || event.HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_NoPixelVeto_Mass55_v12 > 0;
+    // clang-format on
+}
+bool TriggerScaleFactors::photonDisplacedIdTrig(const AnalysisEvent& event) const
+{
+    // clang-format off
+    return is2016_
+               ? false
+               : event.HLT_Photon60_R9Id90_CaloIdL_IsoL_DisplacedIdL_v4 > 0
+               || event.HLT_Photon60_R9Id90_CaloIdL_IsoL_DisplacedIdL_PFHT350MinPFJet15_v7 > 0;
+    // clang-format on
+}
+bool TriggerScaleFactors::photonHoverETrig(const AnalysisEvent& event) const
+{
+    // clang-format off
+    return is2016_
+               ? false
+               : event.HLT_Photon20_HoverELoose_v9 > 0
+               || event.HLT_Photon30_HoverELoose_v9 > 0
+               || event.HLT_Photon40_HoverELoose_v9 > 0
+               || event.HLT_Photon50_HoverELoose_v9 > 0
+               || event.HLT_Photon60_HoverELoose_v9 > 0;
+    // clang-format on
+}
+
 bool TriggerScaleFactors::metFilters(const AnalysisEvent& event,
                                      const bool isMC) const
 {

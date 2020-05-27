@@ -1792,6 +1792,18 @@ class AnalysisEvent
     bool eeTrig() const;
     bool muEGTrig() const;
     bool mumuTrig() const;
+
+//    bool displacedJetTrig() const;
+//    bool photonTrig() const;
+//    bool diphotonTrig() const;
+//    bool triphotonTrig() const;
+//    bool photonHETrig() const;
+//    bool diphotonHETrig() const;
+//    bool diphotonHEpixelVetoTrig() const;
+//    bool diphotonHEnoPixelVetoTrig() const;
+//    bool photonDisplacedIdTrig() const;
+//    bool photonHoverETrig() const;
+
 };
 
 inline AnalysisEvent::AnalysisEvent(const bool isMC,
