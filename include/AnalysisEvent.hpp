@@ -1763,7 +1763,10 @@ class AnalysisEvent
     std::vector<int> electronIndexLoose;
     std::vector<int> muonIndexTight;
     std::vector<int> muonIndexLoose;
+    std::vector<int> photonIndexTight;
+    std::vector<int> photonIndexLoose;
     std::vector<int> jetIndex;
+    std::vector<int> displacedJetIndex;
     std::vector<int> bTagIndex;
 
     std::pair<TLorentzVector, TLorentzVector> zPairLeptons;

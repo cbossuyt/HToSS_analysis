@@ -37,7 +37,7 @@ TriggerScaleFactors::TriggerScaleFactors()
 
     is2016_{false}
     , zCuts_{false}
-    , jetCuts_{false}
+    , dileptonJetCuts_{false}
     , bCuts_{false}
     , applyHltSf_{false}
     , isPart1_{false}
@@ -59,16 +59,29 @@ TriggerScaleFactors::TriggerScaleFactors()
     , numberTriggeredMuonElectrons()
     ,
 
+    numberPassedDisplacedJetsInclusive()
+    , numberTriggeredDisplacedJetsInclusive()
+    , numberPassedDisplacedJetsTracks()
+    , numberTriggeredDisplacedJetsTracks()
+    ,
+
     // alpha systematics
 
     numberSelectedElectrons()
     , numberSelectedMuons()
     , numberSelectedMuonElectrons()
+
+    , numberSelectedDisplacedJetsInclusive()
+    , numberSelectedDisplacedJetsTracks()
     ,
 
     numberSelectedDoubleElectronsTriggered()
     , numberSelectedDoubleMuonsTriggered()
     , numberSelectedMuonElectronsTriggered()
+
+    , numberSelectedDisplacedJetsInclusiveTriggered()
+    , numberSelectedDisplacedJetsTracksTriggered()
+
 {
     //// Plots for turn on curve studies
 
@@ -292,7 +305,7 @@ void TriggerScaleFactors::parseCommandLineArguements(int argc, char* argv[])
         "Set postfix for plots. Overrides the config file.")(
         "2016", po::bool_switch(&is2016_), "Use 2016 conditions (SFs, et al.)")(
         "zCuts", po::bool_switch(&zCuts_), "Use z mass veto cut")(
-        "jetCuts", po::bool_switch(&jetCuts_), "Use jet cuts")(
+        "dileptonJetCuts", po::bool_switch(&dileptonJetCuts_), "Use jet cuts")(
         "bCuts", po::bool_switch(&bCuts_), "Use btag cuts")(
         "nFiles,f",
         po::value<int>(&numFiles)->default_value(-1),
@@ -563,37 +576,48 @@ void TriggerScaleFactors::runMainAnalysis()
             }
 
             // If checking impact of jet and bjet cuts add this bool ...
-            bool passJetSelection = true;
-            if (jetCuts_)
+            bool passDileptonJetSelection = true;
+            if (dileptonJetCuts_)
             {
-                passJetSelection = makeJetCuts(event, (dataset->isMC()));
+                passDileptonJetSelection = makeDileptonJetCuts(event, (dataset->isMC()));
             }
 
             // Does this event pass tight electron cut?
             // Create electron index
             event.electronIndexTight = getTightElectrons(event);
             bool passDoubleElectronSelection(passDileptonSelection(event, 2)
-                                             && passJetSelection);
+                                             && passDileptonJetSelection);
             // Does this event pass tight muon cut?
             // Create muon index
             event.muonIndexTight = getTightMuons(event);
             bool passDoubleMuonSelection(passDileptonSelection(event, 0)
-                                         && passJetSelection);
+                                         && passDileptonJetSelection);
 
             bool passMuonElectronSelection(passDileptonSelection(event, 1)
-                                           && passJetSelection);
+                                           && passDileptonJetSelection);
+
+            //Does this event pass displaced jet event selection cuts?
+            bool passOfflineDisplacedJetInclusiveSelection (passDisplacedJetSelection(event, true));
+            bool passOfflineDisplacedJetTracksSelection (passDisplacedJetSelection(event, false));
 
             // Triggering stuff
             int triggerDoubleEG(0), triggerDoubleMuon(0),
                 triggerMuonElectron(0); // Passes Double Lepton Trigger
+
             int triggerMetDoubleEG(0), triggerMetDoubleMuon(0),
                 triggerMetMuonElectron(
                     0); // Passes Double Lepton and MET triggers
 
-            // Passes event selection and MET triggers
+            int triggerDisplacedJetInclusive(0), triggerDisplacedJetTracks(0); // Passes displaced jet triggers
+            int triggerDisplacedJetInclusiveHt(0), triggerDisplacedJetTracksHt(0); // Passses the HT cuts on top of triggers
+
+            // Passes dilepton event selection and MET triggers
             int triggerMetElectronSelection(0), triggerMetMuonSelection(0),
                 triggerMetMuonElectronSelection(
                     0); // Passes lepton selection and MET triggers
+
+            // Passes displaced dijet event selection and cross triggers
+            // NONE YET
 
             // Does event pass Single/Double EG trigger and the electron
             // selection?
@@ -618,6 +642,18 @@ void TriggerScaleFactors::runMainAnalysis()
                 triggerMetMuonElectron =
                     triggerMuonElectron && metTriggerCut(event);
             }
+
+            // Does event pass displaced jet trigger and displaced jet selections?
+            if (passOfflineDisplacedJetInclusiveSelection && !passOfflineDisplacedJetTracksSelection) {
+                triggerDisplacedJetInclusive = displacedJetsInclusiveTriggerCut(event);
+                triggerDisplacedJetInclusiveHt = triggerDisplacedJetInclusive && HTcheck( event, 700., (dataset->isMC()) );
+            }
+
+            if (passOfflineDisplacedJetTracksSelection) {
+                triggerDisplacedJetTracks = displacedJetsTracksTriggerCut(event);
+                triggerDisplacedJetTracksHt = triggerDisplacedJetTracks && HTcheck( event, 480., (dataset->isMC()) );
+            }
+
             //
             // Does event pass either double lepton seletion and the MET
             // triggers?
@@ -633,6 +669,9 @@ void TriggerScaleFactors::runMainAnalysis()
             {
                 triggerMetMuonElectronSelection = (metTriggerCut(event));
             }
+
+            // Does event pass either displaced jet cuts and cross trigger?
+            // NONE YET
 
             if (dataset->isMC())
             { // If is MC
@@ -697,6 +736,7 @@ void TriggerScaleFactors::runMainAnalysis()
                     }
                 }
 
+                // Dilepton stuff
                 numberPassedElectrons[0] +=
                     triggerMetElectronSelection
                     * eventWeight; // Number of electrons passing the cross
@@ -724,7 +764,15 @@ void TriggerScaleFactors::runMainAnalysis()
                                    // trigger+muonEG selection AND muonEG
                                    // trigger
 
+               // Displaced jet stuff
+
+               numberPassedDisplacedJetsInclusive[0]     += passOfflineDisplacedJetInclusiveSelection * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection and cross trigger (NO cross trigger currently)
+               numberTriggeredDisplacedJetsInclusive [0] += triggerDisplacedJetInclusiveHt * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection (and HT check) and trigger AND cross trigger (NO cross trigger currently)
+               numberPassedDisplacedJetsTracks[0]        += passOfflineDisplacedJetInclusiveSelection * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection and cross trigger (NO cross trigger currently)
+               numberTriggeredDisplacedJetsTracks[0]     += triggerDisplacedJetInclusiveHt * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection (and HT check) and trigger AND cross trigger (NO cross trigger currently)
+
                 // Systematic stuff
+                // Dilepton stuff
                 numberSelectedElectrons[0] +=
                     passDoubleElectronSelection * eventWeight;
                 numberSelectedMuons[0] += passDoubleMuonSelection * eventWeight;
@@ -733,11 +781,18 @@ void TriggerScaleFactors::runMainAnalysis()
 
                 numberSelectedDoubleElectronsTriggered[0] +=
                     triggerDoubleEG * eventWeight;
-                ;
                 numberSelectedDoubleMuonsTriggered[0] +=
                     triggerDoubleMuon * eventWeight * SF;
                 numberSelectedMuonElectronsTriggered[0] +=
                     triggerMuonElectron * eventWeight;
+
+                // Displaced jet stuff
+                numberSelectedDisplacedJetsInclusive[0] += passOfflineDisplacedJetInclusiveSelection * eventWeight;
+                numberSelectedDisplacedJetsTracks[0] += passOfflineDisplacedJetTracksSelection * eventWeight;
+
+                numberSelectedDisplacedJetsInclusiveTriggered[0] += triggerDisplacedJetInclusiveHt * eventWeight;
+                numberSelectedDisplacedJetsTracksTriggered[0] +=  triggerDisplacedJetTracksHt * eventWeight;
+
 
                 // Histos bit
                 if (triggerMetElectronSelection > 0)
@@ -831,6 +886,7 @@ void TriggerScaleFactors::runMainAnalysis()
             else
             { // Else is data
                 // SFs bit
+		// Dilepton stuff
                 numberPassedElectrons[1] +=
                     triggerMetElectronSelection
                     * eventWeight; // Number of electrons passing the cross
@@ -858,6 +914,12 @@ void TriggerScaleFactors::runMainAnalysis()
                     * eventWeight; // Number muonEGs passing both cross
                                    // trigger+muonEG selection AND muonEG
                                    // trigger
+
+               // Displaced jet stuff
+               numberPassedDisplacedJetsInclusive[1]     += passOfflineDisplacedJetInclusiveSelection * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection and cross trigger (NO cross trigger currently)
+               numberTriggeredDisplacedJetsInclusive [1] += triggerDisplacedJetInclusiveHt * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection (and HT check) and trigger AND cross trigger (NO cross trigger currently)
+               numberPassedDisplacedJetsTracks[1]        += passOfflineDisplacedJetInclusiveSelection * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection and cross trigger (NO cross trigger currently)
+               numberTriggeredDisplacedJetsTracks[1]     += triggerDisplacedJetInclusiveHt * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection (and HT check) and trigger AND cross trigger (NO cross trigger currently)
 
                 // NB No systematic stuff required for data
 
@@ -1067,9 +1129,16 @@ std::vector<int>
     return muons;
 }
 
+std::vector<int>
+    TriggerScaleFactors::getTightPhotons(const AnalysisEvent& event) const
+{
+
+}
+
 bool TriggerScaleFactors::passDileptonSelection(AnalysisEvent& event,
                                                 const int nElectrons) const
 {
+return true; /*
     // Check if there are at least two electrons first. Otherwise use muons.
 
     float invMass(0.0);
@@ -1226,11 +1295,34 @@ bool TriggerScaleFactors::passDileptonSelection(AnalysisEvent& event,
         }
     }
 
-    return false;
+    return false; */
 }
+
+bool TriggerScaleFactors::passDisplacedJetSelection(AnalysisEvent& event,  const bool isInclusive, const bool isMC) const
+{
+  std::vector<int> jets;
+  for (int i{0}; i < event.numJetPF2PAT; i++)
+    {
+      TLorentzVector jetVec{getJetLVec(event, i, isMC)};
+      if (jetVec.Pt() <= 40. && !isInclusive) continue;
+      if (jetVec.Pt() <= 60. && isInclusive) continue;
+      if (std::abs(jetVec.Eta()) >= 2.0) continue;
+      
+      bool jetId{true};
+      
+      jets.emplace_back(i);
+    }
+  if (jets.size() > 1) return true;
+  else return false;
+}
+
+//bool TriggerScaleFactors::passDiphotonSelection(AnalysisEvent& event) const
+//{
+//}
 
 bool TriggerScaleFactors::metTriggerCut(const AnalysisEvent& event) const
 {
+return true; /*
     // clang-format off
     return is2016_
                ? event.HLT_MET200_v1 > 0 || event.HLT_MET200_v2 > 0
@@ -1442,9 +1534,22 @@ bool TriggerScaleFactors::metTriggerCut(const AnalysisEvent& event) const
                      || event.HLT_PFHT800_PFMET85_PFMHT85_IDTight_v8 > 0
                      || event.HLT_PFHT800_PFMET85_PFMHT85_IDTight_v9 > 0;
     // clang-format on
+*/}
+
+bool TriggerScaleFactors::displacedJetsInclusiveTriggerCut(const AnalysisEvent& event) const
+{
+    // clang-format off
+    return is2016_
+               ? false
+               : event.HLT_HT650_DisplacedDijet60_Inclusive_v10 > 0
+                     || event.HLT_HT550_DisplacedDijet80_Inclusive_v8 > 0
+                     || event.HLT_HT550_DisplacedDijet60_Inclusive_v10 > 0
+                     || event.HLT_HT650_DisplacedDijet80_Inclusive_v11 > 0
+                     || event.HLT_HT750_DisplacedDijet80_Inclusive_v11 > 0;
+    // clang-format on
 }
 
-bool TriggerScaleFactors::displacedJetsTriggerCut(const AnalysisEvent& event) const
+bool TriggerScaleFactors::displacedJetsTracksTriggerCut(const AnalysisEvent& event) const
 {
     // clang-format off
     return is2016_
@@ -1452,12 +1557,7 @@ bool TriggerScaleFactors::displacedJetsTriggerCut(const AnalysisEvent& event) co
                : event.HLT_HT430_DisplacedDijet40_DisplacedTrack_v10 > 0
                      || event.HLT_HT430_DisplacedDijet60_DisplacedTrack_v10 > 0 
                      || event.HLT_HT430_DisplacedDijet80_DisplacedTrack_v10 > 0
-                     || event.HLT_HT400_DisplacedDijet40_DisplacedTrack_v10 > 0
-                     || event.HLT_HT650_DisplacedDijet60_Inclusive_v10 > 0
-                     || event.HLT_HT550_DisplacedDijet80_Inclusive_v8 > 0
-                     || event.HLT_HT550_DisplacedDijet60_Inclusive_v10 > 0
-                     || event.HLT_HT650_DisplacedDijet80_Inclusive_v11 > 0
-                     || event.HLT_HT750_DisplacedDijet80_Inclusive_v11 > 0;
+                     || event.HLT_HT400_DisplacedDijet40_DisplacedTrack_v10 > 0;
     // clang-format on
 }
 
@@ -1595,7 +1695,20 @@ bool TriggerScaleFactors::metFilters(const AnalysisEvent& event,
     return true;
 }
 
-bool TriggerScaleFactors::makeJetCuts(AnalysisEvent& event,
+bool TriggerScaleFactors::HTcheck(AnalysisEvent& event, const double threshold, const bool isMC) const
+{
+    double hT {0};
+    for (int i{0}; i < event.numJetPF2PAT; i++)
+    {
+        TLorentzVector jetVec{getJetLVec(event, i, isMC)};
+        hT += jetVec.Pt();
+    }
+
+    if (hT >= threshold) return true;
+    else return false;
+}
+
+bool TriggerScaleFactors::makeDileptonJetCuts(AnalysisEvent& event,
                                       const bool isMC) const
 {
     std::vector<int> jets;
@@ -1749,7 +1862,6 @@ bool TriggerScaleFactors::makeJetCuts(AnalysisEvent& event,
             return false;
         }
     }
-
     return true;
 }
 
@@ -2613,6 +2725,10 @@ void TriggerScaleFactors::savePlots()
     double muonElectronEfficiencyMC = numberTriggeredMuonElectrons[0]
                                       / (numberPassedMuonElectrons[0] + 1.0e-6);
 
+    //// DisplacedJetsTriggers
+    double displacedJetsInclusiveEfficiencyMC = numberTriggeredDisplacedJetsInclusive[0] / (numberPassedDisplacedJetsInclusive[0] + 1.0e-06);
+    double displacedJetsTracksEfficiencyMC    = numberTriggeredDisplacedJetsTracks[0]    / (numberPassedDisplacedJetsTracks[0] + 1.0e-06);
+
     // Calculate Data efficiency
 
     //// DoubleLeptonTriggers
@@ -2624,6 +2740,10 @@ void TriggerScaleFactors::savePlots()
         numberTriggeredMuonElectrons[1]
         / (numberPassedMuonElectrons[1] + 1.0e-6);
 
+    //// DisplacedJetsTriggers
+    double displacedJetsInclusiveEfficiencyData = numberTriggeredDisplacedJetsInclusive[1] / (numberPassedDisplacedJetsInclusive[1] + 1.0e-06);
+    double displacedJetsTracksEfficiencyData    = numberTriggeredDisplacedJetsTracks[1]    / (numberPassedDisplacedJetsTracks[1] + 1.0e-06);
+
     // Calculate SF
 
     //// LeptonTriggers
@@ -2633,6 +2753,10 @@ void TriggerScaleFactors::savePlots()
         doubleMuonEfficiencyData / (doubleMuonEfficiencyMC + 1.0e-6);
     double muonElectronSF =
         muonElectronEfficiencyData / (muonElectronEfficiencyMC + 1.0e-6);
+
+    //// DisplacedJetsTriggers	
+    double displacedJetsInclusiveSF = displacedJetsInclusiveEfficiencyData / (displacedJetsInclusiveEfficiencyMC + 1.0e-6);
+    double displacedJetsTracksSF    = displacedJetsTracksEfficiencyData    / (displacedJetsTracksEfficiencyMC + 1.0e-6);
 
     // Calculate alphas
     double alphaDoubleElectron =
@@ -2651,6 +2775,13 @@ void TriggerScaleFactors::savePlots()
          * (numberPassedMuonElectrons[0] / numberSelectedMuonElectrons[0]))
         / (numberTriggeredMuonElectrons[0] / numberSelectedMuonElectrons[0]
            + 1.0e-6);
+
+    double alphaDisplacedJetsInclusive = ((numberSelectedDisplacedJetsInclusiveTriggered[0] / numberSelectedDisplacedJetsInclusive[0])
+                                         * (numberPassedDisplacedJetsInclusive[0] / numberSelectedDisplacedJetsInclusive[0]))
+                                         / (numberTriggeredDisplacedJetsInclusive[0] / numberSelectedDisplacedJetsInclusive[0] + 1.0e-6);
+    double alphaDisplacedJetsTracks = ((numberSelectedDisplacedJetsTracksTriggered[0] / numberSelectedDisplacedJetsTracks[0])
+                                         * (numberPassedDisplacedJetsTracks[0] / numberSelectedDisplacedJetsTracks[0]))
+                                         / (numberTriggeredDisplacedJetsTracks[0] / numberSelectedDisplacedJetsTracks[0] + 1.0e-6);
 
     // Calculate uncertainities
 
@@ -2727,6 +2858,27 @@ void TriggerScaleFactors::savePlots()
                                       level,
                                       false);
 
+    double displacedJetsInclusiveDataUpperUncert = displacedJetsInclusiveEfficiencyData 
+        - TEfficiency::ClopperPearson(numberPassedDisplacedJetsInclusive[1], numberTriggeredDisplacedJetsInclusive[1], level, true);
+    double displacedJetsInclusiveMcUpperUncert = displacedJetsInclusiveEfficiencyMC 
+        - TEfficiency::ClopperPearson(numberPassedDisplacedJetsInclusive[0], numberTriggeredDisplacedJetsInclusive[0], level, true);
+
+    double displacedJetsInclusiveDataLowerUncert = displacedJetsInclusiveEfficiencyData 
+        - TEfficiency::ClopperPearson(numberPassedDisplacedJetsInclusive[1], numberTriggeredDisplacedJetsInclusive[1], level, false);
+    double displacedJetsInclusiveMcLowerUncert = displacedJetsInclusiveEfficiencyMC 
+        - TEfficiency::ClopperPearson(numberPassedDisplacedJetsInclusive[0], numberTriggeredDisplacedJetsInclusive[0], level, false);
+
+    double displacedJetsTracksDataUpperUncert = displacedJetsTracksEfficiencyData 
+        - TEfficiency::ClopperPearson(numberPassedDisplacedJetsTracks[1], numberTriggeredDisplacedJetsTracks[1], level, true);
+    double displacedJetsTracksMcUpperUncert = displacedJetsTracksEfficiencyMC 
+        - TEfficiency::ClopperPearson(numberPassedDisplacedJetsTracks[0], numberTriggeredDisplacedJetsTracks[0], level, true);
+
+    double displacedJetsTracksDataLowerUncert = displacedJetsTracksEfficiencyData 
+        - TEfficiency::ClopperPearson(numberPassedDisplacedJetsTracks[1], numberTriggeredDisplacedJetsTracks[1], level, false);
+    double displacedJetsTracksMcLowerUncert = displacedJetsTracksEfficiencyMC 
+        - TEfficiency::ClopperPearson(numberPassedDisplacedJetsTracks[0], numberTriggeredDisplacedJetsTracks[0], level, false);
+
+
     double doubleEleSfUp =
         (doubleElectronEfficiencyData + doubleElectronDataUpperUncert)
             / (doubleElectronEfficiencyMC - doubleElectronMcLowerUncert
@@ -2783,6 +2935,26 @@ void TriggerScaleFactors::savePlots()
         muonElectronSfUncert = muonElectronSfDown;
     }
 
+    double displacedJetsInclusiveSfUp   = ( displacedJetsInclusiveEfficiencyData + displacedJetsInclusiveDataUpperUncert )
+                                          / (displacedJetsInclusiveEfficiencyMC - displacedJetsInclusiveMcLowerUncert + 1.0e-6)
+                                          - displacedJetsInclusiveSF;
+    double displacedJetsInclusiveSfDown = ( displacedJetsInclusiveEfficiencyData + displacedJetsInclusiveDataLowerUncert )
+      	       	       	       	       	  / (displacedJetsInclusiveEfficiencyMC - displacedJetsInclusiveMcUpperUncert  + 1.0e-6)
+       	       	       	       	       	  - displacedJetsInclusiveSF;
+    double displacedJetsInclusiveSfUncert = 0.0;
+    if ( displacedJetsInclusiveSfUp > displacedJetsInclusiveSfDown ) displacedJetsInclusiveSfUncert = displacedJetsInclusiveSfUp;
+    else displacedJetsInclusiveSfUncert = displacedJetsInclusiveSfDown;
+
+    double displacedJetsTracksSfUp   = ( displacedJetsTracksEfficiencyData + displacedJetsTracksDataUpperUncert )
+                                          / (displacedJetsTracksEfficiencyMC - displacedJetsTracksMcLowerUncert + 1.0e-6) 
+                                          - displacedJetsTracksSF;
+    double displacedJetsTracksSfDown = ( displacedJetsTracksEfficiencyData + displacedJetsTracksDataLowerUncert )
+      	       	       	       	       	  / (displacedJetsTracksEfficiencyMC - displacedJetsTracksMcUpperUncert  + 1.0e-6)
+       	       	       	       	       	  - displacedJetsTracksSF;
+    double displacedJetsTracksSfUncert = 0.0;
+    if ( displacedJetsTracksSfUp > displacedJetsTracksSfDown ) displacedJetsTracksSfUncert = displacedJetsTracksSfUp;
+    else displacedJetsTracksSfUncert = displacedJetsTracksSfDown;
+
     // Print output
 
     std::cout << "-----------------------------------------------------------"
@@ -2804,7 +2976,18 @@ void TriggerScaleFactors::savePlots()
               << numberPassedMuons[1] << " (Data)" << '\n'
               << "eμ: " << numberPassedMuonElectrons[0] << " (MC) / "
               << numberPassedMuonElectrons[1] << " (Data)" << '\n';
-    std::cout << "-----------------------------------------------------------"
+    std::cout << "-----------------------------------------------------------\n";
+    std::cout << "-----------------------------------------------------------\n";
+
+    std::cout << "Events passing displaced jet triggers and offline displaced jet selection:\n"
+              << "Inclusive trigger: " << numberPassedDisplacedJetsInclusive[0] << " (MC) / "
+              << numberPassedDisplacedJetsInclusive[1] << "(Data)" << '\n';
+    std::cout << "Displaced tracks trigger: " << numberPassedDisplacedJetsTracks[0] << "(MC) / "
+              << numberPassedDisplacedJetsTracks[1] <<  "(Data)" << '\n'
+              << std::endl;
+
+    std::cout << "-----------------------------------------------------------\n";
+    std::cout << "-----------------------------------------------------------\n"
               << std::endl;
     std::cout << "Double Electron data efficiency: "
               << doubleElectronEfficiencyData << " +/- "
@@ -2835,7 +3018,25 @@ void TriggerScaleFactors::savePlots()
               << std::endl;
     std::cout << "MuonEG trigger SF: " << muonElectronSF << " +/- "
               << muonElectronSfUncert << std::endl;
-    std::cout << "-----------------------------------------------------------"
+    std::cout << "-----------------------------------------------------------\n";
+    std::cout << "-----------------------------------------------------------\n";
+
+    std::cout << "Displaced jets (inclusive) data efficiency: " << displacedJetsInclusiveEfficiencyData
+              << " +/- " << displacedJetsInclusiveDataUpperUncert << "/" << displacedJetsInclusiveDataLowerUncert << std::endl;
+    std::cout << "Displaced jets (inclusive) MC efficiency: " << displacedJetsInclusiveEfficiencyMC
+              << " +/- " << displacedJetsInclusiveMcUpperUncert << "/" << displacedJetsInclusiveMcLowerUncert << std::endl;
+    std::cout << "Displaced jets (inclusive) SF: " << displacedJetsInclusiveSF << " +/- "
+              << displacedJetsInclusiveSfUncert << std::endl;
+    std::cout << "-----------------------------------------------------------\n";
+    std::cout << "Displaced jets (tracks) data efficiency: " << displacedJetsTracksEfficiencyData
+              << " +/- " << displacedJetsTracksDataUpperUncert << "/" << displacedJetsTracksDataLowerUncert << std::endl;
+    std::cout << "Displaced jets (tracks) MC efficiency: " << displacedJetsTracksEfficiencyMC
+              << " +/- " << displacedJetsTracksMcUpperUncert << "/" << displacedJetsTracksMcLowerUncert << std::endl;
+    std::cout << "Displaced jets (tracks) SF: " << displacedJetsTracksSF << " +/- "
+              << displacedJetsTracksSfUncert << std::endl;
+
+    std::cout << "-----------------------------------------------------------\n";
+    std::cout << "-----------------------------------------------------------\n"
               << std::endl;
     std::cout << "alpha for DoubleEG/DoubleMuon/MuonEG Triggers: "
               << alphaDoubleElectron << "/" << alphaDoubleMuon << "/"

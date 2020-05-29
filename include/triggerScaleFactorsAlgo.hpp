@@ -47,7 +47,7 @@ class TriggerScaleFactors
 
     bool is2016_;
     bool zCuts_;
-    bool jetCuts_;
+    bool dileptonJetCuts_;
     bool bCuts_;
     bool applyHltSf_;
 
@@ -64,7 +64,8 @@ class TriggerScaleFactors
     std::vector<double> electronCutsVars;
     std::vector<double> muonCutsVars;
 
-    bool makeJetCuts(AnalysisEvent& event, const bool isMC) const;
+    bool HTcheck(AnalysisEvent& event, const double threshold, const bool isMC) const;
+    bool makeDileptonJetCuts(AnalysisEvent& event, const bool isMC) const;
     TLorentzVector getJetLVec(AnalysisEvent& event,
                               const int index,
                               const bool isMC) const;
@@ -89,12 +90,17 @@ class TriggerScaleFactors
     // lepton selection
     std::vector<int> getTightElectrons(const AnalysisEvent& event) const;
     std::vector<int> getTightMuons(const AnalysisEvent& event) const;
+    std::vector<int> getTightPhotons(const AnalysisEvent& event) const;
     bool passDileptonSelection(AnalysisEvent& event,
                                const int nElectrons) const;
+    //
+    bool passDisplacedJetSelection(AnalysisEvent& event, const bool isInclusive = true, const bool isMC = false) const;
+    bool passDiphotonSelection(AnalysisEvent& event) const;
 
     // trigger cuts
     bool metTriggerCut(const AnalysisEvent& event) const;
-    bool displacedJetsTriggerCut(const AnalysisEvent& event) const;
+    bool displacedJetsInclusiveTriggerCut(const AnalysisEvent& event) const;
+    bool displacedJetsTracksTriggerCut(const AnalysisEvent& event) const;
     bool photonTriggerCut(const AnalysisEvent& event) const;
     bool diphotonTriggerCut(const AnalysisEvent& event) const;
     bool triphotonTriggerCut(const AnalysisEvent& event) const;
@@ -124,18 +130,23 @@ class TriggerScaleFactors
     double numberPassedMuonElectrons[2];
     double numberTriggeredMuonElectrons[2];
 
+    double numberPassedDisplacedJetsInclusive[2];
+    double numberTriggeredDisplacedJetsInclusive[2];
+    double numberPassedDisplacedJetsTracks[2];
+    double numberTriggeredDisplacedJetsTracks[2];
+
     // Systematic variables
-    double numberSelectedDisplacedJets[2];
-    double numberSelectedPhotons[2];
     double numberSelectedElectrons[2];
     double numberSelectedMuons[2];
     double numberSelectedMuonElectrons[2];
+    double numberSelectedDisplacedJetsInclusive[2];
+    double numberSelectedDisplacedJetsTracks[2];
 
-    double numberSelectedDisplacedJetsTriggered[2];
-    double numberSelectedPhotonsTriggered[2];
     double numberSelectedDoubleElectronsTriggered[2];
     double numberSelectedDoubleMuonsTriggered[2];
     double numberSelectedMuonElectronsTriggered[2]; // Double MuonEG
+    double numberSelectedDisplacedJetsInclusiveTriggered[2];
+    double numberSelectedDisplacedJetsTracksTriggered[2];
 
     // Plots for turn on curve studies
     TProfile* p_electron1_pT_MC;
