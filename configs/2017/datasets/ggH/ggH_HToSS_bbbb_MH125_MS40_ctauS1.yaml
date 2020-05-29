@@ -1,6 +1,6 @@
 name: "ggH_HToSSTobbbb_MS40_ctauS1"
 locations:
-    - "/vols/cms/adm10/skims2017/ggH/NLO_ggH_HToSSTobbbb_Vleptonic_M125_MS40_ctauS1/"
+    - "/vols/cms/adm10/skims2017/ggH/NLO_HToSSTobbbb_MH125_MS40_ctauS1/"
 total_events: 1000
 cross_section: 21.46
 mc: true

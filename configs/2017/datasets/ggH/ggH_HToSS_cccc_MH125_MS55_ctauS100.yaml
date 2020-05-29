@@ -1,6 +1,6 @@
 name: "ggH_HToSSTocccc_MS55_ctauS100"
 locations:
-    - "/vols/cms/adm10/skims2017/ggH/NLO_ggH_HToSSTocccc_Vleptonic_M125_MS55_ctauS100/"
+    - "/vols/cms/adm10/skims2017/ggH/NLO_HToSSTocccc_MH125_MS55_ctauS100/"
 total_events: 1000
 cross_section: 21.46
 mc: true
