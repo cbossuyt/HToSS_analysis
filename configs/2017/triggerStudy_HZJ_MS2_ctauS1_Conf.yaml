@@ -1,0 +1,4 @@
+datasets:
+  - "configs/2017/datasets/HZJ/HZJ_HToSS_dddd_MH125_MS2_ctauS1.yaml"
+  - "configs/2017/datasets/HZJ/HZJ_HToSS_ssss_MH125_MS2_ctauS1.yaml"
+  - "configs/2017/datasets/HZJ/HZJ_HToSS_uuuu_MH125_MS2_ctauS1.yaml"
