@@ -1138,7 +1138,6 @@ std::vector<int>
 bool TriggerScaleFactors::passDileptonSelection(AnalysisEvent& event,
                                                 const int nElectrons) const
 {
-return true; /*
     // Check if there are at least two electrons first. Otherwise use muons.
 
     float invMass(0.0);
@@ -1295,7 +1294,7 @@ return true; /*
         }
     }
 
-    return false; */
+    return false;
 }
 
 bool TriggerScaleFactors::passDisplacedJetSelection(AnalysisEvent& event,  const bool isInclusive, const bool isMC) const
@@ -1323,7 +1322,6 @@ bool TriggerScaleFactors::passDisplacedJetSelection(AnalysisEvent& event,  const
 
 bool TriggerScaleFactors::metTriggerCut(const AnalysisEvent& event) const
 {
-return true; /*
     // clang-format off
     return is2016_
                ? event.HLT_MET200_v1 > 0 || event.HLT_MET200_v2 > 0
@@ -1535,7 +1533,7 @@ return true; /*
                      || event.HLT_PFHT800_PFMET85_PFMHT85_IDTight_v8 > 0
                      || event.HLT_PFHT800_PFMET85_PFMHT85_IDTight_v9 > 0;
     // clang-format on
-*/}
+}
 
 bool TriggerScaleFactors::displacedJetsInclusiveTriggerCut(const AnalysisEvent& event) const
 {
