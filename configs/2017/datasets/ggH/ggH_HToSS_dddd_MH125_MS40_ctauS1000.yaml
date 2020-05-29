@@ -1,0 +1,11 @@
+name: "ggH_HToSSTodddd_MS40_ctauS1000"
+locations:
+    - "/vols/cms/adm10/skims2017/ggH/NLO_ggH_HToSSTodddd_Vleptonic_M125_MS40_ctauS1000/"
+total_events: 1000
+cross_section: 21.46
+mc: true
+histogram: "ggH_HToSS_MS40_ctauS1000"
+colour: "#a65628"
+label: "ggH_HToSS_MS40_ctauS1000"
+plot_type: "f"
+

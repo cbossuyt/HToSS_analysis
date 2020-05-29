@@ -7,7 +7,7 @@
 *.root
 *.o
 *.d
-*.save
+*.save*
 bin/
 /plots/
 configs/2016/datasets/fileLists/*

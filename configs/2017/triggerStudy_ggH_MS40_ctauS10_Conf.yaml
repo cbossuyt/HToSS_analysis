@@ -1,0 +1,6 @@
+datasets:
+  - "configs/2017/datasets/ggH/ggH_HToSS_bbbb_MH125_MS40_ctauS10.yaml"
+  - "configs/2017/datasets/ggH/ggH_HToSS_cccc_MH125_MS40_ctauS10.yaml"
+  - "configs/2017/datasets/ggH/ggH_HToSS_dddd_MH125_MS40_ctauS10.yaml"
+  - "configs/2017/datasets/ggH/ggH_HToSS_ssss_MH125_MS40_ctauS10.yaml"
+  - "configs/2017/datasets/ggH/ggH_HToSS_uuuu_MH125_MS40_ctauS10.yaml"
