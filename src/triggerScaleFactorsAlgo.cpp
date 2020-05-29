@@ -644,7 +644,7 @@ void TriggerScaleFactors::runMainAnalysis()
             }
 
             // Does event pass displaced jet trigger and displaced jet selections?
-            if (passOfflineDisplacedJetInclusiveSelection && !passOfflineDisplacedJetTracksSelection) {
+            if (passOfflineDisplacedJetInclusiveSelection) {
                 triggerDisplacedJetInclusive = displacedJetsInclusiveTriggerCut(event);
                 triggerDisplacedJetInclusiveHt = triggerDisplacedJetInclusive && HTcheck( event, 700., (dataset->isMC()) );
             }
@@ -767,7 +767,7 @@ void TriggerScaleFactors::runMainAnalysis()
                // Displaced jet stuff
 
                numberPassedDisplacedJetsInclusive[0]     += passOfflineDisplacedJetInclusiveSelection * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection and cross trigger (NO cross trigger currently)
-               numberTriggeredDisplacedJetsInclusive [0] += triggerDisplacedJetInclusiveHt * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection (and HT check) and trigger AND cross trigger (NO cross trigger currently)
+               numberTriggeredDisplacedJetsInclusive[0]  += triggerDisplacedJetInclusiveHt * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection (and HT check) and trigger AND cross trigger (NO cross trigger currently)
                numberPassedDisplacedJetsTracks[0]        += passOfflineDisplacedJetInclusiveSelection * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection and cross trigger (NO cross trigger currently)
                numberTriggeredDisplacedJetsTracks[0]     += triggerDisplacedJetInclusiveHt * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection (and HT check) and trigger AND cross trigger (NO cross trigger currently)
 
@@ -1301,17 +1301,18 @@ return true; /*
 bool TriggerScaleFactors::passDisplacedJetSelection(AnalysisEvent& event,  const bool isInclusive, const bool isMC) const
 {
   std::vector<int> jets;
+  double hT {0};
   for (int i{0}; i < event.numJetPF2PAT; i++)
     {
       TLorentzVector jetVec{getJetLVec(event, i, isMC)};
+      hT += jetVec.Pt();
       if (jetVec.Pt() <= 40. && !isInclusive) continue;
       if (jetVec.Pt() <= 60. && isInclusive) continue;
       if (std::abs(jetVec.Eta()) >= 2.0) continue;
-      
-      bool jetId{true};
-      
       jets.emplace_back(i);
     }
+  if (hT < 700. && isInclusive) return false;
+  if (hT < 480. && !isInclusive) return false; 
   if (jets.size() > 1) return true;
   else return false;
 }
@@ -1704,8 +1705,8 @@ bool TriggerScaleFactors::HTcheck(AnalysisEvent& event, const double threshold, 
         hT += jetVec.Pt();
     }
 
-    if (hT >= threshold) return true;
-    else return false;
+    if (hT < threshold) return false;
+    else return true;
 }
 
 bool TriggerScaleFactors::makeDileptonJetCuts(AnalysisEvent& event,
@@ -3041,8 +3042,9 @@ void TriggerScaleFactors::savePlots()
     std::cout << "alpha for DoubleEG/DoubleMuon/MuonEG Triggers: "
               << alphaDoubleElectron << "/" << alphaDoubleMuon << "/"
               << alphaMuonElectron << std::endl;
-    std::cout << "-----------------------------------------------------------"
-              << std::endl;
+    std::cout << "-----------------------------------------------------------\n";
+    std::cout << "alpha for displaced jets inclusive/displaced jets triggers: "
+              << alphaDisplacedJetsInclusive << "/" << alphaDisplacedJetsTracks << std::endl;
     std::cout << "-----------------------------------------------------------"
               << std::endl;
 }
