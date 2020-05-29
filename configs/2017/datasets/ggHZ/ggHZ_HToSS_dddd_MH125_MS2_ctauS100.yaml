@@ -6,5 +6,5 @@ cross_section: 0.006185
 mc: true
 histogram: "ggHZ_HToSS_MS2_ctauS100"
 colour: "#a65628"
-label: "_HToSS_MS2_ctauS100"
+label: "ggHZ_HToSS_MS2_ctauS100"
 plot_type: "f"

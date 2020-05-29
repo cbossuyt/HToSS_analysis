@@ -1,0 +1,10 @@
+name: "HZJ_HToSSTouuuu_MS40_ctauS1"
+locations:
+    - "/vols/cms/adm10/skims2017/HZJ/NLO_HZJ_HToSSTouuuu_Vleptonic_M125_MS40_ctauS1/"
+total_events: 500
+cross_section: 0.07924
+mc: true
+histogram: "HZJ_HToSS_MS40_ctauS1"
+colour: "#339933"
+label: "HZJ_HToSS_MS40_ctauS1"
+plot_type: "f"
