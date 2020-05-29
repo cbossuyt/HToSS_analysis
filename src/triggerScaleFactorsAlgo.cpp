@@ -768,8 +768,8 @@ void TriggerScaleFactors::runMainAnalysis()
 
                numberPassedDisplacedJetsInclusive[0]     += passOfflineDisplacedJetInclusiveSelection * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection and cross trigger (NO cross trigger currently)
                numberTriggeredDisplacedJetsInclusive[0]  += triggerDisplacedJetInclusiveHt * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection (and HT check) and trigger AND cross trigger (NO cross trigger currently)
-               numberPassedDisplacedJetsTracks[0]        += passOfflineDisplacedJetInclusiveSelection * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection and cross trigger (NO cross trigger currently)
-               numberTriggeredDisplacedJetsTracks[0]     += triggerDisplacedJetInclusiveHt * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection (and HT check) and trigger AND cross trigger (NO cross trigger currently)
+               numberPassedDisplacedJetsTracks[0]        += passOfflineDisplacedJetTracksSelection * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection and cross trigger (NO cross trigger currently)
+               numberTriggeredDisplacedJetsTracks[0]     += triggerDisplacedJetTracksHt * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection (and HT check) and trigger AND cross trigger (NO cross trigger currently)
 
                 // Systematic stuff
                 // Dilepton stuff
@@ -2780,6 +2780,7 @@ void TriggerScaleFactors::savePlots()
     double alphaDisplacedJetsInclusive = ((numberSelectedDisplacedJetsInclusiveTriggered[0] / numberSelectedDisplacedJetsInclusive[0])
                                          * (numberPassedDisplacedJetsInclusive[0] / numberSelectedDisplacedJetsInclusive[0]))
                                          / (numberTriggeredDisplacedJetsInclusive[0] / numberSelectedDisplacedJetsInclusive[0] + 1.0e-6);
+
     double alphaDisplacedJetsTracks = ((numberSelectedDisplacedJetsTracksTriggered[0] / numberSelectedDisplacedJetsTracks[0])
                                          * (numberPassedDisplacedJetsTracks[0] / numberSelectedDisplacedJetsTracks[0]))
                                          / (numberTriggeredDisplacedJetsTracks[0] / numberSelectedDisplacedJetsTracks[0] + 1.0e-6);
