@@ -115,9 +115,6 @@ class TriggerScaleFactors
     bool metFilters(const AnalysisEvent& event, const bool isMC) const;
 
     // Efficiencies
-    double numberPassedDisplacedJets[2];
-    double numberTriggeredDisplacedJets[2];
-
     double numberPassedPhotons[2];
     double numberTriggeredPhotons[2];
 
@@ -134,6 +131,8 @@ class TriggerScaleFactors
     double numberTriggeredDisplacedJetsInclusive[2];
     double numberPassedDisplacedJetsTracks[2];
     double numberTriggeredDisplacedJetsTracks[2];
+    double numberPassedDisplacedJetsOr[2];
+    double numberTriggeredDisplacedJetsOr[2];
 
     // Systematic variables
     double numberSelectedElectrons[2];
@@ -141,12 +140,14 @@ class TriggerScaleFactors
     double numberSelectedMuonElectrons[2];
     double numberSelectedDisplacedJetsInclusive[2];
     double numberSelectedDisplacedJetsTracks[2];
+    double numberSelectedDisplacedJetsOr[2];
 
     double numberSelectedDoubleElectronsTriggered[2];
     double numberSelectedDoubleMuonsTriggered[2];
     double numberSelectedMuonElectronsTriggered[2]; // Double MuonEG
     double numberSelectedDisplacedJetsInclusiveTriggered[2];
     double numberSelectedDisplacedJetsTracksTriggered[2];
+    double numberSelectedDisplacedJetsOrTriggered[2];
 
     // Plots for turn on curve studies
     TProfile* p_electron1_pT_MC;
