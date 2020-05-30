@@ -618,16 +618,16 @@ void TriggerScaleFactors::runMainAnalysis()
 
             // Calculate total jet hT 
             event.totalJetHt = caloJetHt( event, dataset->isMC() );
-            event.selectedJetIncHt = caloJetHt( event, dataset->isMC(), 40. );    //HT is calculated using min jet pT > 40, different jet pT requirement for the two calo jets (60)
+            event.selectedJetIncHt    = caloJetHt( event, dataset->isMC(), 40. );    //HT is calculated using min jet pT > 40, different jet pT requirement for the two calo jets (60)
             event.selectedJetTracksHt = caloJetHt( event, dataset->isMC(), 40. ); //HT is calculated using min jet pT > 40, different jet pT requirement for the two calo jets (40)
 
             //Does event pass offline Calo HT requirements?
-            bool passOfflineDisplacedJetInclusiveHtCut =  event.selectedJetIncHt > tracksDisplacedJetsHtCut_;
-            bool passOfflineDisplacedJetTracksHtCut    =  event.selectedJetIncHt > incDisplacedJetsHtCut_;
+            bool passOfflineDisplacedJetInclusiveHtCut =  event.selectedJetIncHt    > incDisplacedJetsHtCut_;
+            bool passOfflineDisplacedJetTracksHtCut    =  event.selectedJetTracksHt > tracksDisplacedJetsHtCut_;
 
             //Does this event pass displaced jet event selection cuts?
-            bool passOfflineDisplacedJetInclusiveSelection ( passDisplacedJetSelection(event, true) && passOfflineDisplacedJetInclusiveHtCut);
-            bool passOfflineDisplacedJetTracksSelection ( passDisplacedJetSelection(event, false) && passOfflineDisplacedJetTracksHtCut);
+            bool passOfflineDisplacedJetInclusiveSelection ( passDisplacedJetSelection(event, true)  && passOfflineDisplacedJetInclusiveHtCut);
+            bool passOfflineDisplacedJetTracksSelection    ( passDisplacedJetSelection(event, false) && passOfflineDisplacedJetTracksHtCut);
             bool passOfflineDisplacedJetOrSelection = passOfflineDisplacedJetInclusiveSelection || passOfflineDisplacedJetTracksSelection;
 
             // Triggering stuff
