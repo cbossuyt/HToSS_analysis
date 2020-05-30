@@ -871,7 +871,7 @@ void AnalysisAlgo::runMainAnalysis()
                     std::cout
                         << "number of negative weights: " << sumNegativeWeights_
                         << std::endl;
-                    exit(999);
+                    std::exit(999);
                 }
             }
 

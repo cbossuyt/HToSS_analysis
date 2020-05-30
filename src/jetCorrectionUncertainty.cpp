@@ -22,7 +22,7 @@ JetCorrectionUncertainty::JetCorrectionUncertainty(std::string dataFile)
     if (!jecFile.is_open())
     {
         std::cout << "Unable to open jecFile." << std::endl;
-        exit(0);
+        std::exit(0);
     }
 
     bool first{true};

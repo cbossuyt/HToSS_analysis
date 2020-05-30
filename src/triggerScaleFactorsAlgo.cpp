@@ -649,6 +649,8 @@ void TriggerScaleFactors::runMainAnalysis()
             // Passes displaced dijet event selection and cross triggers
             // NONE YET
 
+            //// Dilepton
+
             // Does event pass Single/Double EG trigger and the electron
             // selection?
             if (passDoubleElectronSelection)
@@ -673,6 +675,8 @@ void TriggerScaleFactors::runMainAnalysis()
                     triggerMuonElectron && metTriggerCut(event);
             }
 
+            //// Displaced Jets
+
             // Does event pass displaced jet trigger and displaced jet selections?
             if (passOfflineDisplacedJetInclusiveSelection) {
                 triggerDisplacedJetInclusive = displacedJetsInclusiveTriggerCut(event);
@@ -689,9 +693,13 @@ void TriggerScaleFactors::runMainAnalysis()
                     triggerDisplacedJetOr = displacedJetsTracksTriggerCut(event);
                     triggerDisplacedJetOrHt = triggerDisplacedJetTracks && passOfflineDisplacedJetTracksHtCut;
                 }
-                else {
+                else if (passOfflineDisplacedJetInclusiveSelection) {
                     triggerDisplacedJetOr = displacedJetsInclusiveTriggerCut(event);
                     triggerDisplacedJetOrHt = triggerDisplacedJetInclusive && passOfflineDisplacedJetInclusiveHtCut;
+                }
+                else {
+                    std::cout << "Logic failure: " << std::endl;
+                    std::exit(6);
                 }
             }
 
@@ -1319,7 +1327,7 @@ bool TriggerScaleFactors::passDileptonSelection(AnalysisEvent& event,
     {
         std::cout << "Only dilepton searches currently supported. Exiting ..."
                   << std::endl;
-        exit(888);
+        std::exit(888);
     }
 
     if (!zCuts_ && invMass > 0.0)
