@@ -63,6 +63,8 @@ TriggerScaleFactors::TriggerScaleFactors()
     , numberTriggeredDisplacedJetsInclusive()
     , numberPassedDisplacedJetsTracks()
     , numberTriggeredDisplacedJetsTracks()
+    , numberPassedDisplacedJetsOr()
+    , numberTriggeredDisplacedJetsOr()
     ,
 
     // alpha systematics
@@ -73,6 +75,7 @@ TriggerScaleFactors::TriggerScaleFactors()
 
     , numberSelectedDisplacedJetsInclusive()
     , numberSelectedDisplacedJetsTracks()
+    , numberSelectedDisplacedJetsOr()
     ,
 
     numberSelectedDoubleElectronsTriggered()
@@ -81,6 +84,7 @@ TriggerScaleFactors::TriggerScaleFactors()
 
     , numberSelectedDisplacedJetsInclusiveTriggered()
     , numberSelectedDisplacedJetsTracksTriggered()
+    , numberSelectedDisplacedJetsOrTriggered()
 
 {
     //// Plots for turn on curve studies
@@ -599,6 +603,7 @@ void TriggerScaleFactors::runMainAnalysis()
             //Does this event pass displaced jet event selection cuts?
             bool passOfflineDisplacedJetInclusiveSelection (passDisplacedJetSelection(event, true));
             bool passOfflineDisplacedJetTracksSelection (passDisplacedJetSelection(event, false));
+            bool passOfflineDisplacedJetOrSelection = passOfflineDisplacedJetInclusiveSelection || passOfflineDisplacedJetTracksSelection;
 
             // Triggering stuff
             int triggerDoubleEG(0), triggerDoubleMuon(0),
@@ -608,8 +613,8 @@ void TriggerScaleFactors::runMainAnalysis()
                 triggerMetMuonElectron(
                     0); // Passes Double Lepton and MET triggers
 
-            int triggerDisplacedJetInclusive(0), triggerDisplacedJetTracks(0); // Passes displaced jet triggers
-            int triggerDisplacedJetInclusiveHt(0), triggerDisplacedJetTracksHt(0); // Passses the HT cuts on top of triggers
+            int triggerDisplacedJetInclusive(0), triggerDisplacedJetTracks(0), triggerDisplacedJetOr(0); // Passes displaced jet triggers
+            int triggerDisplacedJetInclusiveHt(0), triggerDisplacedJetTracksHt(0), triggerDisplacedJetOrHt(0); // Passses the HT cuts on top of triggers
 
             // Passes dilepton event selection and MET triggers
             int triggerMetElectronSelection(0), triggerMetMuonSelection(0),
@@ -652,6 +657,17 @@ void TriggerScaleFactors::runMainAnalysis()
             if (passOfflineDisplacedJetTracksSelection) {
                 triggerDisplacedJetTracks = displacedJetsTracksTriggerCut(event);
                 triggerDisplacedJetTracksHt = triggerDisplacedJetTracks && HTcheck( event, 480., (dataset->isMC()) );
+            }
+
+            if (passOfflineDisplacedJetOrSelection) {
+                if (passOfflineDisplacedJetTracksSelection) {
+                    triggerDisplacedJetOr = displacedJetsTracksTriggerCut(event);
+                    triggerDisplacedJetOrHt = triggerDisplacedJetTracks && HTcheck( event, 480., (dataset->isMC()) );
+                }
+                else {
+                    triggerDisplacedJetOr = displacedJetsInclusiveTriggerCut(event);
+                    triggerDisplacedJetOrHt = triggerDisplacedJetInclusive && HTcheck( event, 700., (dataset->isMC()) );
+                }
             }
 
             //
@@ -770,6 +786,8 @@ void TriggerScaleFactors::runMainAnalysis()
                numberTriggeredDisplacedJetsInclusive[0]  += triggerDisplacedJetInclusiveHt * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection (and HT check) and trigger AND cross trigger (NO cross trigger currently)
                numberPassedDisplacedJetsTracks[0]        += passOfflineDisplacedJetTracksSelection * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection and cross trigger (NO cross trigger currently)
                numberTriggeredDisplacedJetsTracks[0]     += triggerDisplacedJetTracksHt * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection (and HT check) and trigger AND cross trigger (NO cross trigger currently)
+               numberPassedDisplacedJetsOr[0]            += passOfflineDisplacedJetOrSelection * eventWeight;
+               numberTriggeredDisplacedJetsOr[0]         += triggerDisplacedJetOrHt * eventWeight;
 
                 // Systematic stuff
                 // Dilepton stuff
@@ -788,10 +806,12 @@ void TriggerScaleFactors::runMainAnalysis()
 
                 // Displaced jet stuff
                 numberSelectedDisplacedJetsInclusive[0] += passOfflineDisplacedJetInclusiveSelection * eventWeight;
-                numberSelectedDisplacedJetsTracks[0] += passOfflineDisplacedJetTracksSelection * eventWeight;
+                numberSelectedDisplacedJetsTracks[0]    += passOfflineDisplacedJetTracksSelection * eventWeight;
+                numberSelectedDisplacedJetsOr[0]        += passOfflineDisplacedJetOrSelection * eventWeight;
 
                 numberSelectedDisplacedJetsInclusiveTriggered[0] += triggerDisplacedJetInclusiveHt * eventWeight;
-                numberSelectedDisplacedJetsTracksTriggered[0] +=  triggerDisplacedJetTracksHt * eventWeight;
+                numberSelectedDisplacedJetsTracksTriggered[0]    += triggerDisplacedJetTracksHt * eventWeight;
+                numberSelectedDisplacedJetsOrTriggered[0]        += triggerDisplacedJetOrHt * eventWeight;
 
 
                 // Histos bit
@@ -920,6 +940,8 @@ void TriggerScaleFactors::runMainAnalysis()
                numberTriggeredDisplacedJetsInclusive [1] += triggerDisplacedJetInclusiveHt * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection (and HT check) and trigger AND cross trigger (NO cross trigger currently)
                numberPassedDisplacedJetsTracks[1]        += passOfflineDisplacedJetInclusiveSelection * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection and cross trigger (NO cross trigger currently)
                numberTriggeredDisplacedJetsTracks[1]     += triggerDisplacedJetInclusiveHt * eventWeight; // Number of displaced jets (inc) that pass displaced jets (inc) selection (and HT check) and trigger AND cross trigger (NO cross trigger currently)
+               numberPassedDisplacedJetsOr[1]            += passOfflineDisplacedJetInclusiveSelection * eventWeight;
+               numberTriggeredDisplacedJetsOr[1]         += triggerDisplacedJetInclusiveHt * eventWeight;
 
                 // NB No systematic stuff required for data
 
@@ -2727,6 +2749,7 @@ void TriggerScaleFactors::savePlots()
     //// DisplacedJetsTriggers
     double displacedJetsInclusiveEfficiencyMC = numberTriggeredDisplacedJetsInclusive[0] / (numberPassedDisplacedJetsInclusive[0] + 1.0e-06);
     double displacedJetsTracksEfficiencyMC    = numberTriggeredDisplacedJetsTracks[0]    / (numberPassedDisplacedJetsTracks[0] + 1.0e-06);
+    double displacedJetsOrEfficiencyMC         = numberTriggeredDisplacedJetsOr[0]        / (numberPassedDisplacedJetsOr[0] + 1.06e-06);
 
     // Calculate Data efficiency
 
@@ -2742,6 +2765,7 @@ void TriggerScaleFactors::savePlots()
     //// DisplacedJetsTriggers
     double displacedJetsInclusiveEfficiencyData = numberTriggeredDisplacedJetsInclusive[1] / (numberPassedDisplacedJetsInclusive[1] + 1.0e-06);
     double displacedJetsTracksEfficiencyData    = numberTriggeredDisplacedJetsTracks[1]    / (numberPassedDisplacedJetsTracks[1] + 1.0e-06);
+    double displacedJetsOrEfficiencyData        = numberTriggeredDisplacedJetsOr[1]        / (numberPassedDisplacedJetsOr[1] + 1.0e-06);
 
     // Calculate SF
 
@@ -2756,6 +2780,7 @@ void TriggerScaleFactors::savePlots()
     //// DisplacedJetsTriggers	
     double displacedJetsInclusiveSF = displacedJetsInclusiveEfficiencyData / (displacedJetsInclusiveEfficiencyMC + 1.0e-6);
     double displacedJetsTracksSF    = displacedJetsTracksEfficiencyData    / (displacedJetsTracksEfficiencyMC + 1.0e-6);
+    double displacedJetsOrSF        = displacedJetsOrEfficiencyData        / (displacedJetsOrEfficiencyMC + 1.0e-6);
 
     // Calculate alphas
     double alphaDoubleElectron =
@@ -2782,6 +2807,10 @@ void TriggerScaleFactors::savePlots()
     double alphaDisplacedJetsTracks = ((numberSelectedDisplacedJetsTracksTriggered[0] / numberSelectedDisplacedJetsTracks[0])
                                          * (numberPassedDisplacedJetsTracks[0] / numberSelectedDisplacedJetsTracks[0]))
                                          / (numberTriggeredDisplacedJetsTracks[0] / numberSelectedDisplacedJetsTracks[0] + 1.0e-6);
+
+    double alphaDisplacedJetsOr     = ((numberSelectedDisplacedJetsOrTriggered[0] / numberSelectedDisplacedJetsOr[0])
+                                         * (numberPassedDisplacedJetsOr[0] / numberSelectedDisplacedJetsOr[0]))
+                                         / (numberTriggeredDisplacedJetsOr[0] / numberSelectedDisplacedJetsOr[0] + 1.0e-6);
 
     // Calculate uncertainities
 
@@ -2878,6 +2907,16 @@ void TriggerScaleFactors::savePlots()
     double displacedJetsTracksMcLowerUncert = displacedJetsTracksEfficiencyMC 
         - TEfficiency::ClopperPearson(numberPassedDisplacedJetsTracks[0], numberTriggeredDisplacedJetsTracks[0], level, false);
 
+    double displacedJetsOrDataUpperUncert = displacedJetsOrEfficiencyData 
+        - TEfficiency::ClopperPearson(numberPassedDisplacedJetsOr[1], numberTriggeredDisplacedJetsOr[1], level, true);
+    double displacedJetsOrMcUpperUncert = displacedJetsOrEfficiencyMC 
+        - TEfficiency::ClopperPearson(numberPassedDisplacedJetsOr[0], numberTriggeredDisplacedJetsOr[0], level, true);
+
+    double displacedJetsOrDataLowerUncert = displacedJetsOrEfficiencyData 
+        - TEfficiency::ClopperPearson(numberPassedDisplacedJetsOr[1], numberTriggeredDisplacedJetsOr[1], level, false);
+    double displacedJetsOrMcLowerUncert = displacedJetsOrEfficiencyMC 
+        - TEfficiency::ClopperPearson(numberPassedDisplacedJetsOr[0], numberTriggeredDisplacedJetsOr[0], level, false);
+
 
     double doubleEleSfUp =
         (doubleElectronEfficiencyData + doubleElectronDataUpperUncert)
@@ -2944,7 +2983,7 @@ void TriggerScaleFactors::savePlots()
     double displacedJetsInclusiveSfUncert = 0.0;
     if ( displacedJetsInclusiveSfUp > displacedJetsInclusiveSfDown ) displacedJetsInclusiveSfUncert = displacedJetsInclusiveSfUp;
     else displacedJetsInclusiveSfUncert = displacedJetsInclusiveSfDown;
-
+    ////
     double displacedJetsTracksSfUp   = ( displacedJetsTracksEfficiencyData + displacedJetsTracksDataUpperUncert )
                                           / (displacedJetsTracksEfficiencyMC - displacedJetsTracksMcLowerUncert + 1.0e-6) 
                                           - displacedJetsTracksSF;
@@ -2954,6 +2993,16 @@ void TriggerScaleFactors::savePlots()
     double displacedJetsTracksSfUncert = 0.0;
     if ( displacedJetsTracksSfUp > displacedJetsTracksSfDown ) displacedJetsTracksSfUncert = displacedJetsTracksSfUp;
     else displacedJetsTracksSfUncert = displacedJetsTracksSfDown;
+    ////
+    double displacedJetsOrSfUp   = ( displacedJetsOrEfficiencyData + displacedJetsOrDataUpperUncert )
+                                          / (displacedJetsOrEfficiencyMC - displacedJetsOrMcLowerUncert + 1.0e-6) 
+                                          - displacedJetsOrSF;
+    double displacedJetsOrSfDown = ( displacedJetsOrEfficiencyData + displacedJetsOrDataLowerUncert )
+      	       	       	       	       	  / (displacedJetsOrEfficiencyMC - displacedJetsOrMcUpperUncert  + 1.0e-6)
+       	       	       	       	       	  - displacedJetsOrSF;
+    double displacedJetsOrSfUncert = 0.0;
+    if ( displacedJetsOrSfUp > displacedJetsOrSfDown ) displacedJetsOrSfUncert = displacedJetsOrSfUp;
+    else displacedJetsOrSfUncert = displacedJetsOrSfDown;
 
     // Print output
 
@@ -2980,10 +3029,24 @@ void TriggerScaleFactors::savePlots()
     std::cout << "-----------------------------------------------------------\n";
 
     std::cout << "Events passing displaced jet triggers and offline displaced jet selection:\n"
+              << "Inclusive trigger: " << numberTriggeredDisplacedJetsInclusive[0] << " (MC) / "
+              << numberTriggeredDisplacedJetsInclusive[1] << "(Data)" << '\n';
+    std::cout << "Displaced tracks trigger: " << numberTriggeredDisplacedJetsTracks[0] << "(MC) / "
+              << numberTriggeredDisplacedJetsTracks[1] <<  "(Data)" << '\n'
+              << std::endl;
+    std::cout << "Inclusive OR displaced tracks triggers: " << numberTriggeredDisplacedJetsOr[0] << "(MC) / "
+              << numberTriggeredDisplacedJetsOr[1] <<  "(Data)" << '\n'
+              << std::endl;
+    std::cout
+        << "-----------------------------------------------------------\n";
+    std::cout << "Events passing offline displaced jet selection:\n"
               << "Inclusive trigger: " << numberPassedDisplacedJetsInclusive[0] << " (MC) / "
               << numberPassedDisplacedJetsInclusive[1] << "(Data)" << '\n';
     std::cout << "Displaced tracks trigger: " << numberPassedDisplacedJetsTracks[0] << "(MC) / "
               << numberPassedDisplacedJetsTracks[1] <<  "(Data)" << '\n'
+              << std::endl;
+    std::cout << "Inclusive OR displaced tracks triggers: " << numberPassedDisplacedJetsOr[0] << "(MC) / "
+              << numberPassedDisplacedJetsOr[1] <<  "(Data)" << '\n'
               << std::endl;
 
     std::cout << "-----------------------------------------------------------\n";
@@ -3028,13 +3091,19 @@ void TriggerScaleFactors::savePlots()
     std::cout << "Displaced jets (inclusive) SF: " << displacedJetsInclusiveSF << " +/- "
               << displacedJetsInclusiveSfUncert << std::endl;
     std::cout << "-----------------------------------------------------------\n";
-    std::cout << "Displaced jets (tracks) data efficiency: " << displacedJetsTracksEfficiencyData
+    std::cout << "Displaced jets (displaced tracks) data efficiency: " << displacedJetsTracksEfficiencyData
               << " +/- " << displacedJetsTracksDataUpperUncert << "/" << displacedJetsTracksDataLowerUncert << std::endl;
     std::cout << "Displaced jets (tracks) MC efficiency: " << displacedJetsTracksEfficiencyMC
               << " +/- " << displacedJetsTracksMcUpperUncert << "/" << displacedJetsTracksMcLowerUncert << std::endl;
     std::cout << "Displaced jets (tracks) SF: " << displacedJetsTracksSF << " +/- "
               << displacedJetsTracksSfUncert << std::endl;
-
+    std::cout << "-----------------------------------------------------------\n";
+    std::cout << "Displaced jets (inclusive OR displaced tracks) data efficiency: " << displacedJetsOrEfficiencyData
+              << " +/- " << displacedJetsOrDataUpperUncert  << "/" << displacedJetsOrDataLowerUncert << std::endl;
+    std::cout << "Displaced jets (inclusive OR displaced tracks) MC efficiency: " << displacedJetsOrEfficiencyMC
+              << " +/- " << displacedJetsOrMcUpperUncert << "/" << displacedJetsOrMcLowerUncert << std::endl;
+    std::cout << "Displaced jets (inclusive OR displaced tracks) SF: " << displacedJetsOrSF << " +/- "
+              << displacedJetsOrSfUncert << std::endl;
     std::cout << "-----------------------------------------------------------\n";
     std::cout << "-----------------------------------------------------------\n"
               << std::endl;
