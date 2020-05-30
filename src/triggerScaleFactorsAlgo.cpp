@@ -690,29 +690,15 @@ void TriggerScaleFactors::runMainAnalysis()
 
             if (passOfflineDisplacedJetOrSelection) {
 
-                std::cout << "passOfflineDisplacedJetOrSelection" << std::endl;
-                std::cout << "passOfflineDisplacedJetTracksSelection: " << passOfflineDisplacedJetTracksSelection << std::endl;
-                std::cout << "passOfflineDisplacedJetInclusiveSelection: " << passOfflineDisplacedJetInclusiveSelection << std::endl;
-
+                // If passes offline displaced tracks requirements, check triggers which use a looser offline HT cut (and offline jet pT event selection)
                 if (passOfflineDisplacedJetTracksSelection) {
                     triggerDisplacedJetOr = displacedJetsTracksTriggerCut(event);
                     triggerDisplacedJetOrHt = triggerDisplacedJetTracks && passOfflineDisplacedJetTracksHtCut;
-                    std::cout << "TRACKS: triggerDisplacedJetOr: " << triggerDisplacedJetOr << std::endl;
-                    std::cout << "TRACKS: triggerDisplacedJetOrHt: " << triggerDisplacedJetOrHt << std::endl;
+                }
 
-                }
-                else if (passOfflineDisplacedJetInclusiveSelection) {
-                    triggerDisplacedJetOr = displacedJetsInclusiveTriggerCut(event);
-                    triggerDisplacedJetOrHt = triggerDisplacedJetInclusive && passOfflineDisplacedJetInclusiveHtCut;
-                    std::cout << "INC: triggerDisplacedJetOr: " << triggerDisplacedJetOr << std::endl;
-                    std::cout << "INC: triggerDisplacedJetOrHt: " << triggerDisplacedJetOrHt << std::endl;
-                }
-                else {
-                    std::cout << "Logic failure: " << std::endl;
-                    std::exit(6);
-                }
-                std::cout << "END: triggerDisplacedJetOr: " << triggerDisplacedJetOr << std::endl;
-                std::cout << "END: triggerDisplacedJetOrHt: " << triggerDisplacedJetOrHt << std::endl;
+                // If triggerDisplacedJetOr or triggerDisplacedJetOrHt doesn't fire, check against inclusive triggers when inclusive offline selection is met
+                if (!triggerDisplacedJetOr && passOfflineDisplacedJetInclusiveSelection)   triggerDisplacedJetOr = displacedJetsInclusiveTriggerCut(event);
+                if (!triggerDisplacedJetOrHt && passOfflineDisplacedJetInclusiveSelection) triggerDisplacedJetOrHt = triggerDisplacedJetInclusive && passOfflineDisplacedJetInclusiveHtCut;
             }
 
             //
