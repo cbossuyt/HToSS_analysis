@@ -68,7 +68,7 @@ class TriggerScaleFactors
     std::vector<double> electronCutsVars;
     std::vector<double> muonCutsVars;
 
-    bool HTcheck(AnalysisEvent& event, const double threshold, const bool isMC) const;
+    double caloJetHt(AnalysisEvent& event, const bool isMC, const double jetPtCut = 0.0) const;
     bool makeDileptonJetCuts(AnalysisEvent& event, const bool isMC) const;
     TLorentzVector getJetLVec(AnalysisEvent& event,
                               const int index,

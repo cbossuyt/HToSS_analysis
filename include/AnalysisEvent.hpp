@@ -1767,6 +1767,9 @@ class AnalysisEvent
     std::vector<int> photonIndexLoose;
     std::vector<int> jetIndex;
     std::vector<int> displacedJetIndex;
+    double totalJetHt;
+    double selectedJetIncHt;
+    double selectedJetTracksHt;
     std::vector<int> bTagIndex;
 
     std::pair<TLorentzVector, TLorentzVector> zPairLeptons;

@@ -616,9 +616,18 @@ void TriggerScaleFactors::runMainAnalysis()
             bool passMuonElectronSelection(passDileptonSelection(event, 1)
                                            && passDileptonJetSelection);
 
+            // Calculate total jet hT 
+            event.totalJetHt = caloJetHt( event, dataset->isMC() );
+            event.selectedJetIncHt = caloJetHt( event, dataset->isMC(), 40. );    //HT is calculated using min jet pT > 40, different jet pT requirement for the two calo jets (60)
+            event.selectedJetTracksHt = caloJetHt( event, dataset->isMC(), 40. ); //HT is calculated using min jet pT > 40, different jet pT requirement for the two calo jets (40)
+
+            //Does event pass offline Calo HT requirements?
+            bool passOfflineDisplacedJetInclusiveHtCut =  event.selectedJetIncHt > tracksDisplacedJetsHtCut_;
+            bool passOfflineDisplacedJetTracksHtCut    =  event.selectedJetIncHt > incDisplacedJetsHtCut_;
+
             //Does this event pass displaced jet event selection cuts?
-            bool passOfflineDisplacedJetInclusiveSelection (passDisplacedJetSelection(event, true));
-            bool passOfflineDisplacedJetTracksSelection (passDisplacedJetSelection(event, false));
+            bool passOfflineDisplacedJetInclusiveSelection ( passDisplacedJetSelection(event, true) && passOfflineDisplacedJetInclusiveHtCut);
+            bool passOfflineDisplacedJetTracksSelection ( passDisplacedJetSelection(event, false) && passOfflineDisplacedJetTracksHtCut);
             bool passOfflineDisplacedJetOrSelection = passOfflineDisplacedJetInclusiveSelection || passOfflineDisplacedJetTracksSelection;
 
             // Triggering stuff
@@ -667,22 +676,22 @@ void TriggerScaleFactors::runMainAnalysis()
             // Does event pass displaced jet trigger and displaced jet selections?
             if (passOfflineDisplacedJetInclusiveSelection) {
                 triggerDisplacedJetInclusive = displacedJetsInclusiveTriggerCut(event);
-                triggerDisplacedJetInclusiveHt = triggerDisplacedJetInclusive && HTcheck( event, incDisplacedJetsHtCut_, (dataset->isMC()) );
+                triggerDisplacedJetInclusiveHt = triggerDisplacedJetInclusive && passOfflineDisplacedJetInclusiveHtCut;
             }
 
             if (passOfflineDisplacedJetTracksSelection) {
                 triggerDisplacedJetTracks = displacedJetsTracksTriggerCut(event);
-                triggerDisplacedJetTracksHt = triggerDisplacedJetTracks && HTcheck( event, tracksDisplacedJetsHtCut_, (dataset->isMC()) );
+                triggerDisplacedJetTracksHt = triggerDisplacedJetTracks && passOfflineDisplacedJetTracksHtCut;
             }
 
             if (passOfflineDisplacedJetOrSelection) {
                 if (passOfflineDisplacedJetTracksSelection) {
                     triggerDisplacedJetOr = displacedJetsTracksTriggerCut(event);
-                    triggerDisplacedJetOrHt = triggerDisplacedJetTracks && HTcheck( event, tracksDisplacedJetsPtCut_, (dataset->isMC()) );
+                    triggerDisplacedJetOrHt = triggerDisplacedJetTracks && passOfflineDisplacedJetTracksHtCut;
                 }
                 else {
                     triggerDisplacedJetOr = displacedJetsInclusiveTriggerCut(event);
-                    triggerDisplacedJetOrHt = triggerDisplacedJetInclusive && HTcheck( event, incDisplacedJetsPtCut_, (dataset->isMC()) );
+                    triggerDisplacedJetOrHt = triggerDisplacedJetInclusive && passOfflineDisplacedJetInclusiveHtCut;
                 }
             }
 
@@ -1167,12 +1176,6 @@ std::vector<int>
     return muons;
 }
 
-std::vector<int>
-    TriggerScaleFactors::getTightPhotons(const AnalysisEvent& event) const
-{
-
-}
-
 bool TriggerScaleFactors::passDileptonSelection(AnalysisEvent& event,
                                                 const int nElectrons) const
 {
@@ -1338,25 +1341,17 @@ bool TriggerScaleFactors::passDileptonSelection(AnalysisEvent& event,
 bool TriggerScaleFactors::passDisplacedJetSelection(AnalysisEvent& event,  const bool isInclusive, const bool isMC) const
 {
   std::vector<int> jets;
-  double hT {0};
   for (int i{0}; i < event.numJetPF2PAT; i++)
     {
       TLorentzVector jetVec{getJetLVec(event, i, isMC)};
-      hT += jetVec.Pt();
       if (jetVec.Pt() <= tracksDisplacedJetsPtCut_ && !isInclusive) continue;
       if (jetVec.Pt() <= incDisplacedJetsPtCut_ && isInclusive) continue;
       if (std::abs(jetVec.Eta()) >= 2.0) continue;
       jets.emplace_back(i);
     }
-  if (hT < tracksDisplacedJetsHtCut_ && !isInclusive) return false; 
-  if (hT < incDisplacedJetsHtCut_ && isInclusive) return false;
   if (jets.size() > 1) return true;
   else return false;
 }
-
-//bool TriggerScaleFactors::passDiphotonSelection(AnalysisEvent& event) const
-//{
-//}
 
 bool TriggerScaleFactors::metTriggerCut(const AnalysisEvent& event) const
 {
@@ -1732,17 +1727,17 @@ bool TriggerScaleFactors::metFilters(const AnalysisEvent& event,
     return true;
 }
 
-bool TriggerScaleFactors::HTcheck(AnalysisEvent& event, const double threshold, const bool isMC) const
+double TriggerScaleFactors::caloJetHt(AnalysisEvent& event, const bool isMC, const double jetPtCut) const
 {
     double hT {0};
     for (int i{0}; i < event.numJetPF2PAT; i++)
     {
         TLorentzVector jetVec{getJetLVec(event, i, isMC)};
+        if ( jetVec.Eta() >= 2.50 ) continue;
+        if ( jetVec.Pt() <= jetPtCut ) continue;
         hT += jetVec.Pt();
     }
-
-    if (hT < threshold) return false;
-    else return true;
+    return hT;
 }
 
 bool TriggerScaleFactors::makeDileptonJetCuts(AnalysisEvent& event,
@@ -3125,8 +3120,8 @@ void TriggerScaleFactors::savePlots()
               << alphaDoubleElectron << "/" << alphaDoubleMuon << "/"
               << alphaMuonElectron << std::endl;
     std::cout << "-----------------------------------------------------------\n";
-    std::cout << "alpha for displaced jets inclusive/displaced jets triggers: "
-              << alphaDisplacedJetsInclusive << "/" << alphaDisplacedJetsTracks << std::endl;
+    std::cout << "alpha for displaced jets inclusive/displaced tracks/OR of both displaced jets triggers: "
+              << alphaDisplacedJetsInclusive << "/" << alphaDisplacedJetsTracks << "/" << alphaDisplacedJetsOr << std::endl;
     std::cout << "-----------------------------------------------------------"
               << std::endl;
 }
