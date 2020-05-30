@@ -61,6 +61,10 @@ class TriggerScaleFactors
 
     bool customElectronCuts_;
     bool customMuonCuts_;
+    double tracksDisplacedJetsPtCut_;
+    double tracksDisplacedJetsHtCut_;
+    double incDisplacedJetsPtCut_;
+    double incDisplacedJetsHtCut_;
     std::vector<double> electronCutsVars;
     std::vector<double> muonCutsVars;
 

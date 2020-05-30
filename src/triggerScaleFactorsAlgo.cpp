@@ -44,6 +44,10 @@ TriggerScaleFactors::TriggerScaleFactors()
     , isPart2_{false}
     , customElectronCuts_{false}
     , customMuonCuts_{false}
+    , tracksDisplacedJetsPtCut_{40.}
+    , tracksDisplacedJetsHtCut_{480.}
+    , incDisplacedJetsPtCut_{60.}
+    , incDisplacedJetsHtCut_{700.}
     ,
 
     // For efficiencies
@@ -297,6 +301,18 @@ void TriggerScaleFactors::parseCommandLineArguements(int argc, char* argv[])
         "Set custom muon pT and eta cuts in the format MINMU1PT MAXMU1PT "
         "MINMU2PT MAXLMU2PT MINMU1ETA MAXLMU1ETA MINMU2ETA MAXLMU2ETA. If a "
         "negative value is used for max pT, the cut is skipped. ")(
+        "minTrackJetPt",
+        po::value<double>(&tracksDisplacedJetsPtCut_),
+        "Custom min pT cut for calo jets for displaced tracks variant of displaced jets triggers")(
+        "minIncJetPt",
+        po::value<double>(&incDisplacedJetsPtCut_),
+        "Custom min pT cut for calo jets for inclusive variant of displaced jets triggers")(
+        "minTrackJetHt",
+        po::value<double>(&tracksDisplacedJetsHtCut_),
+        "Custom min HT cut for calo jets for displaced tracks variant of displaced jets triggers")(
+        "minIncJetHt",
+        po::value<double>(&incDisplacedJetsHtCut_),
+        "Custom min HT cut for calo jets for inclusive variant of displaced jets triggers")(
         ",n",
         po::value<long>(&nEvents)->default_value(0),
         "The number of events to be run over. All if set to 0.")(
@@ -651,22 +667,22 @@ void TriggerScaleFactors::runMainAnalysis()
             // Does event pass displaced jet trigger and displaced jet selections?
             if (passOfflineDisplacedJetInclusiveSelection) {
                 triggerDisplacedJetInclusive = displacedJetsInclusiveTriggerCut(event);
-                triggerDisplacedJetInclusiveHt = triggerDisplacedJetInclusive && HTcheck( event, 700., (dataset->isMC()) );
+                triggerDisplacedJetInclusiveHt = triggerDisplacedJetInclusive && HTcheck( event, incDisplacedJetsHtCut_, (dataset->isMC()) );
             }
 
             if (passOfflineDisplacedJetTracksSelection) {
                 triggerDisplacedJetTracks = displacedJetsTracksTriggerCut(event);
-                triggerDisplacedJetTracksHt = triggerDisplacedJetTracks && HTcheck( event, 480., (dataset->isMC()) );
+                triggerDisplacedJetTracksHt = triggerDisplacedJetTracks && HTcheck( event, tracksDisplacedJetsHtCut_, (dataset->isMC()) );
             }
 
             if (passOfflineDisplacedJetOrSelection) {
                 if (passOfflineDisplacedJetTracksSelection) {
                     triggerDisplacedJetOr = displacedJetsTracksTriggerCut(event);
-                    triggerDisplacedJetOrHt = triggerDisplacedJetTracks && HTcheck( event, 480., (dataset->isMC()) );
+                    triggerDisplacedJetOrHt = triggerDisplacedJetTracks && HTcheck( event, tracksDisplacedJetsPtCut_, (dataset->isMC()) );
                 }
                 else {
                     triggerDisplacedJetOr = displacedJetsInclusiveTriggerCut(event);
-                    triggerDisplacedJetOrHt = triggerDisplacedJetInclusive && HTcheck( event, 700., (dataset->isMC()) );
+                    triggerDisplacedJetOrHt = triggerDisplacedJetInclusive && HTcheck( event, incDisplacedJetsPtCut_, (dataset->isMC()) );
                 }
             }
 
@@ -1327,13 +1343,13 @@ bool TriggerScaleFactors::passDisplacedJetSelection(AnalysisEvent& event,  const
     {
       TLorentzVector jetVec{getJetLVec(event, i, isMC)};
       hT += jetVec.Pt();
-      if (jetVec.Pt() <= 40. && !isInclusive) continue;
-      if (jetVec.Pt() <= 60. && isInclusive) continue;
+      if (jetVec.Pt() <= tracksDisplacedJetsPtCut_ && !isInclusive) continue;
+      if (jetVec.Pt() <= incDisplacedJetsPtCut_ && isInclusive) continue;
       if (std::abs(jetVec.Eta()) >= 2.0) continue;
       jets.emplace_back(i);
     }
-  if (hT < 700. && isInclusive) return false;
-  if (hT < 480. && !isInclusive) return false; 
+  if (hT < tracksDisplacedJetsHtCut_ && !isInclusive) return false; 
+  if (hT < incDisplacedJetsHtCut_ && isInclusive) return false;
   if (jets.size() > 1) return true;
   else return false;
 }
