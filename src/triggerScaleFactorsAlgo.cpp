@@ -3032,10 +3032,9 @@ void TriggerScaleFactors::savePlots()
               << "Inclusive trigger: " << numberTriggeredDisplacedJetsInclusive[0] << " (MC) / "
               << numberTriggeredDisplacedJetsInclusive[1] << "(Data)" << '\n';
     std::cout << "Displaced tracks trigger: " << numberTriggeredDisplacedJetsTracks[0] << "(MC) / "
-              << numberTriggeredDisplacedJetsTracks[1] <<  "(Data)" << '\n'
-              << std::endl;
+              << numberTriggeredDisplacedJetsTracks[1] <<  "(Data)" << '\n';
     std::cout << "Inclusive OR displaced tracks triggers: " << numberTriggeredDisplacedJetsOr[0] << "(MC) / "
-              << numberTriggeredDisplacedJetsOr[1] <<  "(Data)" << '\n'
+              << numberTriggeredDisplacedJetsOr[1] <<  "(Data)"
               << std::endl;
     std::cout
         << "-----------------------------------------------------------\n";
@@ -3043,8 +3042,7 @@ void TriggerScaleFactors::savePlots()
               << "Inclusive trigger: " << numberPassedDisplacedJetsInclusive[0] << " (MC) / "
               << numberPassedDisplacedJetsInclusive[1] << "(Data)" << '\n';
     std::cout << "Displaced tracks trigger: " << numberPassedDisplacedJetsTracks[0] << "(MC) / "
-              << numberPassedDisplacedJetsTracks[1] <<  "(Data)" << '\n'
-              << std::endl;
+              << numberPassedDisplacedJetsTracks[1] <<  "(Data)" << '\n';
     std::cout << "Inclusive OR displaced tracks triggers: " << numberPassedDisplacedJetsOr[0] << "(MC) / "
               << numberPassedDisplacedJetsOr[1] <<  "(Data)" << '\n'
               << std::endl;
