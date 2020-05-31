@@ -902,6 +902,8 @@ class AnalysisEvent
     Float_t genParPt[NGENPARMAX];
     Int_t genParId[NGENPARMAX];
     Int_t genParMotherId[NGENPARMAX];
+    Int_t genParNumDaughters[NGENPARMAX];
+    Int_t genParStatus[NGENPARMAX];
     Int_t genParCharge[NGENPARMAX];
     Int_t eventRun;
     Int_t eventNum;
@@ -1748,6 +1750,8 @@ class AnalysisEvent
     TBranch* b_genParPt; //!
     TBranch* b_genParId; //!
     TBranch* b_genParMotherId; //!
+    TBranch* b_genParNumDaughters; //!
+    TBranch* b_genParStatus; //!
     TBranch* b_genParCharge; //!
     TBranch* b_eventRun; //!
     TBranch* b_eventNum; //!
@@ -2757,6 +2761,8 @@ inline AnalysisEvent::AnalysisEvent(const bool isMC,
        fChain->SetBranchAddress("genParPt", genParPt, &b_genParPt);
        fChain->SetBranchAddress("genParId", genParId, &b_genParId);
        fChain->SetBranchAddress("genParMotherId", genParMotherId, &b_genParMotherId);
+       fChain->SetBranchAddress("genParNumDaughters", genParNumDaughters, &b_genParNumDaughters);
+       fChain->SetBranchAddress("genParStatus", genParStatus, &b_genParStatus);
        fChain->SetBranchAddress("genParCharge", genParCharge, &b_genParCharge);
    }
    fChain->SetBranchAddress("eventRun", &eventRun, &b_eventRun);
