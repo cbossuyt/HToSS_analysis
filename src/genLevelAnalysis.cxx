@@ -287,6 +287,7 @@ std::string pdgId (int parId) {
    int id = std::abs(parId);
 
    switch (id) {
+      case 0 : particle += "-"; break;
       case 1 : particle += "d"; break;
       case 2 : particle += "u"; break;
       case 3 : particle += "s"; break;
@@ -314,23 +315,85 @@ std::string pdgId (int parId) {
 
       case 111 : particle += "\u03C00"; break;
       case 211 : particle += "\u03C0"; break;
+      case 113 : particle += "\u03C10"; break;
+      case 213 : particle += "\u03C1"; break;
 
       case 130 : particle += "K0_L"; break;
       case 310 : particle += "K0_S"; break;
       case 311 : particle += "K0"; break;
       case 321 : particle += "K"; break;
 
+      case 313 : particle += "K*0"; break;
+      case 323 : particle += "K*"; break;
+
+      case 221 : particle += "\u03B7"; break;
+      case 331 : particle += "\u03B7\'"; break;
+      case 223 : particle += "\u03C9"; break;
+      case 333 : particle += "\u03C6"; break;
+
+      case 411 : particle += "D"; break;
+      case 421 : particle += "D0"; break;
+      case 413 : particle += "D*"; break;
+      case 423 : particle += "D*0"; break;
+      case 431 : particle += "D_S"; break;
+      case 433 : particle += "D*_S"; break;
+      case 443 : particle += "J/\u03C8"; break;
+      case 445 : particle += "\u03C7_c2(1P)"; break;
+ 
+      case 511 : particle += "B0"; break;
+      case 521 : particle += "B"; break;
+      case 513 : particle += "B*0"; break;
+      case 523 : particle += "B*"; break;
+      case 531 : particle += "B0_S"; break;
+      case 533 : particle += "B*0_S"; break;
+
+      case 1101 : particle += "(dd)0"; break;
+      case 2101 : particle += "(ud)0"; break;
+      case 2103 : particle += "(ud)1"; break;
+      case 2203 : particle += "(uu)1"; break;
+
       case 2212 : particle += "p"; break;
       case 2112 : particle += "n"; break;
+      case 2224 : particle += "\u0394++"; break;
+      case 2214 : particle += "\u0394+"; break;
+      case 2114 : particle += "\u03940"; break;
+      case 1114 : particle += "\u0394-"; break;
+
+      case 3122 : particle += "\u0394"; break;
+      case 3222 : particle += "\u03A3"; break;
+      case 3224 : particle += "\u03A3*"; break;
+      case 3212 : particle += "\u03A30"; break;
+      case 3322 : particle += "\u03A30"; break;
+      case 3112 : particle += "\u03A3-"; break;
+
+      case 3324 : particle += "\u039E*0"; break;
+
+      case 4214 : particle += "\u03A3*_C"; break;
+      case 4222 : particle += "\u03A3_C"; break;
+      case 4122 : particle += "\u039BC"; break;
+      case 4114 : particle += "\u03A3*0_C"; break;
+      case 4224 : particle += "\u03A3+C"; break;
+
+      case 5122 : particle += "\u039B0_b"; break;
+      case 5212 : particle += "\u03A30_b"; break;
+      case 5232 : particle += "\u039E0_b"; break;
+
+      case 10313: particle += "K0_1 (1270)"; break;
+      case 10441: particle += "\u03C7_C0(1P)"; break;
+      case 20313: particle += "K0_1 (1400)"; break;
+      case 20213: particle += "a1"; break;
 
       case 9000006 : particle += "S"; break;
-      default: particle += std::to_string(std::abs(parId));
+      default : {particle += std::to_string(std::abs(parId)); std::cout << "UNKNOWN PID: " << parId << std::endl;}
    }
 
-   if (parId == 211) particle += "+";
-   if (parId == 321) particle += "+";
-   if (parId < 0) particle += "-";
-   return particle;
+   if (parId == 211 || parId == 213 || parId == 321 || parId == 323 || parId == 411 || parId == 431 || parId == 433 || parId == 521 || parId == 4122 || parId == 20213 || parId == 4214 || parId == 523
+   || parId == 3224 || parId == 3222
+)  particle += "+";
 
+   if (parId < 0) particle += "-";
+   if (parId == -4222 || parId == -4224) particle += "-";
+   if (parId == 4222  || parId == 4222) particle += "+";
+   return particle;
 }
 
