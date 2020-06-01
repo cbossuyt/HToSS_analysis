@@ -1,8 +1,7 @@
 #include "AnalysisEvent.hpp"
 #include "TChain.h"
 #include "TFile.h"
-#include "TH1F.h"
-#include "TH2F.h"
+#include "TH1D.h"
 #include "TMVA/Timer.h"
 #include "TTree.h"
 
@@ -18,8 +17,8 @@
 #include <string>
 #include <vector>
 
-std::string pythiaStatus (int status);
-std::string pdgId (int status);
+std::string pythiaStatus (const Int_t status);
+std::string pdgIdCode (const Int_t status);
 
 int main(int argc, char* argv[])
 {
@@ -28,7 +27,7 @@ int main(int argc, char* argv[])
     bool is2016;
     Long64_t nEvents;
 
-    int maxGenPars {0};
+//    int maxGenPars {0};
 
     namespace po = boost::program_options;
     po::options_description desc("Options");
@@ -97,8 +96,16 @@ int main(int argc, char* argv[])
     std::cout << std::endl;
     std::cout << "Attached all files to TTree!" << std::endl;
 
-//    TH1F* histElePt{new TH1F{"histEleGenEta", "Distribution of gen-electron #eta", 500, -2.5, 2.5}};
+// status == 1 for final state particles
+// status == 2 for a decayed Standard Model hadron or tau or mu lepton, excepting virtual intermediate states thereof (i.e. the particle must undergo a normal decay, not e.g. a shower branching);
+// status == 61-63 for particles produced by beam-remnant treatment
+// status == 71 for partons in preparation of hadronization process and 74 (but exclude particles who are their own parent)
 
+    TH1D* histPdgId{new TH1D{"histPdgId", "Final state content", 500, 0., 500.5}};
+    TH1D* histPdgIdStatus1{new TH1D{"histPdgIdStatus1", "Final state content", 500, -.5, 2.5}};
+    TH1D* histPdgIdStatus2{new TH1D{"histPdgIdStatus2", "Decayed SM hadron or tau or mu", 500, -2.5, 2.5}};
+    TH1D* histPdgIdStatus6X{new TH1D{"histPdgIdStatus6X", "Beam remnants", 500, -2.5, 2.5}};
+    TH1D* histPdgIdStatus7X{new TH1D{"histPdgIdStatus7X", "Oartons in preparation of hadronization process", 500, -2.5, 2.5}};
 
     TMVA::Timer* lTimer{
         new TMVA::Timer{boost::numeric_cast<int>(inputTrees.size()),
@@ -112,34 +119,42 @@ int main(int argc, char* argv[])
     // Event counters
     int totalEvents{0};
 
-    for (std::vector<TTree*>::const_iterator lIt = inputTrees.begin(); lIt != inputTrees.end(); ++lIt)
-    {
-        AnalysisEvent* lEvent{new AnalysisEvent{true, *lIt, is2016}};
+    for (std::vector<TTree*>::const_iterator lIt = inputTrees.begin(); lIt != inputTrees.end(); ++lIt) {
+      AnalysisEvent* lEvent{new AnalysisEvent{true, *lIt, is2016}};
 
-        Long64_t lNumEvents{(*lIt)->GetEntries()};
-        if (nEvents && nEvents < lNumEvents) lNumEvents = nEvents;
+      Long64_t lNumEvents{(*lIt)->GetEntries()};
+      if (nEvents && nEvents < lNumEvents) lNumEvents = nEvents;
+      
+      totalEvents += lNumEvents;
+      
+      for (Int_t j{0}; j < lNumEvents; j++) {
+	(*lIt)->GetEvent(j);
+	
+	
+	for (Int_t k{0}; k < lEvent->nGenPar; k++) {
+	  
+	  const Int_t pdgId    { lEvent->genParId[k] };
+	  const Int_t status   { lEvent->genParStatus[k] };
+	  const Int_t motherId { lEvent->genParMotherId[k] };
+	  const bool daughters { lEvent->genParNumDaughters[k] };
+	  const bool isOwnParent { pdgId == motherId ? true : false };
+	  
+	  if (status == 1 || status == 2 ) histPdgId->Fill(pdgId);
+	  if (status == 1) histPdgIdStatus1->Fill(pdgId);
+	  if (status == 2) histPdgIdStatus2->Fill(pdgId);
+	  if (status == 61 || status == 62 || status == 63) histPdgIdStatus6X->Fill(pdgId);
+	  if (status == 71) histPdgIdStatus7X->Fill(pdgId);
 
-        totalEvents += lNumEvents;
+	  // if (maxGenPars < lEvent->nGenPar) maxGenPars = lEvent->nGenPar;
 
-        for (Int_t j{0}; j < lNumEvents; j++)
-        {
-            (*lIt)->GetEvent(j);
-            if (maxGenPars < lEvent->nGenPar) maxGenPars = lEvent->nGenPar;
-            std::cout << "nGenPar: " << lEvent->nGenPar << std::endl;
-            std::cout << "pdgId / mother / status: " << std::endl;
-            for (Int_t k{0}; k < lEvent->nGenPar; k++) {
-                std::cout << pdgId( lEvent->genParId[k] ) << " / " << pdgId( lEvent->genParMotherId[k] ) << " / " << pythiaStatus( lEvent->genParStatus[k] ) << std::endl;
-            }
-            std::cout << std::endl;
-
-//            for (Int_t k{0}; k < lEvent->numElePF2PAT; k++) {
-//                histElePt->Fill(lEvent->elePF2PATPT[k]);
-//            }
-        }
+	  std::cout << "nGenPar: " << lEvent->nGenPar << std::endl;
+	  std::cout << "pdgId / mother / daughers? / status: " << std::endl;
+	  std::cout << pdgIdCode( pdgId ) << " / " << pdgIdCode( motherId ) << " / " << daughters << " / " << pythiaStatus( status ) << std::endl;
+	}
+      }
         lTimer->DrawProgressBar(lCounter++, "");
     }
-
-    std::cout << std::endl << std::endl;
+    std::cout << std::endl;
     std::cout << "Total no. of events:\t\t\t" << totalEvents << std::endl;
     std::cout << std::endl;
 
@@ -148,11 +163,11 @@ int main(int argc, char* argv[])
 //    histElePt->Write();
 
 //    outFile->Close();
-    std::cout << "Max nGenPar: " << maxGenPars << std::endl;
-    std::cout << "\n Finished." << std::endl;
+//    std::cout << "Max nGenPar: " << maxGenPars << std::endl;
+    std::cout << "\nFinished." << std::endl;
 }
 
-std::string pythiaStatus (int status) {
+std::string pythiaStatus (const Int_t status) {
 
    std::string message;
    message += std::to_string(status);
@@ -275,13 +290,13 @@ std::string pythiaStatus (int status) {
            break;
        case 107 : message += " : particles in the handling of R-hadron production and decay, i.e. long-lived (or stable) particles with very heavy flavour - two temporary leftover gluons joined into one in the formation of a gluino-gluon R-hadron";
            break;
-       default: message += " : unknown status code ";
+//       default: message += " : unknown status code ";
    }
 
    return message;
 }
 
-std::string pdgId (int parId) {
+std::string pdgIdCode (const Int_t parId) {
 
    std::string particle;
    int id = std::abs(parId);
