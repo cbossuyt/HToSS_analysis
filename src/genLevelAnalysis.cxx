@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
     bool is2016;
     Long64_t nEvents;
 
-//    int maxGenPars {0};
+    int maxGenPars {0};
 
     namespace po = boost::program_options;
     po::options_description desc("Options");
@@ -131,25 +131,27 @@ int main(int argc, char* argv[])
 	(*lIt)->GetEvent(j);
 	
 	
+        if (maxGenPars < lEvent->nGenPar) maxGenPars = lEvent->nGenPar;
+        std::cout << "nGenPar: " << lEvent->nGenPar << std::endl;
+
 	for (Int_t k{0}; k < lEvent->nGenPar; k++) {
 	  
 	  const Int_t pdgId    { lEvent->genParId[k] };
 	  const Int_t status   { lEvent->genParStatus[k] };
 	  const Int_t motherId { lEvent->genParMotherId[k] };
-	  const bool daughters { lEvent->genParNumDaughters[k] };
+	  const Int_t daughters { lEvent->genParNumDaughters[k] };
 	  const bool isOwnParent { pdgId == motherId ? true : false };
 	  
-	  if (status == 1 || status == 2 ) histPdgId->Fill(pdgId);
-	  if (status == 1) histPdgIdStatus1->Fill(pdgId);
-	  if (status == 2) histPdgIdStatus2->Fill(pdgId);
-	  if (status == 61 || status == 62 || status == 63) histPdgIdStatus6X->Fill(pdgId);
-	  if (status == 71) histPdgIdStatus7X->Fill(pdgId);
+	  if (daughters == 0)  histPdgId->Fill(pdgId);
+	  if (status == 1 && daughters == 0) histPdgIdStatus1->Fill(pdgId);
+	  if (status == 2 && daughters) histPdgIdStatus2->Fill(pdgId);
+	  if ((status == 61 && daughters == 0) || (status == 62 && daughters == 0) || (status == 63 && daughters == 0)) histPdgIdStatus6X->Fill(pdgId);
+	  if ((status == 71 && daughters == 0) || (status == 74 && daughters == 0)) histPdgIdStatus7X->Fill(pdgId);
 
-	  // if (maxGenPars < lEvent->nGenPar) maxGenPars = lEvent->nGenPar;
-
-	  std::cout << "nGenPar: " << lEvent->nGenPar << std::endl;
-	  std::cout << "pdgId / mother / daughers? / status: " << std::endl;
-	  std::cout << pdgIdCode( pdgId ) << " / " << pdgIdCode( motherId ) << " / " << daughters << " / " << pythiaStatus( status ) << std::endl;
+          if ( !daughters ) {
+	     std::cout << "pdgId / mother / nDaughers / status: " << std::endl;
+	     std::cout << pdgIdCode( pdgId ) << " / " << pdgIdCode( motherId ) << " / " << daughters << " / " << pythiaStatus( status ) << std::endl;
+          }
 	}
       }
         lTimer->DrawProgressBar(lCounter++, "");
