@@ -28,6 +28,8 @@ int main(int argc, char* argv[])
     bool is2016;
     Long64_t nEvents;
 
+    int maxGenPars {0};
+
     namespace po = boost::program_options;
     po::options_description desc("Options");
     desc.add_options()("help,h", "Print this message.")(
@@ -122,6 +124,7 @@ int main(int argc, char* argv[])
         for (Int_t j{0}; j < lNumEvents; j++)
         {
             (*lIt)->GetEvent(j);
+            if (maxGenPars < lEvent->nGenPar) maxGenPars = lEvent->nGenPar;
             std::cout << "nGenPar: " << lEvent->nGenPar << std::endl;
             std::cout << "pdgId / mother / status: " << std::endl;
             for (Int_t k{0}; k < lEvent->nGenPar; k++) {
@@ -145,6 +148,7 @@ int main(int argc, char* argv[])
 //    histElePt->Write();
 
 //    outFile->Close();
+    std::cout << "Max nGenPar: " << maxGenPars << std::endl;
     std::cout << "\n Finished." << std::endl;
 }
 
@@ -154,6 +158,13 @@ std::string pythiaStatus (int status) {
    message += std::to_string(status);
 
    switch (status) {
+
+       case 0 : message += " : an empty entry, with no meaningful information"; break;
+       case 1 : message += " : a final-state particle"; break;
+       case 2 : message += " : a decayed Standard Model hadron or tau or mu lepton, excepting virtual intermediate states thereof"; break;
+       case 3 : message += " : a documentation entry - not used in PYTHIA"; break;
+       case 4 : message += " : an incoming beam particle"; break;
+
        case 11 : message += " : beam particles - the event as a whole";
            break;
        case 12 : message += " : beam particles - incoming beam";
@@ -304,6 +315,11 @@ std::string pdgId (int parId) {
       case 111 : particle += "\u03C00"; break;
       case 211 : particle += "\u03C0"; break;
 
+      case 130 : particle += "K0_L"; break;
+      case 310 : particle += "K0_S"; break;
+      case 311 : particle += "K0"; break;
+      case 321 : particle += "K"; break;
+
       case 2212 : particle += "p"; break;
       case 2112 : particle += "n"; break;
 
@@ -312,6 +328,7 @@ std::string pdgId (int parId) {
    }
 
    if (parId == 211) particle += "+";
+   if (parId == 321) particle += "+";
    if (parId < 0) particle += "-";
    return particle;
 
