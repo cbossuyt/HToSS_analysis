@@ -160,11 +160,15 @@ int main(int argc, char* argv[])
     std::cout << "Total no. of events:\t\t\t" << totalEvents << std::endl;
     std::cout << std::endl;
 
-//    TFile* outFile{new TFile{outFileString.c_str(), "RECREATE"}};
+    TFile* outFile{new TFile{outFileString.c_str(), "RECREATE"}};
 
-//    histElePt->Write();
+    histPdgId->Write();
+    histPdgIdStatus1->Write();
+    histPdgIdStatus2->Write();
+    histPdgIdStatus6X->Write();
+    histPdgIdStatus7X->Write();
 
-//    outFile->Close();
+    outFile->Close();
 //    std::cout << "Max nGenPar: " << maxGenPars << std::endl;
     std::cout << "\nFinished." << std::endl;
 }
