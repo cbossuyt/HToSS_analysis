@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
     bool is2016;
     Long64_t nEvents;
 
-    int maxGenPars {0};
+//    int maxGenPars {0};
 
     namespace po = boost::program_options;
     po::options_description desc("Options");
@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
 // status == 1 for final state particles
 // status == 2 for a decayed Standard Model hadron or tau or mu lepton, excepting virtual intermediate states thereof (i.e. the particle must undergo a normal decay, not e.g. a shower branching);
 // status == 61-63 for particles produced by beam-remnant treatment
-// status == 71 for partons in preparation of hadronization process and 74 (but exclude particles who are their own parent)
+// status == 71 for partons in preparation of hadronization process and 72+74 (but exclude particles who are their own parent)
 
     TH1D* histPdgId{new TH1D{"histPdgId", "Final state content", 500, 0., 500.5}};
     TH1D* histPdgIdStatus1{new TH1D{"histPdgIdStatus1", "Final state content", 500, -.5, 2.5}};
@@ -131,8 +131,8 @@ int main(int argc, char* argv[])
 	(*lIt)->GetEvent(j);
 	
 	
-        if (maxGenPars < lEvent->nGenPar) maxGenPars = lEvent->nGenPar;
-        std::cout << "nGenPar: " << lEvent->nGenPar << std::endl;
+//        if (maxGenPars < lEvent->nGenPar) maxGenPars = lEvent->nGenPar;
+//        std::cout << "nGenPar: " << lEvent->nGenPar << std::endl;
 
 	for (Int_t k{0}; k < lEvent->nGenPar; k++) {
 	  
@@ -142,18 +142,18 @@ int main(int argc, char* argv[])
 	  const Int_t daughters { lEvent->genParNumDaughters[k] };
 	  const bool isOwnParent { pdgId == motherId ? true : false };
 	  
-	  if (daughters == 0)  histPdgId->Fill(pdgId);
+	  if ( daughters == 0 && (status == 1 || status == 2 || status == 71 || status == 72) )  histPdgId->Fill(pdgId);
 	  if (status == 1 && daughters == 0) histPdgIdStatus1->Fill(pdgId);
-	  if (status == 2 && daughters) histPdgIdStatus2->Fill(pdgId);
-	  if ((status == 61 && daughters == 0) || (status == 62 && daughters == 0) || (status == 63 && daughters == 0)) histPdgIdStatus6X->Fill(pdgId);
-	  if ((status == 71 && daughters == 0) || (status == 74 && daughters == 0)) histPdgIdStatus7X->Fill(pdgId);
+	  if (status == 2 && daughters == 0) histPdgIdStatus2->Fill(pdgId);
+	  if ((status == 61 && status == 62 || status == 63) && daughters == 0) histPdgIdStatus6X->Fill(pdgId);
+	  if ((status == 71 || status == 72 || status == 74) && daughters == 0) histPdgIdStatus7X->Fill(pdgId);
 
-          if ( !daughters ) {
-	     std::cout << "pdgId / mother / nDaughers / status: " << std::endl;
-	     std::cout << pdgIdCode( pdgId ) << " / " << pdgIdCode( motherId ) << " / " << daughters << " / " << pythiaStatus( status ) << std::endl;
-          }
+//          if ( !daughters ) {
+//	     std::cout << "pdgId / mother / nDaughers / status: " << std::endl;
+//	     std::cout << pdgIdCode( pdgId ) << " / " << pdgIdCode( motherId ) << " / " << daughters << " / " << pythiaStatus( status ) << std::endl;}
 	}
       }
+//        std::cout << std::endl;
         lTimer->DrawProgressBar(lCounter++, "");
     }
     std::cout << std::endl;
