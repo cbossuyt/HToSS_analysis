@@ -6,11 +6,15 @@
 #include "TTree.h"
 
 #include <boost/filesystem.hpp>
+#include <boost/functional/hash.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/program_options.hpp>
+#include <boost/progress.hpp>
 #include <boost/range/iterator_range.hpp>
+
 #include <fstream>
 #include <iostream>
+#include <regex>
 #include <iterator>
 #include <memory>
 #include <sstream>
@@ -20,12 +24,29 @@
 std::string pythiaStatus (const Int_t status);
 std::string pdgIdCode (const Int_t status);
 
+namespace fs = boost::filesystem;
+
 int main(int argc, char* argv[])
 {
-    std::string inputDir{};
+    std::vector<std::string> inputDirs{};
     std::string outFileString{"plots/distributions/output.root"};
     bool is2016;
     Long64_t nEvents;
+    Long64_t totalEvents;
+    const std::regex mask{".*\\.root"};
+
+// status == 1 for final state particles
+// status == 2 for a decayed Standard Model hadron or tau or mu lepton, excepting virtual intermediate states thereof (i.e. the particle must undergo a normal decay, not e.g. a shower branching);
+// status == 61-63 for particles produced by beam-remnant treatment
+// status == 71 for partons in preparation of hadronization process and 72+74 (but exclude particles who are their own parent)
+
+    TH1D* histPdgId{new TH1D{"histPdgId", "Final state content", 501, 0., 500.5}};
+    TH1D* histPdgIdStatus1{new TH1D{"histPdgIdStatus1", "Final state content", 501, -.5, 500.5}};
+    TH1D* histPdgIdStatus2{new TH1D{"histPdgIdStatus2", "Decayed SM hadron or tau or mu", 501, -0.5, 500.5}};
+    TH1D* histPdgIdStatus6X{new TH1D{"histPdgIdStatus6X", "Beam remnants", 501, -0.5, 500.5}};
+    TH1D* histPdgIdStatus7X{new TH1D{"histPdgIdStatus7X", "Oartons in preparation of hadronization process", 501, -0.5, 500.5}};
+
+/////
 
 //    int maxGenPars {0};
 
@@ -33,8 +54,8 @@ int main(int argc, char* argv[])
     po::options_description desc("Options");
     desc.add_options()("help,h", "Print this message.")(
         "indir,i",
-        po::value<std::string>(&inputDir)->required(),
-        "Input folder for nTuples.")(
+        po::value<std::vector<std::string>>(&inputDirs)->required(),
+        "Input folder(s) for nTuples.")(
         "outfile,o",
         po::value<std::string>(&outFileString)->default_value(outFileString),
         "Output file for plots.")(
@@ -64,103 +85,63 @@ int main(int argc, char* argv[])
 
     std::vector<TTree*> inputTrees;
 
-    if (boost::filesystem::is_directory(inputDir))
-    {
-        const long int count{
-            std::distance(boost::filesystem::directory_iterator{inputDir},
-                          boost::filesystem::directory_iterator())};
+    for (const auto& inputDir : inputDirs) { // for each input directory
+        for (const auto& file : boost::make_iterator_range(fs::directory_iterator{inputDir}, {})) { // for each file in directory
+            const std::string path{file.path().string()};
+            std::cout << "path: " << path << std::endl;
+            if (!fs::is_regular_file(file.status()) || !std::regex_match(path, mask)) continue; // skip if not a root file
 
-        TMVA::Timer lTimer{
-            boost::numeric_cast<int>(count), "Attaching files to TTree", false};
-        Int_t lCounter{1};
+            TChain datasetChain{"tree"};
+            datasetChain.Add(path.c_str());
+	    
+	    Long64_t numberOfEvents{datasetChain.GetEntries()};
+	    if ( nEvents && nEvents < numberOfEvents) numberOfEvents = nEvents;
+            std::cout << "numberOfEvents = " << numberOfEvents << std::endl;
 
-        lTimer.DrawProgressBar(0, "");
+            boost::progress_display progress{
+                boost::numeric_cast<unsigned long>(numberOfEvents),
+                std::cout,
+                "\n"};
+            AnalysisEvent event{true, &datasetChain, is2016};
+	    
+	    totalEvents += numberOfEvents;
 
-        for (const auto& file : boost::make_iterator_range(
-                 boost::filesystem::directory_iterator{inputDir}, {}))
-        {
-            TFile* inputFile{new TFile{file.path().string().c_str()}};
-            TTree* lTempTree{dynamic_cast<TTree*>(inputFile->Get("tree"))};
-            inputTrees.emplace_back(lTempTree);
+            std::cout << __LINE__<< " : " << __FILE__ << std::endl;
 
-            lTimer.DrawProgressBar(lCounter++, "");
-        }
-    }
-    else
-    {
-        std::cout << "ERROR: " << inputDir << "is not a valid directory"
-                  << std::endl;
-        return 1;
-    }
+            for (Long64_t i{0}; i < numberOfEvents; i++)
+            {
+                ++progress; // update progress bar (++ must be prefix)
+                event.GetEntry(i);      
 
-    std::cout << std::endl;
-    std::cout << "Attached all files to TTree!" << std::endl;
-
-// status == 1 for final state particles
-// status == 2 for a decayed Standard Model hadron or tau or mu lepton, excepting virtual intermediate states thereof (i.e. the particle must undergo a normal decay, not e.g. a shower branching);
-// status == 61-63 for particles produced by beam-remnant treatment
-// status == 71 for partons in preparation of hadronization process and 72+74 (but exclude particles who are their own parent)
-
-    TH1D* histPdgId{new TH1D{"histPdgId", "Final state content", 501, 0., 500.5}};
-    TH1D* histPdgIdStatus1{new TH1D{"histPdgIdStatus1", "Final state content", 501, -.5, 500.5}};
-    TH1D* histPdgIdStatus2{new TH1D{"histPdgIdStatus2", "Decayed SM hadron or tau or mu", 501, -0.5, 500.5}};
-    TH1D* histPdgIdStatus6X{new TH1D{"histPdgIdStatus6X", "Beam remnants", 501, -0.5, 500.5}};
-    TH1D* histPdgIdStatus7X{new TH1D{"histPdgIdStatus7X", "Oartons in preparation of hadronization process", 501, -0.5, 500.5}};
-
-    TMVA::Timer* lTimer{
-        new TMVA::Timer{boost::numeric_cast<int>(inputTrees.size()),
-                        "Running over trees",
-                        false}};
-
-    lTimer->DrawProgressBar(0, "");
-
-    Int_t lCounter{1};
-
-    // Event counters
-    int totalEvents{0};
-
-    for (std::vector<TTree*>::const_iterator lIt = inputTrees.begin(); lIt != inputTrees.end(); ++lIt) {
-      AnalysisEvent* lEvent{new AnalysisEvent{true, *lIt, is2016}};
-
-      Long64_t lNumEvents{(*lIt)->GetEntries()};
-      if (nEvents && nEvents < lNumEvents) lNumEvents = nEvents;
-      
-      totalEvents += lNumEvents;
-      
-      for (Int_t j{0}; j < lNumEvents; j++) {
-	(*lIt)->GetEvent(j);
-	
-	
-//        if (maxGenPars < lEvent->nGenPar) maxGenPars = lEvent->nGenPar;
-//        std::cout << "nGenPar: " << lEvent->nGenPar << std::endl;
-
-	for (Int_t k{0}; k < lEvent->nGenPar; k++) {
+		for (Int_t k{0}; k < event.nGenPar; k++) {
 	  
-	  const Int_t pdgId    { lEvent->genParId[k] };
-	  const Int_t status   { lEvent->genParStatus[k] };
-	  const Int_t motherId { lEvent->genParMotherId[k] };
-	  const Int_t daughters { lEvent->genParNumDaughters[k] };
-	  const bool isOwnParent { pdgId == motherId ? true : false };
+		  const Int_t pdgId    { event.genParId[k] };
+		  const Int_t status   { event.genParStatus[k] };
+		  const Int_t motherId { event.genParMotherId[k] };
+		  const Int_t daughters { event.genParNumDaughters[k] };
+		  const bool isOwnParent { pdgId == motherId ? true : false };
 	  
-	  if ( daughters == 0 && (status == 1 || status == 2 || status == 71 || status == 72) )  histPdgId->Fill(pdgId);
-	  if (status == 1 && daughters == 0) histPdgIdStatus1->Fill(pdgId);
-	  if (status == 2 && daughters == 0) histPdgIdStatus2->Fill(pdgId);
-	  if ((status == 61 && status == 62 || status == 63) && daughters == 0) histPdgIdStatus6X->Fill(pdgId);
-	  if ((status == 71 || status == 72 || status == 74) && daughters == 0) histPdgIdStatus7X->Fill(pdgId);
+		  if ( daughters == 0 && (status == 1 || status == 2 || status == 71 || status == 72) )  histPdgId->Fill(pdgId);
+		  if (status == 1 && daughters == 0) histPdgIdStatus1->Fill(pdgId);
+		  if (status == 2 && daughters == 0) histPdgIdStatus2->Fill(pdgId);
+		  if ((status == 61 && status == 62 || status == 63) && daughters == 0) histPdgIdStatus6X->Fill(pdgId);
+		  if ((status == 71 || status == 72 || status == 74) && daughters == 0) histPdgIdStatus7X->Fill(pdgId);
 
-//          if ( !daughters ) {
-//	     std::cout << "pdgId / mother / nDaughers / status: " << std::endl;
-//	     std::cout << pdgIdCode( pdgId ) << " / " << pdgIdCode( motherId ) << " / " << daughters << " / " << pythiaStatus( status ) << std::endl;}
+		  //if ( !daughters ) {
+		  //std::cout << "pdgId / mother / nDaughers / status: " << std::endl;
+		  //std::cout << pdgIdCode( pdgId ) << " / " << pdgIdCode( motherId ) << " / " << daughters << " / " << pythiaStatus( status ) << std::endl;}
+		}
+	    }
+	    std::cout << std::endl;
 	}
-      }
-//        std::cout << std::endl;
-        lTimer->DrawProgressBar(lCounter++, "");
     }
+    
     std::cout << std::endl;
     std::cout << "Total no. of events:\t\t\t" << totalEvents << std::endl;
     std::cout << std::endl;
 
     TFile* outFile{new TFile{outFileString.c_str(), "RECREATE"}};
+    outFile->cd();
 
     histPdgId->Write();
     histPdgIdStatus1->Write();
