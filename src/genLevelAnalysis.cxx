@@ -101,11 +101,11 @@ int main(int argc, char* argv[])
 // status == 61-63 for particles produced by beam-remnant treatment
 // status == 71 for partons in preparation of hadronization process and 72+74 (but exclude particles who are their own parent)
 
-    TH1D* histPdgId{new TH1D{"histPdgId", "Final state content", 500, 0., 500.5}};
-    TH1D* histPdgIdStatus1{new TH1D{"histPdgIdStatus1", "Final state content", 500, -.5, 2.5}};
-    TH1D* histPdgIdStatus2{new TH1D{"histPdgIdStatus2", "Decayed SM hadron or tau or mu", 500, -2.5, 2.5}};
-    TH1D* histPdgIdStatus6X{new TH1D{"histPdgIdStatus6X", "Beam remnants", 500, -2.5, 2.5}};
-    TH1D* histPdgIdStatus7X{new TH1D{"histPdgIdStatus7X", "Oartons in preparation of hadronization process", 500, -2.5, 2.5}};
+    TH1D* histPdgId{new TH1D{"histPdgId", "Final state content", 501, 0., 500.5}};
+    TH1D* histPdgIdStatus1{new TH1D{"histPdgIdStatus1", "Final state content", 501, -.5, 500.5}};
+    TH1D* histPdgIdStatus2{new TH1D{"histPdgIdStatus2", "Decayed SM hadron or tau or mu", 501, -0.5, 500.5}};
+    TH1D* histPdgIdStatus6X{new TH1D{"histPdgIdStatus6X", "Beam remnants", 501, -0.5, 500.5}};
+    TH1D* histPdgIdStatus7X{new TH1D{"histPdgIdStatus7X", "Oartons in preparation of hadronization process", 501, -0.5, 500.5}};
 
     TMVA::Timer* lTimer{
         new TMVA::Timer{boost::numeric_cast<int>(inputTrees.size()),
