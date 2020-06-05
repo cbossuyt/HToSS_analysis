@@ -4,12 +4,12 @@
 #include "TH1D.h"
 #include "TMVA/Timer.h"
 #include "TTree.h"
+#include "config_parser.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/functional/hash.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/program_options.hpp>
-#include <boost/progress.hpp>
 #include <boost/range/iterator_range.hpp>
 
 #include <fstream>
@@ -28,11 +28,16 @@ namespace fs = boost::filesystem;
 
 int main(int argc, char* argv[])
 {
-    std::vector<std::string> inputDirs{};
+    std::string config;
+    std::vector<Dataset> datasets;
+    double totalLumi;
+    double usePreLumi;
+
     std::string outFileString{"plots/distributions/output.root"};
-    bool is2016;
+    bool is2016_;
+    int numFiles;
     Long64_t nEvents;
-    Long64_t totalEvents;
+    Long64_t totalEvents {0};
     const std::regex mask{".*\\.root"};
 
 // status == 1 for final state particles
@@ -53,16 +58,22 @@ int main(int argc, char* argv[])
     namespace po = boost::program_options;
     po::options_description desc("Options");
     desc.add_options()("help,h", "Print this message.")(
-        "indir,i",
-        po::value<std::vector<std::string>>(&inputDirs)->required(),
-        "Input folder(s) for nTuples.")(
+        "config,c",
+        po::value<std::string>(&config)->required(),
+        "The configuration file to be used.")(
+        "nFiles,f",
+        po::value<int>(&numFiles)->default_value(-1),
+        "Number of files to run over. All if set to -1.")(
+        "lumi,l",
+        po::value<double>(&usePreLumi)->default_value(41528.0),
+        "Lumi to scale MC plots to.")(
         "outfile,o",
         po::value<std::string>(&outFileString)->default_value(outFileString),
         "Output file for plots.")(
         ",n",
         po::value<Long64_t>(&nEvents)->default_value(0),
         "The number of events to be run over. All if set to 0.")(
-        "2016", po::bool_switch(&is2016), "Use 2016 conditions (SFs, et al.).");
+        "2016", po::bool_switch(&is2016_), "Use 2016 conditions (SFs, et al.).");
     po::variables_map vm;
 
     try
@@ -83,56 +94,89 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    std::vector<TTree*> inputTrees;
+    // Some vectors that will be filled in the parsing
+    totalLumi = 0;
 
-    for (const auto& inputDir : inputDirs) { // for each input directory
-        for (const auto& file : boost::make_iterator_range(fs::directory_iterator{inputDir}, {})) { // for each file in directory
-            const std::string path{file.path().string()};
-            std::cout << "path: " << path << std::endl;
-            if (!fs::is_regular_file(file.status()) || !std::regex_match(path, mask)) continue; // skip if not a root file
+    try
+    {
+        Parser::parse_config(config,
+                             datasets,
+                             totalLumi);
+    }
+    catch (const std::exception)
+    {
+        std::cerr << "ERROR Problem with a confugration file, see previous "
+                     "errors for more details. If this is the only error, the "
+                     "problem is with the main configuration file."
+                  << std::endl;
+        throw;
+    }
 
-            TChain datasetChain{"tree"};
-            datasetChain.Add(path.c_str());
-	    
-	    Long64_t numberOfEvents{datasetChain.GetEntries()};
-	    if ( nEvents && nEvents < numberOfEvents) numberOfEvents = nEvents;
-            std::cout << "numberOfEvents = " << numberOfEvents << std::endl;
+    if (totalLumi == 0.)
+    {
+        totalLumi = usePreLumi;
+    }
+    std::cout << "Using lumi: " << totalLumi << std::endl;
 
-            boost::progress_display progress{
-                boost::numeric_cast<unsigned long>(numberOfEvents),
-                std::cout,
-                "\n"};
-            AnalysisEvent event{true, &datasetChain, is2016};
-	    
-	    totalEvents += numberOfEvents;
+    bool datasetFilled{false};
 
-            std::cout << __LINE__<< " : " << __FILE__ << std::endl;
+    // Begin to loop over all datasets
+    for (auto dataset = datasets.begin(); dataset != datasets.end(); ++dataset)
+    {
 
-            for (Long64_t i{0}; i < numberOfEvents; i++)
-            {
-                ++progress; // update progress bar (++ must be prefix)
-                event.GetEntry(i);      
+        datasetFilled = false;
+        TChain* datasetChain{new TChain{dataset->treeName().c_str()}};
+        datasetChain->SetAutoSave(0);
 
-		for (Int_t k{0}; k < event.nGenPar; k++) {
+        if (!datasetFilled) {
+            if (!dataset->fillChain(datasetChain, numFiles)) {
+                std::cerr << "There was a problem constructing the chain for " << dataset->name() << " made of " << numFiles << " files. Continuing with next dataset.\n";
+                continue;
+            }
+            datasetFilled=true;
+        }
+
+        // extract the dataset weight. MC = (lumi*crossSection)/(totalEvents), data = 1.0
+        float datasetWeight{dataset->getDatasetWeight(totalLumi)};
+        std::cout << datasetChain->GetEntries() << " number of items in tree. Dataset weight: " << datasetWeight << std::endl;
+        if (datasetChain->GetEntries() == 0) {
+            std::cout << "No entries in tree, skipping..." << std::endl;
+            continue;
+        }
+
+        AnalysisEvent event{dataset->isMC(), datasetChain, is2016_};
+
+        Long64_t numberOfEvents{datasetChain->GetEntries()};
+        if (	nEvents && nEvents < numberOfEvents) numberOfEvents = nEvents;
+
+        TMVA::Timer* lEventTimer{ new TMVA::Timer{boost::numeric_cast<int>(numberOfEvents), "Running over dataset ...", false}}; 
+        lEventTimer->DrawProgressBar(0, "");
+    
+        totalEvents += numberOfEvents;
+        for (Long64_t i{0}; i < numberOfEvents; i++) {
+
+            lEventTimer->DrawProgressBar(i,"");
+
+            event.GetEntry(i);      
+
+            for (Int_t k{0}; k < event.nGenPar; k++) {
+                const Int_t pdgId    { event.genParId[k] };
+		const Int_t status   { event.genParStatus[k] };
+		const Int_t motherId { event.genParMotherId[k] };
+		const Int_t daughters { event.genParNumDaughters[k] };
+		const bool isOwnParent { pdgId == motherId ? true : false };
 	  
-		  const Int_t pdgId    { event.genParId[k] };
-		  const Int_t status   { event.genParStatus[k] };
-		  const Int_t motherId { event.genParMotherId[k] };
-		  const Int_t daughters { event.genParNumDaughters[k] };
-		  const bool isOwnParent { pdgId == motherId ? true : false };
-	  
-		  if ( daughters == 0 && (status == 1 || status == 2 || status == 71 || status == 72) )  histPdgId->Fill(pdgId);
-		  if (status == 1 && daughters == 0) histPdgIdStatus1->Fill(pdgId);
-		  if (status == 2 && daughters == 0) histPdgIdStatus2->Fill(pdgId);
-		  if ((status == 61 && status == 62 || status == 63) && daughters == 0) histPdgIdStatus6X->Fill(pdgId);
-		  if ((status == 71 || status == 72 || status == 74) && daughters == 0) histPdgIdStatus7X->Fill(pdgId);
+		if ( daughters == 0 && (status == 1 || status == 2 || status == 71 || status == 72) )  histPdgId->Fill(pdgId);
+		if (status == 1 && daughters == 0) histPdgIdStatus1->Fill(pdgId);
+		if (status == 2 && daughters == 0) histPdgIdStatus2->Fill(pdgId);
+		if ((status == 61 && status == 62 || status == 63) && daughters == 0) histPdgIdStatus6X->Fill(pdgId);
+		if ((status == 71 || status == 72 || status == 74) && daughters == 0) histPdgIdStatus7X->Fill(pdgId);
 
-		  //if ( !daughters ) {
-		  //std::cout << "pdgId / mother / nDaughers / status: " << std::endl;
-		  //std::cout << pdgIdCode( pdgId ) << " / " << pdgIdCode( motherId ) << " / " << daughters << " / " << pythiaStatus( status ) << std::endl;}
-		}
+		//if ( !daughters ) {
+		//std::cout << "pdgId / mother / nDaughers / status: " << std::endl;
+	        //std::cout << pdgIdCode( pdgId ) << " / " << pdgIdCode( motherId ) << " / " << daughters << " / " << pythiaStatus( status ) << std::endl;}
 	    }
-	    std::cout << std::endl;
+//	    std::cout << std::endl;
 	}
     }
     
