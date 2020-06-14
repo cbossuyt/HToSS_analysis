@@ -1,6 +1,6 @@
 name: "ttbar_semileptonic"
 locations:
-    - "/scratch/data/tZqSkimsRun2017/ttbar_semileptonic/"
+    - "/vols/cms/adm10/skims2017/ttbar_semileptonic/"
 total_events: 110014744
 cross_section: 365.34
 mc: true

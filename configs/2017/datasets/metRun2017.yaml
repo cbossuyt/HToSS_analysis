@@ -1,10 +1,10 @@
 name: "metRun2017"
 locations:
-    - "/scratch/data/tZqSkimsRun2017/metRun2017B"
-    - "/scratch/data/tZqSkimsRun2017/metRun2017C"
-    - "/scratch/data/tZqSkimsRun2017/metRun2017D"
-    - "/scratch/data/tZqSkimsRun2017/metRun2017E"
-    - "/scratch/data/tZqSkimsRun2017/metRun2017F"
+    - "/vols/cms/adm10/skims2017/metRun2017B"
+    - "/vols/cms/adm10/skims2017/metRun2017C"
+    - "/vols/cms/adm10/skims2017/metRun2017D"
+    - "/vols/cms/adm10/skims2017/metRun2017E"
+    - "/vols/cms/adm10/skims2017/metRun2017F"
 luminosity: 41528
 mc: false
 histogram: "data"

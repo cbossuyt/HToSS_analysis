@@ -1,6 +1,6 @@
 name: "ttbarInclusivePowerheg"
 locations:
-    - "/scratch/data/tZqSkimsRun2016/ttbarInclusive_powerheg"
+    - "/vols/cms/adm10/skims2016/ttbarInclusive_powerheg"
 total_events: 77081156
 cross_section: 730.6
 mc: true
