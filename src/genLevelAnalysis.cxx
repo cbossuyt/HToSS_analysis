@@ -2,6 +2,12 @@
 #include "TChain.h"
 #include "TFile.h"
 #include "TH1I.h"
+#include "TCanvas.h"
+#include "TLegend.h"
+#include "TPad.h"
+#include "TStyle.h"
+#include "TASImage.h"
+#include "TLatex.h"
 #include "TMVA/Timer.h"
 #include "TTree.h"
 #include "TString.h"
@@ -196,14 +202,15 @@ int main(int argc, char* argv[])
     // Do scalable histograms
     int nPdgIds = pdgIdMap.size(); // number of different pdgIds
 
-    //5001, -.5, 5000.5
-
-    TH1I* h_pdgId{new TH1I{"h_pdgId", "Final state content", nPdgIds, 0, nPdgIds}};
+    TH1I* h_pdgId{new TH1I{"h_pdgId", "Final state content", nPdgIds, 0, Double_t(nPdgIds)}};
 
     uint binCounter {1};
     for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
         std::cout << "Add " << it->second << " to bin " << binCounter << " for pdgId " << it->first << std::endl;
         h_pdgId->SetBinContent(binCounter, it->second);
+        const char *label = ( pdgIdCode(it->first) ).c_str();
+        std::cout << "label : " << label << std::endl;
+        h_pdgId->GetXaxis()->SetBinLabel(binCounter, label);
         binCounter++;
     }
 
@@ -390,6 +397,7 @@ std::string pdgIdCode (const Int_t parId) {
       case 211 : particle += "\u03C0"; break;
       case 113 : particle += "\u03C10"; break;
       case 213 : particle += "\u03C1"; break;
+      case 225 : particle += "f2(1270)"; break;
 
       case 130 : particle += "K0_L"; break;
       case 310 : particle += "K0_S"; break;
@@ -397,7 +405,10 @@ std::string pdgIdCode (const Int_t parId) {
       case 321 : particle += "K"; break;
 
       case 313 : particle += "K*0"; break;
+      case 315 : particle += "K*0_2"; break;
       case 323 : particle += "K*"; break;
+
+      case 10311 : particle += "K0*_0(1430)"; break;
 
       case 221 : particle += "\u03B7"; break;
       case 331 : particle += "\u03B7\'"; break;
@@ -437,9 +448,11 @@ std::string pdgIdCode (const Int_t parId) {
       case 3224 : particle += "\u03A3*"; break;
       case 3212 : particle += "\u03A30"; break;
       case 3322 : particle += "\u03A30"; break;
+      case 3312 : particle += "\u03A3-"; break;
       case 3112 : particle += "\u03A3-"; break;
 
       case 3324 : particle += "\u039E*0"; break;
+      case 3334 : particle += "\u03A9-"; break;
 
       case 4214 : particle += "\u03A3*_C"; break;
       case 4222 : particle += "\u03A3_C"; break;
@@ -457,7 +470,9 @@ std::string pdgIdCode (const Int_t parId) {
       case 20213: particle += "a1"; break;
 
       case 9000006 : particle += "S"; break;
-      default : {particle += std::to_string(std::abs(parId)); std::cout << "UNKNOWN PID: " << parId << std::endl;}
+      case 9010221 : particle += "f0(980)"; break;
+
+      default : {particle += std::to_string(std::abs(parId)); /*std::cout << "UNKNOWN PID: " << parId << std::endl;*/}
    }
 
    if (parId == 211 || parId == 213 || parId == 321 || parId == 323 || parId == 411 || parId == 431 || parId == 433 || parId == 521 || parId == 4122 || parId == 20213 || parId == 4214 || parId == 523
@@ -467,6 +482,7 @@ std::string pdgIdCode (const Int_t parId) {
    if (parId < 0) particle += "-";
    if (parId == -4222 || parId == -4224) particle += "-";
    if (parId == 4222  || parId == 4222) particle += "+";
+
    return particle;
 }
 
