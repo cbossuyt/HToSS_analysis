@@ -2,9 +2,7 @@
 #include "TChain.h"
 #include "TFile.h"
 #include "TH1I.h"
-#include "TCanvas.h"
 #include "TLegend.h"
-#include "TPad.h"
 #include "TStyle.h"
 #include "TASImage.h"
 #include "TLatex.h"
@@ -30,7 +28,7 @@
 #include <map>
 
 std::string pythiaStatus (const Int_t status);
-std::string pdgIdCode (const Int_t status);
+std::string pdgIdCode (const Int_t status, const bool unicode = false);
 
 namespace fs = boost::filesystem;
 
@@ -189,7 +187,7 @@ int main(int argc, char* argv[])
 
 		//if ( !daughters ) {
 		//std::cout << "pdgId / mother / nDaughers / status: " << std::endl;
-	        //std::cout << pdgIdCode( pdgId ) << " / " << pdgIdCode( motherId ) << " / " << daughters << " / " << pythiaStatus( status ) << std::endl;}
+	        //std::cout << pdgIdCode( pdgId, true ) << " / " << pdgIdCode( motherId, true ) << " / " << daughters << " / " << pythiaStatus( status ) << std::endl;}
 	    }
 //	    std::cout << std::endl;
 	}
@@ -208,8 +206,9 @@ int main(int argc, char* argv[])
     for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
         std::cout << "Add " << it->second << " to bin " << binCounter << " for pdgId " << it->first << std::endl;
         h_pdgId->SetBinContent(binCounter, it->second);
-        const char *label = ( pdgIdCode(it->first) ).c_str();
-        std::cout << "label : " << label << std::endl;
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        const char *label2 = ( pdgIdCode(it->first, true) ).c_str();
+        std::cout << "label : " << label2 << std::endl;
         h_pdgId->GetXaxis()->SetBinLabel(binCounter, label);
         binCounter++;
     }
@@ -361,7 +360,7 @@ std::string pythiaStatus (const Int_t status) {
    return message;
 }
 
-std::string pdgIdCode (const Int_t parId) {
+std::string pdgIdCode (const Int_t parId, const bool unicode) {
 
    std::string particle;
    int id = std::abs(parId);
@@ -374,24 +373,20 @@ std::string pdgIdCode (const Int_t parId) {
       case 4 : particle += "c"; break;
       case 5 : particle += "b"; break;
       case 6 : particle += "t"; break;
-      case 7 : particle += "b\'"; break;
-      case 8 : particle += "t\t"; break;
       case 9 : particle += "g"; break;
 
       case 11 : particle += "e"; break;
-      case 12 : particle += "\u03BD_e"; break;
-      case 13 : particle += "mu"; break;
-      case 14 : particle += "\u03BD_mu"; break;
-      case 15 : particle += "\u03C4"; break;
-      case 16 : particle += "\u03BD_\u03C4"; break;
-      case 17 : particle += "\u03C4\'"; break;
-      case 18 : particle += "\u03BD_\u03C4\'"; break;
+      case 12 : particle += unicode ? "\u03BD_e" : "#nu_{e}" ; break;
+      case 13 : particle += unicode ? "\u03BC" : "#mu"; break;
+      case 14 : particle += unicode ? "\u03BD_\u03BC" : "#nu_{#mu}"; break;
+      case 15 : particle += unicode ? "\u03C4" : "#tau"; break;
+      case 16 : particle += unicode ? "\u03BD_\u03C4" : "#nu_{#tau}"; break;
 
       case 21 : particle += "g"; break;
-      case 22 : particle += "\u03B3"; break;
-      case 23 : particle += "Z0"; break;
+      case 22 : particle += unicode ? "\u03B3" : "#gamma"; break;
+      case 23 : particle += "Z_{0}"; break;
       case 24 : particle += "W"; break;
-      case 25 : particle += "h0"; break;
+      case 25 : particle += "h_{0}"; break;
 
       case 111 : particle += "\u03C00"; break;
       case 211 : particle += "\u03C0"; break;
