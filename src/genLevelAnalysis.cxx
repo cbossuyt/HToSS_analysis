@@ -1,7 +1,7 @@
 #include "AnalysisEvent.hpp"
 #include "TChain.h"
 #include "TFile.h"
-#include "TH1D.h"
+#include "TH1I.h"
 #include "TMVA/Timer.h"
 #include "TTree.h"
 #include "TString.h"
@@ -21,10 +21,10 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <map>
 
 std::string pythiaStatus (const Int_t status);
 std::string pdgIdCode (const Int_t status);
-std::vector<std::TString> pdgLabels();
 
 namespace fs = boost::filesystem;
 
@@ -34,6 +34,8 @@ int main(int argc, char* argv[])
     std::vector<Dataset> datasets;
     double totalLumi;
     double usePreLumi;
+
+    std::map<int, int> pdgIdMap;
 
     std::string outFileString{"plots/distributions/output.root"};
     bool is2016_;
@@ -47,15 +49,13 @@ int main(int argc, char* argv[])
 // status == 61-63 for particles produced by beam-remnant treatment
 // status == 71 for partons in preparation of hadronization process and 72+74 (but exclude particles who are their own parent)
 
-    TH1D* histPdgId{new TH1D{"histPdgId", "Final state content", 5001, -.5, 5000.5}};
-    TH1D* histPdgId_2{new TH1D{"histPdgId_2", "Final state content", 80, -.5, 79.5}};
-    TH1D* histPdgIdStatus1{new TH1D{"histPdgIdStatus1", "Final state content", 501, -.5, 500.5}};
-    TH1D* histPdgIdStatus2{new TH1D{"histPdgIdStatus2", "Decayed SM hadron or tau or mu", 501, -0.5, 500.5}};
-    TH1D* histPdgIdStatus6X{new TH1D{"histPdgIdStatus6X", "Beam remnants", 501, -0.5, 500.5}};
-    TH1D* histPdgIdStatus7X{new TH1D{"histPdgIdStatus7X", "Oartons in preparation of hadronization process", 501, -0.5, 500.5}};    
+    TH1I* histPdgId{new TH1I{"histPdgId", "Final state content", 5001, -.5, 5000.5}};
+    TH1I* histPdgId_2{new TH1I{"histPdgId_2", "Final state content", 80, -.5, 79.5}};
+    TH1I* histPdgIdStatus1{new TH1I{"histPdgIdStatus1", "Final state content", 501, -.5, 500.5}};
+    TH1I* histPdgIdStatus2{new TH1I{"histPdgIdStatus2", "Decayed SM hadron or tau or mu", 501, -0.5, 500.5}};
+    TH1I* histPdgIdStatus6X{new TH1I{"histPdgIdStatus6X", "Beam remnants", 501, -0.5, 500.5}};
+    TH1I* histPdgIdStatus7X{new TH1I{"histPdgIdStatus7X", "Partons in preparation of hadronization process", 501, -0.5, 500.5}};    
 
-////
-    std::vector<std::TString> pdgNames = pdgLabels();
 ////
 
 //    int maxGenPars {0};
@@ -170,11 +170,16 @@ int main(int argc, char* argv[])
 		const Int_t daughters { event.genParNumDaughters[k] };
 		const bool isOwnParent { pdgId == motherId ? true : false };
 	  
-		if ( daughters == 0 && (status == 1 || status == 2 || status == 71 || status == 72) )  { histPdgId->Fill(pdgId); histPdgId_2->Fill(pdgId);}
+		if ( daughters == 0 && (status == 1 || status == 2 || status == 71 || status == 72) ) { 
+                    histPdgId->Fill(pdgId);
+                    histPdgId_2->Fill(pdgId);
+                    pdgIdMap[pdgId]++;
+                }
 		if (status == 1 && daughters == 0) histPdgIdStatus1->Fill(pdgId);
 		if (status == 2 && daughters == 0) histPdgIdStatus2->Fill(pdgId);
 		if ((status == 61 && status == 62 || status == 63) && daughters == 0) histPdgIdStatus6X->Fill(pdgId);
 		if ((status == 71 || status == 72 || status == 74) && daughters == 0) histPdgIdStatus7X->Fill(pdgId);
+
 
 		//if ( !daughters ) {
 		//std::cout << "pdgId / mother / nDaughers / status: " << std::endl;
@@ -188,6 +193,20 @@ int main(int argc, char* argv[])
     std::cout << "Total no. of events:\t\t\t" << totalEvents << std::endl;
     std::cout << std::endl;
 
+    // Do scalable histograms
+    int nPdgIds = pdgIdMap.size(); // number of different pdgIds
+
+    //5001, -.5, 5000.5
+
+    TH1I* h_pdgId{new TH1I{"h_pdgId", "Final state content", nPdgIds, 0, nPdgIds}};
+
+    uint binCounter {1};
+    for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
+        std::cout << "Add " << it->second << " to bin " << binCounter << " for pdgId " << it->first << std::endl;
+        h_pdgId->SetBinContent(binCounter, it->second);
+        binCounter++;
+    }
+
     TFile* outFile{new TFile{outFileString.c_str(), "RECREATE"}};
     outFile->cd();
 
@@ -197,9 +216,12 @@ int main(int argc, char* argv[])
     histPdgIdStatus2->Write();
     histPdgIdStatus6X->Write();
     histPdgIdStatus7X->Write();
+    h_pdgId->Write();    
 
     outFile->Close();
-//    std::cout << "Max nGenPar: " << maxGenPars << std::endl;
+
+//    std::cout << "Max nGenPar: " << maxGenPars << std::endl;    
+ 
     std::cout << "\nFinished." << std::endl;
 }
 
@@ -448,9 +470,3 @@ std::string pdgIdCode (const Int_t parId) {
    return particle;
 }
 
-std::map<std::string, std::string>>
-std::vector<std::TString> pdgLabels() {
-
-std::vector<std::TString> labels;
-
-}
