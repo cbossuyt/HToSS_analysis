@@ -475,6 +475,33 @@ class AnalysisEvent
     Float_t pvNtracks[NPVSMAX];
     Float_t pvNtracksW05[NPVSMAX];
 
+    static constexpr size_t NSVSMAX{20};
+    Int_t numSVs;
+    Float_t svPt[NSVSMAX];
+    Float_t svPx[NSVSMAX];
+    Float_t svPy[NSVSMAX];
+    Float_t svPz[NSVSMAX];
+    Float_t svMass[NSVSMAX];
+    Float_t svE[NSVSMAX];
+    Float_t svEta[NSVSMAX];
+    Float_t svTheta[NSVSMAX];
+    Float_t svPhi[NSVSMAX];
+    Float_t svX[NSVSMAX];
+    Float_t svY[NSVSMAX];
+    Float_t svZ[NSVSMAX];
+    Float_t svVertexChi2[NSVSMAX];
+    Float_t svVertexNdof[NSVSMAX];
+    Int_t svNtracks[NSVSMAX];
+    Float_t svDist3D[NSVSMAX];
+    Float_t svDist3DSig[NSVSMAX];
+    Float_t svDist3DError[NSVSMAX];
+    Float_t svDistXY[NSVSMAX];
+    Float_t svDistXYSig[NSVSMAX];
+    Float_t svDistXYError[NSVSMAX];
+    Float_t svAnglePV[NSVSMAX];
+    Int_t svIsLambda[NSVSMAX];
+    Int_t svIsKshort[NSVSMAX];
+
     Float_t mhtPt;
     Float_t mhtPy;
     Float_t mhtPx;
@@ -1432,6 +1459,31 @@ class AnalysisEvent
     TBranch* b_pvIsFake; //!
     TBranch* b_pvNdof; //!
     TBranch* b_pvChi2; //!
+    TBranch* b_numSVs; //!
+    TBranch* b_svPt; //!
+    TBranch* b_svPx; //!
+    TBranch* b_svPy; //!
+    TBranch* b_svPz; //!
+    TBranch* b_svMass; //!
+    TBranch* b_svE; //!
+    TBranch* b_svEta; //!
+    TBranch* b_svTheta; //!
+    TBranch* b_svPhi; //!
+    TBranch* b_svX; //!
+    TBranch* b_svY; //!
+    TBranch* b_svZ; //!
+    TBranch* b_svVertexChi2; //!
+    TBranch* b_svVertexNdof; //!
+    TBranch* b_svNtracks; //!
+    TBranch* b_svDist3D; //!
+    TBranch* b_svDist3DSig; //!
+    TBranch* b_svDist3DError; //!
+    TBranch* b_svDistXY; //!
+    TBranch* b_svDistXYSig; //!
+    TBranch* b_svDistXYError; //!
+    TBranch* b_svAnglePV; //!
+    TBranch* b_svIsLambda; //!
+    TBranch* b_svIsKshort; //!
     TBranch* b_mhtPt; //!
     TBranch* b_mhtPy; //!
     TBranch* b_mhtPx; //!
@@ -2497,6 +2549,31 @@ inline AnalysisEvent::AnalysisEvent(const bool isMC,
    fChain->SetBranchAddress("pvIsFake", &pvIsFake, &b_pvIsFake);
    fChain->SetBranchAddress("pvNdof", &pvNdof, &b_pvNdof);
    fChain->SetBranchAddress("pvChi2", &pvChi2, &b_pvChi2);
+   fChain->SetBranchAddress("numSVs", &numSVs, &b_numSVs);
+   fChain->SetBranchAddress("svPt", &svPt, &b_svPt);
+   fChain->SetBranchAddress("svPx", &svPx, &b_svPx);
+   fChain->SetBranchAddress("svPy", &svPy, &b_svPy);
+   fChain->SetBranchAddress("svPz", &svPz, &b_svPz);
+   fChain->SetBranchAddress("svMass", &svMass, &b_svMass);
+   fChain->SetBranchAddress("svE", &svE, &b_svE);
+   fChain->SetBranchAddress("svEta", &svEta, &b_svEta);
+   fChain->SetBranchAddress("svTheta", &svTheta, &b_svTheta);
+   fChain->SetBranchAddress("svPhi", &svPhi, &b_svPhi);
+   fChain->SetBranchAddress("svX", &svX, &b_svX);
+   fChain->SetBranchAddress("svY", &svY, &b_svY);
+   fChain->SetBranchAddress("svZ", &svZ, &b_svZ);
+   fChain->SetBranchAddress("svVertexChi2", &svVertexChi2, &b_svVertexChi2);
+   fChain->SetBranchAddress("svVertexNdof", &svVertexNdof, &b_svVertexNdof);
+   fChain->SetBranchAddress("svNtracks", &svNtracks, &b_svNtracks);
+   fChain->SetBranchAddress("svDist3D", &svDist3D, &b_svDist3D);
+   fChain->SetBranchAddress("svDist3DSig", &svDist3DSig, &b_svDist3DSig);
+   fChain->SetBranchAddress("svDist3DError", &svDist3DError, &b_svDist3DError);
+   fChain->SetBranchAddress("svDistXY", &svDistXY, &b_svDistXY);
+   fChain->SetBranchAddress("svDistXYSig", &svDistXYSig, &b_svDistXYSig);
+   fChain->SetBranchAddress("svDistXYError", &svDistXYError, &b_svDistXYError);
+   fChain->SetBranchAddress("svAnglePV", &svAnglePV, &b_svAnglePV);
+   fChain->SetBranchAddress("svIsLambda", &svIsLambda, &b_svIsLambda);
+   fChain->SetBranchAddress("svIsKshort", &svIsKshort, &b_svIsKshort);
    fChain->SetBranchAddress("mhtPt", &mhtPt, &b_mhtPt);
    fChain->SetBranchAddress("mhtPy", &mhtPy, &b_mhtPy);
    fChain->SetBranchAddress("mhtPx", &mhtPx, &b_mhtPx);

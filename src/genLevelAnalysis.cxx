@@ -204,11 +204,11 @@ int main(int argc, char* argv[])
 
     uint binCounter {1};
     for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
-        std::cout << "Add " << it->second << " to bin " << binCounter << " for pdgId " << it->first << std::endl;
+//        std::cout << "Add " << it->second << " to bin " << binCounter << " for pdgId " << it->first << std::endl;
         h_pdgId->SetBinContent(binCounter, it->second);
         const char *label = ( pdgIdCode(it->first, false) ).c_str();
         const char *label2 = ( pdgIdCode(it->first, true) ).c_str();
-        std::cout << "label : " << label2 << std::endl;
+//        std::cout << "label : " << label2 << std::endl;
         h_pdgId->GetXaxis()->SetBinLabel(binCounter, label);
         binCounter++;
     }
@@ -391,7 +391,7 @@ std::string pdgIdCode (const Int_t parId, const bool unicode) {
       case 111 : particle += unicode ? "\u03C00" : "#pi^{0}"; break;
       case 211 : particle += unicode ? "\u03C0" : "#pi^{+}"; break;
       case 113 : particle += unicode ? "\u03C10" : "#rho(770)^{0}"; break;
-      case 213 : particle += unicode ? "\u03C1" : "rho(770)^{+}"; break;
+      case 213 : particle += unicode ? "\u03C1" : "#rho(770)^{+}"; break;
       case 225 : particle += unicode ? "f2(1270)" : "f_{2}(1270)"; break;
 
       case 130 : particle += unicode ? "K0_L" : "K_{L}^{0}"; break;
@@ -400,10 +400,10 @@ std::string pdgIdCode (const Int_t parId, const bool unicode) {
       case 321 : particle += unicode ? "K" : "K^{+}"; break;
 
       case 313 : particle += unicode ? "K*0" : "K^{*}(892)^{0}"; break;
-      case 315 : particle += unicode ? "K*0_2" : "K^{*}_{2}(1430)^{0}"; break;
+      case 315 : particle += unicode ? "K*0_2" : "K^{*}_{2}(1430)"; break;
       case 323 : particle += unicode ? "K*" : "K^{*}(892)^{+}"; break;
 
-      case 10311 : particle += unicode ? "K0*_0(1430)" : "K^{*}_{0}(1430)^{0}"; break;
+      case 10311 : particle += unicode ? "K0*_0(1430)" : "K^{*}_{0}(1430)"; break;
 
       case 221 : particle += unicode ? "\u03B7" : "#eta"; break;
       case 331 : particle += unicode ? "\u03B7\'" : "#eta'"; break;
@@ -412,19 +412,19 @@ std::string pdgIdCode (const Int_t parId, const bool unicode) {
 
       case 411 : particle += unicode ? "D" : "D^{+}"; break;
       case 421 : particle += unicode ? "D0" : "D^{0}"; break;
-      case 413 : particle += unicode ? "D*" : "D^{*}(2010)^{+}"; break;
+      case 413 : particle += unicode ? "D*" : "D^{*} 2010)^{+}"; break;
       case 423 : particle += unicode ? "D*0" : "D^{*}(2007)^{0}"; break;
-      case 431 : particle += unicode ? "D_S" : "D_{S}^{+}"; break;
-      case 433 : particle += unicode ? "D*_S" : "D_{S}^{*+}"; break;
+      case 431 : particle += unicode ? "D_S" : "D_{s}^{+}"; break;
+      case 433 : particle += unicode ? "D*_S" : "D_{s}^{*+}"; break;
       case 443 : particle += unicode ? "J/\u03C8" : "J/#psi"; break;
-      case 445 : particle += unicode ? "\u03C7_c2(1P)" : "#chi_{C2}(1P)"; break;
+      case 445 : particle += unicode ? "\u03C7_c2(1P)" : "#chi_{c2}(1P)"; break;
  
       case 511 : particle += unicode ? "B0" : "B^{0}"; break;
       case 521 : particle += unicode ? "B" : "B^{+}"; break;
       case 513 : particle += unicode ? "B*0" : "B^{*0}"; break;
       case 523 : particle += unicode ? "B*" : "B^{*+}"; break;
-      case 531 : particle += unicode ? "B0_S" : "B^{0}_{S}"; break;
-      case 533 : particle += unicode ? "B*0_S" : "B^{*0}_{S}"; break;
+      case 531 : particle += unicode ? "B0_S" : "B^{0}_{s}"; break;
+      case 533 : particle += unicode ? "B*0_S" : "B^{*0}_{s}"; break;
 
       case 1101 : particle += unicode ? "(dd)0" : "(dd)_{0}"; break;
       case 2101 : particle += unicode ? "(ud)0" : "(ud)_{0}"; break;
@@ -433,39 +433,39 @@ std::string pdgIdCode (const Int_t parId, const bool unicode) {
 
       case 2212 : particle += "p"; break;
       case 2112 : particle += "n"; break;
-      case 2224 : particle += unicode ? "\u0394++" : ""; break;
-      case 2214 : particle += unicode ? "\u0394+" : ""; break;
-      case 2114 : particle += unicode ? "\u03940" : ""; break;
-      case 1114 : particle += unicode ? "\u0394-" : ""; break;
+      case 2224 : particle += unicode ? "\u0394++" : "#Delta^{++}"; break;
+      case 2214 : particle += unicode ? "\u0394+" : "#Delta^{+}"; break;
+      case 2114 : particle += unicode ? "\u03940" : "#Delta^{0}"; break;
+      case 1114 : particle += unicode ? "\u0394-" : "#Delta^{-}"; break;
 
-      case 3122 : particle += unicode ? "\u0394" : ""; break;
-      case 3222 : particle += unicode ? "\u03A3" : ""; break;
-      case 3224 : particle += unicode ? "\u03A3*" : ""; break;
-      case 3212 : particle += unicode ? "\u03A30" : ""; break;
-      case 3322 : particle += unicode ? "\u03A30" : ""; break;
-      case 3312 : particle += unicode ? "\u03A3-" : ""; break;
-      case 3112 : particle += unicode ? "\u03A3-" : ""; break;
+      case 3122 : particle += unicode ? "\u0394" : "#Lambda"; break;
+      case 3222 : particle += unicode ? "\u03A3" : "#Sigma^{+}"; break;
+      case 3224 : particle += unicode ? "\u03A3*" : "#Sigma^{*+}"; break;
+      case 3212 : particle += unicode ? "\u03A30" : "#Sigma^{0}"; break;
+      case 3322 : particle += unicode ? "\u03A30" : "#Xi^{0}"; break;
+      case 3312 : particle += unicode ? "\u03A3-" : "#Xi^{-}"; break;
+      case 3112 : particle += unicode ? "\u03A3-" : "#Sigma{-}"; break;
 
-      case 3324 : particle += unicode ? "\u039E*0" : ""; break;
-      case 3334 : particle += unicode ? "\u03A9-" : ""; break;
+      case 3324 : particle += unicode ? "\u039E*0" : "#Xi^{*0}"; break;
+      case 3334 : particle += unicode ? "\u03A9-" : "#Omega^{-}"; break;
 
-      case 4214 : particle += unicode ? "\u03A3*_C" : ""; break;
-      case 4222 : particle += unicode ? "\u03A3_C" : ""; break;
-      case 4122 : particle += unicode ? "\u039BC" : ""; break;
-      case 4114 : particle += unicode ? "\u03A3*0_C" : ""; break;
-      case 4224 : particle += unicode ? "\u03A3+C" : ""; break;
+      case 4214 : particle += unicode ? "\u03A3*_C" : "#Sigma_{c}^{*+}"; break;
+      case 4222 : particle += unicode ? "\u03A3_C" : "#Sigma_{c}^{++}"; break;
+      case 4122 : particle += unicode ? "\u039BC" : "#Lambda_{c}^{+}"; break;
+      case 4114 : particle += unicode ? "\u03A3*0_C" : "#Sigma_{c}^{*0}"; break;
+      case 4224 : particle += unicode ? "\u03A3+C" : "#Sigma_{c}^{*++}"; break;
 
-      case 5122 : particle += unicode ? "\u039B0_b" : ""; break;
-      case 5212 : particle += unicode ? "\u03A30_b" : ""; break;
-      case 5232 : particle += unicode ? "\u039E0_b" : ""; break;
+      case 5122 : particle += unicode ? "\u039B0_b" : "#Lambda^{0}_{b}"; break;
+      case 5212 : particle += unicode ? "\u03A30_b" : "#Sigma_{b}^{0}"; break;
+      case 5232 : particle += unicode ? "\u039E0_b" : "#Xi_{b}^{0}"; break;
 
-      case 10313: particle += unicode ? "K0_1 (1270)" : ""; break;
-      case 10441: particle += unicode ? "\u03C7_C0(1P)" : ""; break;
-      case 20313: particle += unicode ? "K0_1 (1400)" : ""; break;
-      case 20213: particle += unicode ? "a1" : ""; break;
+      case 10313: particle += unicode ? "K0_1 (1270)" : "K_{1} (1270)^{0}"; break;
+      case 10441: particle += unicode ? "\u03C7_C0(1P)" : "#chi_{c0}(1P)"; break;
+      case 20313: particle += unicode ? "K0_1 (1400)" : "K_{1}(1400)^0}"; break;
+      case 20213: particle += unicode ? "a1" : "a_{1} (1260)^{+}"; break;
 
-      case 9000006 : particle += unicode ? "S" : ""; break;
-      case 9010221 : particle += unicode ? "f0(980)" : ""; break;
+      case 9000006 : particle += unicode ? "S" : "ABCD"; break;
+      case 9010221 : particle += unicode ? "f0(980)" : "f_{0}(980)"; break;
 
       default : {particle += std::to_string(std::abs(parId)); /*std::cout << "UNKNOWN PID: " << parId << std::endl;*/}
    }
