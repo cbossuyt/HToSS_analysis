@@ -40,6 +40,10 @@ int main(int argc, char* argv[])
     double usePreLumi;
 
     std::map<int, int> pdgIdMap;
+    std::map<int, int> pdgIdMapStatus1;
+    std::map<int, int> pdgIdMapStatus2;
+    std::map<int, int> pdgIdMapStatus6X;
+    std::map<int, int> pdgIdMapStatus7X;
 
     std::string outFileString{"plots/distributions/output.root"};
     bool is2016_;
@@ -47,18 +51,6 @@ int main(int argc, char* argv[])
     Long64_t nEvents;
     Long64_t totalEvents {0};
     const std::regex mask{".*\\.root"};
-
-// status == 1 for final state particles
-// status == 2 for a decayed Standard Model hadron or tau or mu lepton, excepting virtual intermediate states thereof (i.e. the particle must undergo a normal decay, not e.g. a shower branching);
-// status == 61-63 for particles produced by beam-remnant treatment
-// status == 71 for partons in preparation of hadronization process and 72+74 (but exclude particles who are their own parent)
-
-    TH1I* histPdgId{new TH1I{"histPdgId", "Final state content", 5001, -.5, 5000.5}};
-    TH1I* histPdgId_2{new TH1I{"histPdgId_2", "Final state content", 80, -.5, 79.5}};
-    TH1I* histPdgIdStatus1{new TH1I{"histPdgIdStatus1", "Final state content", 501, -.5, 500.5}};
-    TH1I* histPdgIdStatus2{new TH1I{"histPdgIdStatus2", "Decayed SM hadron or tau or mu", 501, -0.5, 500.5}};
-    TH1I* histPdgIdStatus6X{new TH1I{"histPdgIdStatus6X", "Beam remnants", 501, -0.5, 500.5}};
-    TH1I* histPdgIdStatus7X{new TH1I{"histPdgIdStatus7X", "Partons in preparation of hadronization process", 501, -0.5, 500.5}};    
 
 ////
 
@@ -173,16 +165,14 @@ int main(int argc, char* argv[])
 		const Int_t motherId { event.genParMotherId[k] };
 		const Int_t daughters { event.genParNumDaughters[k] };
 		const bool isOwnParent { pdgId == motherId ? true : false };
+
+//                if ( motherId == 9000006 ) std::cout << "MOTHER IS SCALAR and has " << daughters << " daughters and status " << status << " and pdgId " << pdgId << std::endl;                
 	  
-		if ( daughters == 0 && (status == 1 || status == 2 || status == 71 || status == 72) ) { 
-                    histPdgId->Fill(pdgId);
-                    histPdgId_2->Fill(pdgId);
-                    pdgIdMap[pdgId]++;
-                }
-		if (status == 1 && daughters == 0) histPdgIdStatus1->Fill(pdgId);
-		if (status == 2 && daughters == 0) histPdgIdStatus2->Fill(pdgId);
-		if ((status == 61 && status == 62 || status == 63) && daughters == 0) histPdgIdStatus6X->Fill(pdgId);
-		if ((status == 71 || status == 72 || status == 74) && daughters == 0) histPdgIdStatus7X->Fill(pdgId);
+		if ( daughters == 0 && (status == 1 || status == 2 || status == 71 || status == 72) ) pdgIdMap[pdgId]++;
+		if (status == 1 && daughters == 0) pdgIdMapStatus1[pdgId]++;
+		if (status == 2 && daughters == 0) pdgIdMapStatus2[pdgId]++;
+		if ((status == 61 && status == 62 || status == 63) && daughters == 0) pdgIdMapStatus6X[pdgId]++;
+		if ((status == 71 || status == 72 || status == 74) && daughters == 0) pdgIdMapStatus7X[pdgId]++;
 
 
 		//if ( !daughters ) {
@@ -198,9 +188,22 @@ int main(int argc, char* argv[])
     std::cout << std::endl;
 
     // Do scalable histograms
-    int nPdgIds = pdgIdMap.size(); // number of different pdgIds
+    int nPdgIds         = pdgIdMap.size(); // number of different final state pdgIds
+    int nPdgIdsStatus1  = pdgIdMapStatus1.size(); // number of different final state pdgIds with status 1
+    int nPdgIdsStatus2  = pdgIdMapStatus2.size(); // number of different final state pdgIds with status 2
+    int nPdgIdsStatus6X = pdgIdMapStatus6X.size(); // number of different final state pdgIds with status 6X
+    int nPdgIdsStatus7X = pdgIdMapStatus7X.size(); // number of different final state pdgIds with status 7X
 
-    TH1I* h_pdgId{new TH1I{"h_pdgId", "Final state content", nPdgIds, 0, Double_t(nPdgIds)}};
+    // status == 1 for final state particles
+    // status == 2 for a decayed Standard Model hadron or tau or mu lepton, excepting virtual intermediate states thereof (i.e. the particle must undergo a normal decay, not e.g. a shower branching);
+    // status == 61-63 for particles produced by beam-remnant treatment
+    // status == 71 for partons in preparation of hadronization process and 72+74 (but exclude particles who are their own parent)
+
+    TH1I* h_pdgId         {new TH1I{"h_pdgId",         "Final state content - all final state codes", nPdgIds,         0, Double_t(nPdgIds)         }};
+    TH1I* h_pdgIdStatus1  {new TH1I{"h_pdgIdStatus1",  "Final state content - status code 1",         nPdgIdsStatus1,  0, Double_t(nPdgIdsStatus1)  }};
+    TH1I* h_pdgIdStatus2  {new TH1I{"h_pdgIdStatus2",  "Final state content - status code 2",         nPdgIdsStatus2,  0, Double_t(nPdgIdsStatus2)  }};
+    TH1I* h_pdgIdStatus6X {new TH1I{"h_pdgIdStatus6X", "Final state content - status code 6X"       , nPdgIdsStatus6X, 0, Double_t(nPdgIdsStatus6X) }};
+    TH1I* h_pdgIdStatus7X {new TH1I{"h_pdgIdStatus7X", "Final state content - status code 7X"       , nPdgIdsStatus7X, 0, Double_t(nPdgIdsStatus7X) }};
 
     uint binCounter {1};
     for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
@@ -213,16 +216,48 @@ int main(int argc, char* argv[])
         binCounter++;
     }
 
+    uint binCounterStatus1 {1};
+    for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
+        h_pdgId->SetBinContent(binCounterStatus1, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        const char *label2 = ( pdgIdCode(it->first, true) ).c_str();
+        h_pdgId->GetXaxis()->SetBinLabel(binCounterStatus1, label);
+        binCounterStatus1++;
+    }
+    uint binCounterStatus2 {1};
+    for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
+        h_pdgId->SetBinContent(binCounterStatus2, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        const char *label2 = ( pdgIdCode(it->first, true) ).c_str();
+        h_pdgId->GetXaxis()->SetBinLabel(binCounterStatus2, label);
+        binCounterStatus2++;
+    }
+    uint binCounterStatus6X {1};
+    for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
+        h_pdgId->SetBinContent(binCounterStatus6X, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        const char *label2 = ( pdgIdCode(it->first, true) ).c_str();
+        h_pdgId->GetXaxis()->SetBinLabel(binCounterStatus6X, label);
+        binCounterStatus6X++;
+    }
+    uint binCounterStatus7X {1};
+    for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
+        h_pdgId->SetBinContent(binCounterStatus7X, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        const char *label2 = ( pdgIdCode(it->first, true) ).c_str();
+        h_pdgId->GetXaxis()->SetBinLabel(binCounterStatus7X, label);
+        binCounterStatus7X++;
+    }
+
+
     TFile* outFile{new TFile{outFileString.c_str(), "RECREATE"}};
     outFile->cd();
 
-    histPdgId->Write();
-    histPdgId_2->Write();
-    histPdgIdStatus1->Write();
-    histPdgIdStatus2->Write();
-    histPdgIdStatus6X->Write();
-    histPdgIdStatus7X->Write();
-    h_pdgId->Write();    
+    h_pdgId->Write();
+    h_pdgIdStatus1->Write();
+    h_pdgIdStatus2->Write();
+    h_pdgIdStatus6X->Write();
+    h_pdgIdStatus7X->Write();
 
     outFile->Close();
 
@@ -464,7 +499,7 @@ std::string pdgIdCode (const Int_t parId, const bool unicode) {
       case 20313: particle += unicode ? "K0_1 (1400)" : "K_{1}(1400)^0}"; break;
       case 20213: particle += unicode ? "a1" : "a_{1} (1260)^{+}"; break;
 
-      case 9000006 : particle += unicode ? "S" : "ABCD"; break;
+      case 9000006 : particle += unicode ? "S" : "SCALAR"; break;
       case 9010221 : particle += unicode ? "f0(980)" : "f_{0}(980)"; break;
 
       default : {particle += std::to_string(std::abs(parId)); /*std::cout << "UNKNOWN PID: " << parId << std::endl;*/}

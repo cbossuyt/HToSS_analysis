@@ -105,8 +105,8 @@ class AnalysisEvent
     Int_t elePF2PATPhotonConversionTag[NELECTRONSMAX];
     Float_t elePF2PATPhotonConversionDist[NELECTRONSMAX];
     Float_t elePF2PATPhotonConversionDcot[NELECTRONSMAX];
-//    Int_t elePF2PATPhotonConversionVeto[NELECTRONSMAX];
-    Int_t elePF2PATPhotonConversionTagCustom[NELECTRONSMAX];
+    Int_t elePF2PATPhotonConversionVeto[NELECTRONSMAX];
+//    Int_t elePF2PATPhotonConversionTagCustom[NELECTRONSMAX];
     Float_t elePF2PATPhotonConversionDistCustom[NELECTRONSMAX];
     Float_t elePF2PATPhotonConversionDcotCustom[NELECTRONSMAX];
     Float_t elePF2PATTriggerMatch[NELECTRONSMAX];
@@ -1019,7 +1019,10 @@ class AnalysisEvent
     Float_t genParPt[NGENPARMAX];
     Int_t genParId[NGENPARMAX];
     Int_t genParMotherId[NGENPARMAX];
+    Int_t genParMotherIndex[NGENPARMAX];
     Int_t genParNumDaughters[NGENPARMAX];
+    Int_t genParDaughterId1[NGENPARMAX];
+    Int_t genParDaughterId2[NGENPARMAX];
     Int_t genParStatus[NGENPARMAX];
     Int_t genParCharge[NGENPARMAX];
     Int_t eventRun;
@@ -1106,8 +1109,8 @@ class AnalysisEvent
     TBranch* b_elePF2PATPhotonConversionTag; //!
     TBranch* b_elePF2PATPhotonConversionDist; //!
     TBranch* b_elePF2PATPhotonConversionDcot; //!
-//    TBranch* b_elePF2PATPhotonConversionVeto; //!
-    TBranch* b_elePF2PATPhotonConversionTagCustom; //!
+    TBranch* b_elePF2PATPhotonConversionVeto; //!
+//    TBranch* b_elePF2PATPhotonConversionTagCustom; //!
     TBranch* b_elePF2PATPhotonConversionDistCustom; //!
     TBranch* b_elePF2PATPhotonConversionDcotCustom; //!
     TBranch* b_elePF2PATTriggerMatch; //!
@@ -1976,7 +1979,10 @@ class AnalysisEvent
     TBranch* b_genParPt; //!
     TBranch* b_genParId; //!
     TBranch* b_genParMotherId; //!
+    TBranch* b_genParMotherIndex; //!
     TBranch* b_genParNumDaughters; //!
+    TBranch* b_genParDaughterId1; //!
+    TBranch* b_genParDaughterId2; //!
     TBranch* b_genParStatus; //!
     TBranch* b_genParCharge; //!
     TBranch* b_eventRun; //!
@@ -2162,8 +2168,8 @@ inline AnalysisEvent::AnalysisEvent(const bool isMC,
    fChain->SetBranchAddress("elePF2PATPhotonConversionTag", elePF2PATPhotonConversionTag, &b_elePF2PATPhotonConversionTag);
    fChain->SetBranchAddress("elePF2PATPhotonConversionDist", elePF2PATPhotonConversionDist, &b_elePF2PATPhotonConversionDist);
    fChain->SetBranchAddress("elePF2PATPhotonConversionDcot", elePF2PATPhotonConversionDcot, &b_elePF2PATPhotonConversionDcot);
-//   fChain->SetBranchAddress("elePF2PATPhotonConversionVeto", elePF2PATPhotonConversionVeto, &b_elePF2PATPhotonConversionVeto);
-   fChain->SetBranchAddress("elePF2PATPhotonConversionTagCustom", elePF2PATPhotonConversionTagCustom, &b_elePF2PATPhotonConversionTagCustom);
+   fChain->SetBranchAddress("elePF2PATPhotonConversionVeto", elePF2PATPhotonConversionVeto, &b_elePF2PATPhotonConversionVeto);
+//   fChain->SetBranchAddress("elePF2PATPhotonConversionTagCustom", elePF2PATPhotonConversionTagCustom, &b_elePF2PATPhotonConversionTagCustom);
    fChain->SetBranchAddress("elePF2PATPhotonConversionDistCustom", elePF2PATPhotonConversionDistCustom, &b_elePF2PATPhotonConversionDistCustom);
    fChain->SetBranchAddress("elePF2PATPhotonConversionDcotCustom", elePF2PATPhotonConversionDcotCustom, &b_elePF2PATPhotonConversionDcotCustom);
    fChain->SetBranchAddress("elePF2PATTriggerMatch", elePF2PATTriggerMatch, &b_elePF2PATTriggerMatch);
@@ -3097,7 +3103,10 @@ inline AnalysisEvent::AnalysisEvent(const bool isMC,
        fChain->SetBranchAddress("genParPt", genParPt, &b_genParPt);
        fChain->SetBranchAddress("genParId", genParId, &b_genParId);
        fChain->SetBranchAddress("genParMotherId", genParMotherId, &b_genParMotherId);
+       fChain->SetBranchAddress("genParMotherIndex", genParMotherIndex, &b_genParMotherIndex);
        fChain->SetBranchAddress("genParNumDaughters", genParNumDaughters, &b_genParNumDaughters);
+       fChain->SetBranchAddress("genParDaughterId1", genParDaughterId1, &b_genParDaughterId1);
+       fChain->SetBranchAddress("genParDaughterId2", genParDaughterId2, &b_genParDaughterId2);
        fChain->SetBranchAddress("genParStatus", genParStatus, &b_genParStatus);
        fChain->SetBranchAddress("genParCharge", genParCharge, &b_genParCharge);
    }
