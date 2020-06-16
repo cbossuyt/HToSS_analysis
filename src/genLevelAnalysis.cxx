@@ -210,42 +210,38 @@ int main(int argc, char* argv[])
 //        std::cout << "Add " << it->second << " to bin " << binCounter << " for pdgId " << it->first << std::endl;
         h_pdgId->SetBinContent(binCounter, it->second);
         const char *label = ( pdgIdCode(it->first, false) ).c_str();
-        const char *label2 = ( pdgIdCode(it->first, true) ).c_str();
+//        const char *label2 = ( pdgIdCode(it->first, true) ).c_str();
 //        std::cout << "label : " << label2 << std::endl;
         h_pdgId->GetXaxis()->SetBinLabel(binCounter, label);
         binCounter++;
     }
 
     uint binCounterStatus1 {1};
-    for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
-        h_pdgId->SetBinContent(binCounterStatus1, it->second);
+    for (auto it = pdgIdMapStatus1.begin(); it != pdgIdMapStatus1.end(); ++it) {
+        h_pdgIdStatus1->SetBinContent(binCounterStatus1, it->second);
         const char *label = ( pdgIdCode(it->first, false) ).c_str();
-        const char *label2 = ( pdgIdCode(it->first, true) ).c_str();
-        h_pdgId->GetXaxis()->SetBinLabel(binCounterStatus1, label);
+        h_pdgIdStatus1->GetXaxis()->SetBinLabel(binCounterStatus1, label);
         binCounterStatus1++;
     }
     uint binCounterStatus2 {1};
-    for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
-        h_pdgId->SetBinContent(binCounterStatus2, it->second);
+    for (auto it = pdgIdMapStatus2.begin(); it != pdgIdMapStatus2.end(); ++it) {
+        h_pdgIdStatus2->SetBinContent(binCounterStatus2, it->second);
         const char *label = ( pdgIdCode(it->first, false) ).c_str();
-        const char *label2 = ( pdgIdCode(it->first, true) ).c_str();
-        h_pdgId->GetXaxis()->SetBinLabel(binCounterStatus2, label);
+        h_pdgIdStatus2->GetXaxis()->SetBinLabel(binCounterStatus2, label);
         binCounterStatus2++;
     }
     uint binCounterStatus6X {1};
-    for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
-        h_pdgId->SetBinContent(binCounterStatus6X, it->second);
+    for (auto it = pdgIdMapStatus6X.begin(); it != pdgIdMapStatus6X.end(); ++it) {
+        h_pdgIdStatus6X->SetBinContent(binCounterStatus6X, it->second);
         const char *label = ( pdgIdCode(it->first, false) ).c_str();
-        const char *label2 = ( pdgIdCode(it->first, true) ).c_str();
-        h_pdgId->GetXaxis()->SetBinLabel(binCounterStatus6X, label);
+        h_pdgIdStatus6X->GetXaxis()->SetBinLabel(binCounterStatus6X, label);
         binCounterStatus6X++;
     }
     uint binCounterStatus7X {1};
-    for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
-        h_pdgId->SetBinContent(binCounterStatus7X, it->second);
+    for (auto it = pdgIdMapStatus7X.begin(); it != pdgIdMapStatus7X.end(); ++it) {
+        h_pdgIdStatus7X->SetBinContent(binCounterStatus7X, it->second);
         const char *label = ( pdgIdCode(it->first, false) ).c_str();
-        const char *label2 = ( pdgIdCode(it->first, true) ).c_str();
-        h_pdgId->GetXaxis()->SetBinLabel(binCounterStatus7X, label);
+        h_pdgIdStatus7X->GetXaxis()->SetBinLabel(binCounterStatus7X, label);
         binCounterStatus7X++;
     }
 
