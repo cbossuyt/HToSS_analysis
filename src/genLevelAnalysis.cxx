@@ -17,6 +17,7 @@
 #include <boost/program_options.hpp>
 #include <boost/range/iterator_range.hpp>
 
+#include <chrono> 
 #include <fstream>
 #include <iostream>
 #include <regex>
@@ -29,11 +30,16 @@
 
 std::string pythiaStatus (const Int_t status);
 std::string pdgIdCode (const Int_t status, const bool unicode = false);
+bool scalarGrandparent(const AnalysisEvent event, const Int_t k, const Int_t pdgId_);
+
+uint debugCounter;
 
 namespace fs = boost::filesystem;
 
 int main(int argc, char* argv[])
 {
+    auto timerStart = std::chrono::high_resolution_clock::now(); 
+
     std::string config;
     std::vector<Dataset> datasets;
     double totalLumi;
@@ -44,6 +50,7 @@ int main(int argc, char* argv[])
     std::map<int, int> pdgIdMapStatus2;
     std::map<int, int> pdgIdMapStatus6X;
     std::map<int, int> pdgIdMapStatus7X;
+    std::map<int, int> pdgIdMapFromScalar;
 
     std::string outFileString{"plots/distributions/output.root"};
     bool is2016_;
@@ -147,7 +154,7 @@ int main(int argc, char* argv[])
         AnalysisEvent event{dataset->isMC(), datasetChain, is2016_};
 
         Long64_t numberOfEvents{datasetChain->GetEntries()};
-        if (	nEvents && nEvents < numberOfEvents) numberOfEvents = nEvents;
+        if (nEvents && nEvents < numberOfEvents) numberOfEvents = nEvents;
 
         TMVA::Timer* lEventTimer{ new TMVA::Timer{boost::numeric_cast<int>(numberOfEvents), "Running over dataset ...", false}}; 
         lEventTimer->DrawProgressBar(0, "");
@@ -162,18 +169,25 @@ int main(int argc, char* argv[])
             for (Int_t k{0}; k < event.nGenPar; k++) {
                 const Int_t pdgId    { std::abs(event.genParId[k]) };
 		const Int_t status   { event.genParStatus[k] };
-		const Int_t motherId { event.genParMotherId[k] };
-		const Int_t daughters { event.genParNumDaughters[k] };
+		const Int_t motherId { std::abs(event.genParMotherId[k]) };
+		const Int_t numDaughters { event.genParNumDaughters[k] };
 		const bool isOwnParent { pdgId == motherId ? true : false };
 
 //                if ( motherId == 9000006 ) std::cout << "MOTHER IS SCALAR and has " << daughters << " daughters and status " << status << " and pdgId " << pdgId << std::endl;                
 	  
-		if ( daughters == 0 && (status == 1 || status == 2 || status == 71 || status == 72) ) pdgIdMap[pdgId]++;
-		if (status == 1 && daughters == 0) pdgIdMapStatus1[pdgId]++;
-		if (status == 2 && daughters == 0) pdgIdMapStatus2[pdgId]++;
-		if ((status == 61 && status == 62 || status == 63) && daughters == 0) pdgIdMapStatus6X[pdgId]++;
-		if ((status == 71 || status == 72 || status == 74) && daughters == 0) pdgIdMapStatus7X[pdgId]++;
+		if ( numDaughters == 0 && (status == 1 || status == 2 || status == 71 || status == 72) ) pdgIdMap[pdgId]++;
+		if (status == 1 && numDaughters == 0) pdgIdMapStatus1[pdgId]++;
+		if (status == 2 && numDaughters == 0) pdgIdMapStatus2[pdgId]++;
+		if ((status == 61 && status == 62 || status == 63) && numDaughters == 0) pdgIdMapStatus6X[pdgId]++;
+		if ((status == 71 || status == 72 || status == 74) && numDaughters == 0) pdgIdMapStatus7X[pdgId]++;
 
+//                debugCounter = 0;
+//                std::cout << "debugCounter: " << debugCounter << std::endl;
+
+                // search ancestry if final state
+                if ( numDaughters == 0 ) {
+                    if ( scalarGrandparent(event, k, 9000006) == true ) pdgIdMapFromScalar[pdgId]++;
+                }
 
 		//if ( !daughters ) {
 		//std::cout << "pdgId / mother / nDaughers / status: " << std::endl;
@@ -188,22 +202,25 @@ int main(int argc, char* argv[])
     std::cout << std::endl;
 
     // Do scalable histograms
-    int nPdgIds         = pdgIdMap.size(); // number of different final state pdgIds
-    int nPdgIdsStatus1  = pdgIdMapStatus1.size(); // number of different final state pdgIds with status 1
-    int nPdgIdsStatus2  = pdgIdMapStatus2.size(); // number of different final state pdgIds with status 2
-    int nPdgIdsStatus6X = pdgIdMapStatus6X.size(); // number of different final state pdgIds with status 6X
-    int nPdgIdsStatus7X = pdgIdMapStatus7X.size(); // number of different final state pdgIds with status 7X
+    int nPdgIds           = pdgIdMap.size(); // number of different final state pdgIds
+    int nPdgIdsStatus1    = pdgIdMapStatus1.size();    // number of different final state pdgIds with status 1
+    int nPdgIdsStatus2    = pdgIdMapStatus2.size();    // number of different final state pdgIds with status 2
+    int nPdgIdsStatus6X   = pdgIdMapStatus6X.size();   // number of different final state pdgIds with status 6X
+    int nPdgIdsStatus7X   = pdgIdMapStatus7X.size();   // number of different final state pdgIds with status 7X
+    int nPdgIdsFromScalar = pdgIdMapFromScalar.size(); // number of different final state pdgIds that are descended from scalar particle
 
     // status == 1 for final state particles
     // status == 2 for a decayed Standard Model hadron or tau or mu lepton, excepting virtual intermediate states thereof (i.e. the particle must undergo a normal decay, not e.g. a shower branching);
     // status == 61-63 for particles produced by beam-remnant treatment
     // status == 71 for partons in preparation of hadronization process and 72+74 (but exclude particles who are their own parent)
 
-    TH1I* h_pdgId         {new TH1I{"h_pdgId",         "Final state content - all final state codes", nPdgIds,         0, Double_t(nPdgIds)         }};
-    TH1I* h_pdgIdStatus1  {new TH1I{"h_pdgIdStatus1",  "Final state content - status code 1",         nPdgIdsStatus1,  0, Double_t(nPdgIdsStatus1)  }};
-    TH1I* h_pdgIdStatus2  {new TH1I{"h_pdgIdStatus2",  "Final state content - status code 2",         nPdgIdsStatus2,  0, Double_t(nPdgIdsStatus2)  }};
-    TH1I* h_pdgIdStatus6X {new TH1I{"h_pdgIdStatus6X", "Final state content - status code 6X"       , nPdgIdsStatus6X, 0, Double_t(nPdgIdsStatus6X) }};
-    TH1I* h_pdgIdStatus7X {new TH1I{"h_pdgIdStatus7X", "Final state content - status code 7X"       , nPdgIdsStatus7X, 0, Double_t(nPdgIdsStatus7X) }};
+    TH1I* h_pdgId            {new TH1I{"h_pdgId",            "Final state content - all final state codes", nPdgIds,           0, Double_t(nPdgIds)           }};
+    TH1I* h_pdgIdStatus1     {new TH1I{"h_pdgIdStatus1",     "Final state content - status code 1"        , nPdgIdsStatus1,    0, Double_t(nPdgIdsStatus1)    }};
+    TH1I* h_pdgIdStatus2     {new TH1I{"h_pdgIdStatus2",     "Final state content - status code 2"        , nPdgIdsStatus2,    0, Double_t(nPdgIdsStatus2)    }};
+    TH1I* h_pdgIdStatus6X    {new TH1I{"h_pdgIdStatus6X",    "Final state content - status code 6X"       , nPdgIdsStatus6X,   0, Double_t(nPdgIdsStatus6X)   }};
+    TH1I* h_pdgIdStatus7X    {new TH1I{"h_pdgIdStatus7X",    "Final state content - status code 7X"       , nPdgIdsStatus7X,   0, Double_t(nPdgIdsStatus7X)   }};
+
+    TH1I* h_pdgIdFromScalar  {new TH1I{"h_pdgIdFromScalar",  "Final state content from scalars"           , nPdgIdsFromScalar, 0, Double_t(nPdgIdsFromScalar) }}; 
 
     uint binCounter {1};
     for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
@@ -245,6 +262,14 @@ int main(int argc, char* argv[])
         binCounterStatus7X++;
     }
 
+    uint binCounterFromScalar {1};
+    for (auto it = pdgIdMapFromScalar.begin(); it != pdgIdMapFromScalar.end(); ++it) {
+        h_pdgIdFromScalar->SetBinContent(binCounterFromScalar, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdFromScalar->GetXaxis()->SetBinLabel(binCounterFromScalar, label);
+        binCounterFromScalar++;
+    }
+
 
     TFile* outFile{new TFile{outFileString.c_str(), "RECREATE"}};
     outFile->cd();
@@ -254,12 +279,15 @@ int main(int argc, char* argv[])
     h_pdgIdStatus2->Write();
     h_pdgIdStatus6X->Write();
     h_pdgIdStatus7X->Write();
+    h_pdgIdFromScalar->Write();
 
     outFile->Close();
 
 //    std::cout << "Max nGenPar: " << maxGenPars << std::endl;    
- 
-    std::cout << "\nFinished." << std::endl;
+    auto timerStop = std::chrono::high_resolution_clock::now(); 
+    auto duration  = std::chrono::duration_cast<std::chrono::seconds>(timerStop - timerStart);
+
+    std::cout << "\nFinished. Took " << duration.count() << " seconds" <<std::endl;
 }
 
 std::string pythiaStatus (const Int_t status) {
@@ -512,3 +540,20 @@ std::string pdgIdCode (const Int_t parId, const bool unicode) {
    return particle;
 }
 
+bool scalarGrandparent (const AnalysisEvent event, const Int_t k, const Int_t grandparentId) {
+
+    const Int_t pdgId        { std::abs(event.genParId[k]) };
+    const Int_t numDaughters { event.genParNumDaughters[k] };
+    const Int_t motherId     { std::abs(event.genParMotherId[k]) };
+    const Int_t motherIndex  { std::abs(event.genParMotherIndex[k]) };
+
+
+    if (motherId == 0 || motherIndex == -1) return false; // if no parent, then mother Id is null and there's no index, quit search
+    else if (motherId == std::abs(grandparentId)) return true; // if mother is granparent being searched for, return true
+    else {
+//        std::cout << "Going up the ladder ... pdgId = " << pdgId << " : motherIndex = " << motherIndex << " : motherId = " << motherId << std::endl;
+//        debugCounter++;
+//        std::cout << "debugCounter: " << debugCounter << std::endl;
+        return scalarGrandparent(event, motherIndex, grandparentId); // otherwise check mother's mother ...
+    }
+}
