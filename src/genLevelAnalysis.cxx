@@ -48,9 +48,15 @@ int main(int argc, char* argv[])
     std::map<int, int> pdgIdMap;
     std::map<int, int> pdgIdMapStatus1;
     std::map<int, int> pdgIdMapStatus2;
+    std::map<int, int> pdgIdMapStatus23;
+    std::map<int, int> pdgIdMapStatus33;
     std::map<int, int> pdgIdMapStatus6X;
     std::map<int, int> pdgIdMapStatus7X;
+
     std::map<int, int> pdgIdMapFromScalar;
+    std::map<int, int> pdgIdMapFromScalarStatus1;
+    std::map<int, int> pdgIdMapFromScalarStatus23;
+    std::map<int, int> pdgIdMapFromScalarStatus71;
 
     std::string outFileString{"plots/distributions/output.root"};
     bool is2016_;
@@ -178,6 +184,8 @@ int main(int argc, char* argv[])
 		if ( numDaughters == 0 && (status == 1 || status == 2 || status == 71 || status == 72) ) pdgIdMap[pdgId]++;
 		if (status == 1 && numDaughters == 0) pdgIdMapStatus1[pdgId]++;
 		if (status == 2 && numDaughters == 0) pdgIdMapStatus2[pdgId]++;
+                if (status == 23) pdgIdMapStatus23[pdgId]++;
+                if (status == 33) pdgIdMapStatus33[pdgId]++;
 		if ((status == 61 && status == 62 || status == 63) && numDaughters == 0) pdgIdMapStatus6X[pdgId]++;
 		if ((status == 71 || status == 72 || status == 74) && numDaughters == 0) pdgIdMapStatus7X[pdgId]++;
 
@@ -186,7 +194,12 @@ int main(int argc, char* argv[])
 
                 // search ancestry if final state
                 if ( numDaughters == 0 ) {
-                    if ( scalarGrandparent(event, k, 9000006) == true ) pdgIdMapFromScalar[pdgId]++;
+                    if ( scalarGrandparent(event, k, 9000006) == true ) {
+                        pdgIdMapFromScalar[pdgId]++;
+                        if (status == 1) pdgIdMapFromScalarStatus1[pdgId]++;
+                        if (status == 23) pdgIdMapFromScalarStatus23[pdgId]++;
+                        if (status == 71) pdgIdMapFromScalarStatus71[pdgId]++;
+                    }
                 }
 
 		//if ( !daughters ) {
@@ -202,25 +215,35 @@ int main(int argc, char* argv[])
     std::cout << std::endl;
 
     // Do scalable histograms
-    int nPdgIds           = pdgIdMap.size(); // number of different final state pdgIds
-    int nPdgIdsStatus1    = pdgIdMapStatus1.size();    // number of different final state pdgIds with status 1
-    int nPdgIdsStatus2    = pdgIdMapStatus2.size();    // number of different final state pdgIds with status 2
-    int nPdgIdsStatus6X   = pdgIdMapStatus6X.size();   // number of different final state pdgIds with status 6X
-    int nPdgIdsStatus7X   = pdgIdMapStatus7X.size();   // number of different final state pdgIds with status 7X
-    int nPdgIdsFromScalar = pdgIdMapFromScalar.size(); // number of different final state pdgIds that are descended from scalar particle
+    int nPdgIds                   = pdgIdMap.size();                   // number of different final state pdgIds
+    int nPdgIdsStatus1            = pdgIdMapStatus1.size();            // number of different final state pdgIds with status 1
+    int nPdgIdsStatus2            = pdgIdMapStatus2.size();            // number of different final state pdgIds with status 2
+    int nPdgIdsStatus23           = pdgIdMapStatus23.size();           // number of different final state pdgIds with status 23
+    int nPdgIdsStatus33           = pdgIdMapStatus33.size();           // number of different final state pdgIds with status 33
+    int nPdgIdsStatus6X           = pdgIdMapStatus6X.size();           // number of different final state pdgIds with status 6X
+    int nPdgIdsStatus7X           = pdgIdMapStatus7X.size();           // number of different final state pdgIds with status 7X
+    int nPdgIdsFromScalar         = pdgIdMapFromScalar.size();         // number of different final state pdgIds that are descended from scalar particle
+    int nPdgIdsFromScalarStatus1  = pdgIdMapFromScalarStatus1.size();  // number of different final state pdgIds that are descended from scalar particle
+    int nPdgIdsFromScalarStatus23 = pdgIdMapFromScalarStatus23.size(); // number of different final state pdgIds that are descended from scalar particle
+    int nPdgIdsFromScalarStatus71 = pdgIdMapFromScalarStatus71.size(); // number of different final state pdgIds that are descended from scalar particle
 
     // status == 1 for final state particles
     // status == 2 for a decayed Standard Model hadron or tau or mu lepton, excepting virtual intermediate states thereof (i.e. the particle must undergo a normal decay, not e.g. a shower branching);
     // status == 61-63 for particles produced by beam-remnant treatment
     // status == 71 for partons in preparation of hadronization process and 72+74 (but exclude particles who are their own parent)
 
-    TH1I* h_pdgId            {new TH1I{"h_pdgId",            "Final state content - all final state codes", nPdgIds,           0, Double_t(nPdgIds)           }};
-    TH1I* h_pdgIdStatus1     {new TH1I{"h_pdgIdStatus1",     "Final state content - status code 1"        , nPdgIdsStatus1,    0, Double_t(nPdgIdsStatus1)    }};
-    TH1I* h_pdgIdStatus2     {new TH1I{"h_pdgIdStatus2",     "Final state content - status code 2"        , nPdgIdsStatus2,    0, Double_t(nPdgIdsStatus2)    }};
-    TH1I* h_pdgIdStatus6X    {new TH1I{"h_pdgIdStatus6X",    "Final state content - status code 6X"       , nPdgIdsStatus6X,   0, Double_t(nPdgIdsStatus6X)   }};
-    TH1I* h_pdgIdStatus7X    {new TH1I{"h_pdgIdStatus7X",    "Final state content - status code 7X"       , nPdgIdsStatus7X,   0, Double_t(nPdgIdsStatus7X)   }};
+    TH1I* h_pdgId            {new TH1I{"h_pdgId",            "Final state content - all final state codes"   , nPdgIds,           0, Double_t(nPdgIds)           }};
+    TH1I* h_pdgIdStatus1     {new TH1I{"h_pdgIdStatus1",     "Final state content - status code 1"           , nPdgIdsStatus1,    0, Double_t(nPdgIdsStatus1)    }};
+    TH1I* h_pdgIdStatus2     {new TH1I{"h_pdgIdStatus2",     "Final state content - status code 2"           , nPdgIdsStatus2,    0, Double_t(nPdgIdsStatus2)    }};
+    TH1I* h_pdgIdStatus23    {new TH1I{"h_pdgIdStatus23",    "Outgoing particles of hardest subprocess"      , nPdgIdsStatus23,   0, Double_t(nPdgIdsStatus23)   }};
+    TH1I* h_pdgIdStatus33    {new TH1I{"h_pdgIdStatus33",    "Outgoing particles of subsequent subprocesses" , nPdgIdsStatus33,   0, Double_t(nPdgIdsStatus33)   }};
+    TH1I* h_pdgIdStatus6X    {new TH1I{"h_pdgIdStatus6X",    "Final state content - status code 6X"          , nPdgIdsStatus6X,   0, Double_t(nPdgIdsStatus6X)   }};
+    TH1I* h_pdgIdStatus7X    {new TH1I{"h_pdgIdStatus7X",    "Final state content - status code 7X"          , nPdgIdsStatus7X,   0, Double_t(nPdgIdsStatus7X)   }};
 
-    TH1I* h_pdgIdFromScalar  {new TH1I{"h_pdgIdFromScalar",  "Final state content from scalars"           , nPdgIdsFromScalar, 0, Double_t(nPdgIdsFromScalar) }}; 
+    TH1I* h_pdgIdFromScalar         {new TH1I{"h_pdgIdFromScalar",         "Final state content from scalars"                  , nPdgIdsFromScalar, 0, Double_t(nPdgIdsFromScalar) }}; 
+    TH1I* h_pdgIdFromScalarStatus1  {new TH1I{"h_pdgIdFromScalarStatus1",  "Final state content from scalars with status 1"    , nPdgIdsFromScalarStatus1, 0, Double_t(nPdgIdsFromScalarStatus1) }}; 
+    TH1I* h_pdgIdFromScalarStatus23  {new TH1I{"h_pdgIdFromScalarStatus23",  "Final state content from scalars with status 23" , nPdgIdsFromScalarStatus23, 0, Double_t(nPdgIdsFromScalarStatus23) }}; 
+    TH1I* h_pdgIdFromScalarStatus71  {new TH1I{"h_pdgIdFromScalarStatus71",  "Final state content from scalars with status 71" , nPdgIdsFromScalarStatus71, 0, Double_t(nPdgIdsFromScalarStatus71) }}; 
 
     uint binCounter {1};
     for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
@@ -247,6 +270,20 @@ int main(int argc, char* argv[])
         h_pdgIdStatus2->GetXaxis()->SetBinLabel(binCounterStatus2, label);
         binCounterStatus2++;
     }
+    uint binCounterStatus23 {1};
+    for (auto it = pdgIdMapStatus23.begin(); it != pdgIdMapStatus23.end(); ++it) {
+        h_pdgIdStatus23->SetBinContent(binCounterStatus23, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdStatus23->GetXaxis()->SetBinLabel(binCounterStatus23, label);
+        binCounterStatus23++;
+    }
+    uint binCounterStatus33 {1};
+    for (auto it = pdgIdMapStatus33.begin(); it != pdgIdMapStatus33.end(); ++it) {
+        h_pdgIdStatus33->SetBinContent(binCounterStatus33, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdStatus33->GetXaxis()->SetBinLabel(binCounterStatus33, label);
+        binCounterStatus33++;
+    }
     uint binCounterStatus6X {1};
     for (auto it = pdgIdMapStatus6X.begin(); it != pdgIdMapStatus6X.end(); ++it) {
         h_pdgIdStatus6X->SetBinContent(binCounterStatus6X, it->second);
@@ -270,6 +307,30 @@ int main(int argc, char* argv[])
         binCounterFromScalar++;
     }
 
+    uint binCounterFromScalarStatus1 {1};
+    for (auto it = pdgIdMapFromScalarStatus1.begin(); it != pdgIdMapFromScalarStatus1.end(); ++it) {
+        h_pdgIdFromScalarStatus1->SetBinContent(binCounterFromScalarStatus1, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdFromScalarStatus1->GetXaxis()->SetBinLabel(binCounterFromScalarStatus1, label);
+        binCounterFromScalarStatus1++;
+    }
+
+    uint binCounterFromScalarStatus23 {1};
+    for (auto it = pdgIdMapFromScalarStatus23.begin(); it != pdgIdMapFromScalarStatus23.end(); ++it) {
+        h_pdgIdFromScalarStatus23->SetBinContent(binCounterFromScalarStatus23, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdFromScalarStatus23->GetXaxis()->SetBinLabel(binCounterFromScalarStatus23, label);
+        binCounterFromScalarStatus23++;
+    }
+
+    uint binCounterFromScalarStatus71 {1};
+    for (auto it = pdgIdMapFromScalarStatus71.begin(); it != pdgIdMapFromScalarStatus71.end(); ++it) {
+        h_pdgIdFromScalarStatus71->SetBinContent(binCounterFromScalarStatus71, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdFromScalarStatus71->GetXaxis()->SetBinLabel(binCounterFromScalarStatus71, label);
+        binCounterFromScalarStatus71++;
+    }
+
 
     TFile* outFile{new TFile{outFileString.c_str(), "RECREATE"}};
     outFile->cd();
@@ -277,9 +338,14 @@ int main(int argc, char* argv[])
     h_pdgId->Write();
     h_pdgIdStatus1->Write();
     h_pdgIdStatus2->Write();
+    h_pdgIdStatus23->Write();
+    h_pdgIdStatus33->Write();
     h_pdgIdStatus6X->Write();
     h_pdgIdStatus7X->Write();
     h_pdgIdFromScalar->Write();
+    h_pdgIdFromScalarStatus1->Write();
+    h_pdgIdFromScalarStatus23->Write();
+    h_pdgIdFromScalarStatus71->Write();
 
     outFile->Close();
 
