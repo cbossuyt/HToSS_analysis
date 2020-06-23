@@ -54,9 +54,12 @@ int main(int argc, char* argv[])
     std::map<int, int> pdgIdMapStatus6X;
     std::map<int, int> pdgIdMapStatus7X;
 
+    std::map<int, int> pdgIdMapScalarMother;
+
     std::map<int, int> pdgIdMapFromScalar;
     std::map<int, int> pdgIdMapFromScalarStatus1;
     std::map<int, int> pdgIdMapFromScalarStatus23;
+    std::map<int, int> pdgIdMapFromScalarStatus33;
     std::map<int, int> pdgIdMapFromScalarStatus71;
 
     std::vector <int>  nOutgoingStatus23;
@@ -202,15 +205,16 @@ int main(int argc, char* argv[])
 		if ((status == 61 && status == 62 || status == 63) && numDaughters == 0) pdgIdMapStatus6X[pdgId]++;
 		if ((status == 71 || status == 72 || status == 74) && numDaughters == 0) pdgIdMapStatus7X[pdgId]++;
 
-//                debugCounter = 0;
-//                std::cout << "debugCounter: " << debugCounter << std::endl;
+                // particles directly outgoing from scalar decays
+                if (motherId == 9000006 && ( status == 23 || status == 33) && !isOwnParent) pdgIdMapScalarMother[pdgId]++;
 
-                // search ancestry if final state
+                // search ancestry of final state for final state particles from scalars
                 if ( numDaughters == 0 ) {
                     if ( scalarGrandparent(event, k, 9000006) == true ) {
                         pdgIdMapFromScalar[pdgId]++;
                         if (status == 1) pdgIdMapFromScalarStatus1[pdgId]++;
                         if (status == 23) pdgIdMapFromScalarStatus23[pdgId]++;
+                        if (status == 33) pdgIdMapFromScalarStatus33[pdgId]++;
                         if (status == 71) pdgIdMapFromScalarStatus71[pdgId]++;
                     }
                 }
@@ -237,9 +241,11 @@ int main(int argc, char* argv[])
     int nPdgIdsStatus33           = pdgIdMapStatus33.size();           // number of different final state pdgIds with status 33
     int nPdgIdsStatus6X           = pdgIdMapStatus6X.size();           // number of different final state pdgIds with status 6X
     int nPdgIdsStatus7X           = pdgIdMapStatus7X.size();           // number of different final state pdgIds with status 7X
+    int nPdgIdsScalarMother       = pdgIdMapScalarMother.size();       // number of different particles produced from scalar decay
     int nPdgIdsFromScalar         = pdgIdMapFromScalar.size();         // number of different final state pdgIds that are descended from scalar particle
     int nPdgIdsFromScalarStatus1  = pdgIdMapFromScalarStatus1.size();  // number of different final state pdgIds that are descended from scalar particle
     int nPdgIdsFromScalarStatus23 = pdgIdMapFromScalarStatus23.size(); // number of different final state pdgIds that are descended from scalar particle
+    int nPdgIdsFromScalarStatus33 = pdgIdMapFromScalarStatus33.size(); // number of different final state pdgIds that are descended from scalar particle
     int nPdgIdsFromScalarStatus71 = pdgIdMapFromScalarStatus71.size(); // number of different final state pdgIds that are descended from scalar particle
 
     int nOutgoingStatus23Max = *std::max_element(nOutgoingStatus23.begin(),nOutgoingStatus23.end());
@@ -258,9 +264,12 @@ int main(int argc, char* argv[])
     TH1I* h_pdgIdStatus6X    {new TH1I{"h_pdgIdStatus6X",    "Final state content - status code 6X"          , nPdgIdsStatus6X,   0, Double_t(nPdgIdsStatus6X)   }};
     TH1I* h_pdgIdStatus7X    {new TH1I{"h_pdgIdStatus7X",    "Final state content - status code 7X"          , nPdgIdsStatus7X,   0, Double_t(nPdgIdsStatus7X)   }};
 
-    TH1I* h_pdgIdFromScalar          {new TH1I{"h_pdgIdFromScalar",         "Final state content from scalars"                  , nPdgIdsFromScalar, 0, Double_t(nPdgIdsFromScalar) }}; 
-    TH1I* h_pdgIdFromScalarStatus1   {new TH1I{"h_pdgIdFromScalarStatus1",  "Final state content from scalars with status 1"    , nPdgIdsFromScalarStatus1, 0, Double_t(nPdgIdsFromScalarStatus1) }}; 
+    TH1I* h_pdgIdScalarMother       {new TH1I{"h_pdgIdScalarMother",         "Direct decays from scalars"                      , nPdgIdsScalarMother, 0, Double_t(nPdgIdsScalarMother) }};
+
+    TH1I* h_pdgIdFromScalar          {new TH1I{"h_pdgIdFromScalar",          "Final state content from scalars"                , nPdgIdsFromScalar, 0, Double_t(nPdgIdsFromScalar) }}; 
+    TH1I* h_pdgIdFromScalarStatus1   {new TH1I{"h_pdgIdFromScalarStatus1",   "Final state content from scalars with status 1"  , nPdgIdsFromScalarStatus1, 0, Double_t(nPdgIdsFromScalarStatus1) }}; 
     TH1I* h_pdgIdFromScalarStatus23  {new TH1I{"h_pdgIdFromScalarStatus23",  "Final state content from scalars with status 23" , nPdgIdsFromScalarStatus23, 0, Double_t(nPdgIdsFromScalarStatus23) }}; 
+    TH1I* h_pdgIdFromScalarStatus33  {new TH1I{"h_pdgIdFromScalarStatus33",  "Final state content from scalars with status 33" , nPdgIdsFromScalarStatus33, 0, Double_t(nPdgIdsFromScalarStatus33) }}; 
     TH1I* h_pdgIdFromScalarStatus71  {new TH1I{"h_pdgIdFromScalarStatus71",  "Final state content from scalars with status 71" , nPdgIdsFromScalarStatus71, 0, Double_t(nPdgIdsFromScalarStatus71) }}; 
 
     TH1I* h_outgoingStatus23 {new TH1I{"h_outgoingStatus23", "Number of outgoing particles - hardest subprocess"   , nOutgoingStatus23Max+1 , -0.5, Double_t(nOutgoingStatus23Max+0.5) }};
@@ -320,6 +329,14 @@ int main(int argc, char* argv[])
         binCounterStatus7X++;
     }
 
+    uint binCounterScalarMother {1};
+    for (auto it = pdgIdMapScalarMother.begin(); it != pdgIdMapScalarMother.end(); ++it) {
+        h_pdgIdScalarMother->SetBinContent(binCounterScalarMother, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdScalarMother->GetXaxis()->SetBinLabel(binCounterScalarMother, label);
+        binCounterScalarMother++;
+    }
+
     uint binCounterFromScalar {1};
     for (auto it = pdgIdMapFromScalar.begin(); it != pdgIdMapFromScalar.end(); ++it) {
         h_pdgIdFromScalar->SetBinContent(binCounterFromScalar, it->second);
@@ -342,6 +359,14 @@ int main(int argc, char* argv[])
         const char *label = ( pdgIdCode(it->first, false) ).c_str();
         h_pdgIdFromScalarStatus23->GetXaxis()->SetBinLabel(binCounterFromScalarStatus23, label);
         binCounterFromScalarStatus23++;
+    }
+
+    uint binCounterFromScalarStatus33 {1};
+    for (auto it = pdgIdMapFromScalarStatus33.begin(); it != pdgIdMapFromScalarStatus33.end(); ++it) {
+        h_pdgIdFromScalarStatus33->SetBinContent(binCounterFromScalarStatus33, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdFromScalarStatus33->GetXaxis()->SetBinLabel(binCounterFromScalarStatus33, label);
+        binCounterFromScalarStatus33++;
     }
 
     uint binCounterFromScalarStatus71 {1};
@@ -369,9 +394,11 @@ int main(int argc, char* argv[])
     h_pdgIdStatus33->Write();
     h_pdgIdStatus6X->Write();
     h_pdgIdStatus7X->Write();
+    h_pdgIdScalarMother->Write();
     h_pdgIdFromScalar->Write();
     h_pdgIdFromScalarStatus1->Write();
     h_pdgIdFromScalarStatus23->Write();
+    h_pdgIdFromScalarStatus33->Write();
     h_pdgIdFromScalarStatus71->Write();
     h_outgoingStatus23->Write();
     h_outgoingStatus33->Write();
@@ -620,7 +647,7 @@ std::string pdgIdCode (const Int_t parId, const bool unicode) {
       case 20313: particle += unicode ? "K0_1 (1400)" : "K_{1}(1400)^0}"; break;
       case 20213: particle += unicode ? "a1" : "a_{1} (1260)^{+}"; break;
 
-      case 9000006 : particle += unicode ? "S" : "SCALAR"; break;
+      case 9000006 : particle += unicode ? "Scalar" : "SCALAR"; break;
       case 9010221 : particle += unicode ? "f0(980)" : "f_{0}(980)"; break;
 
       default : {particle += std::to_string(std::abs(parId)); /*std::cout << "UNKNOWN PID: " << parId << std::endl;*/}
