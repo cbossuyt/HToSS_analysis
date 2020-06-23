@@ -17,6 +17,7 @@
 #include <boost/program_options.hpp>
 #include <boost/range/iterator_range.hpp>
 
+#include <algorithm> 
 #include <chrono> 
 #include <fstream>
 #include <iostream>
@@ -57,6 +58,9 @@ int main(int argc, char* argv[])
     std::map<int, int> pdgIdMapFromScalarStatus1;
     std::map<int, int> pdgIdMapFromScalarStatus23;
     std::map<int, int> pdgIdMapFromScalarStatus71;
+
+    std::vector <int>  nOutgoingStatus23;
+    std::vector <int>  nOutgoingStatus33;
 
     std::string outFileString{"plots/distributions/output.root"};
     bool is2016_;
@@ -172,6 +176,9 @@ int main(int argc, char* argv[])
 
             event.GetEntry(i);      
 
+            int nOutgoingStatus23Counter {0};
+            int nOutgoingStatus33Counter {0};
+
             for (Int_t k{0}; k < event.nGenPar; k++) {
                 const Int_t pdgId    { std::abs(event.genParId[k]) };
 		const Int_t status   { event.genParStatus[k] };
@@ -184,8 +191,14 @@ int main(int argc, char* argv[])
 		if ( numDaughters == 0 && (status == 1 || status == 2 || status == 71 || status == 72) ) pdgIdMap[pdgId]++;
 		if (status == 1 && numDaughters == 0) pdgIdMapStatus1[pdgId]++;
 		if (status == 2 && numDaughters == 0) pdgIdMapStatus2[pdgId]++;
-                if (status == 23) pdgIdMapStatus23[pdgId]++;
-                if (status == 33) pdgIdMapStatus33[pdgId]++;
+                if (status == 23) {
+                    pdgIdMapStatus23[pdgId]++;
+                    nOutgoingStatus23Counter++;
+                }
+                if (status == 33) {
+                    pdgIdMapStatus33[pdgId]++;
+                    nOutgoingStatus33Counter++;
+                }
 		if ((status == 61 && status == 62 || status == 63) && numDaughters == 0) pdgIdMapStatus6X[pdgId]++;
 		if ((status == 71 || status == 72 || status == 74) && numDaughters == 0) pdgIdMapStatus7X[pdgId]++;
 
@@ -206,6 +219,8 @@ int main(int argc, char* argv[])
 		//std::cout << "pdgId / mother / nDaughers / status: " << std::endl;
 	        //std::cout << pdgIdCode( pdgId, true ) << " / " << pdgIdCode( motherId, true ) << " / " << daughters << " / " << pythiaStatus( status ) << std::endl;}
 	    }
+            nOutgoingStatus23.emplace_back(nOutgoingStatus23Counter);
+            nOutgoingStatus33.emplace_back(nOutgoingStatus33Counter);
 //	    std::cout << std::endl;
 	}
     }
@@ -227,6 +242,9 @@ int main(int argc, char* argv[])
     int nPdgIdsFromScalarStatus23 = pdgIdMapFromScalarStatus23.size(); // number of different final state pdgIds that are descended from scalar particle
     int nPdgIdsFromScalarStatus71 = pdgIdMapFromScalarStatus71.size(); // number of different final state pdgIds that are descended from scalar particle
 
+    int nOutgoingStatus23Max = *std::max_element(nOutgoingStatus23.begin(),nOutgoingStatus23.end());
+    int nOutgoingStatus33Max = *std::max_element(nOutgoingStatus33.begin(),nOutgoingStatus33.end());
+
     // status == 1 for final state particles
     // status == 2 for a decayed Standard Model hadron or tau or mu lepton, excepting virtual intermediate states thereof (i.e. the particle must undergo a normal decay, not e.g. a shower branching);
     // status == 61-63 for particles produced by beam-remnant treatment
@@ -240,10 +258,13 @@ int main(int argc, char* argv[])
     TH1I* h_pdgIdStatus6X    {new TH1I{"h_pdgIdStatus6X",    "Final state content - status code 6X"          , nPdgIdsStatus6X,   0, Double_t(nPdgIdsStatus6X)   }};
     TH1I* h_pdgIdStatus7X    {new TH1I{"h_pdgIdStatus7X",    "Final state content - status code 7X"          , nPdgIdsStatus7X,   0, Double_t(nPdgIdsStatus7X)   }};
 
-    TH1I* h_pdgIdFromScalar         {new TH1I{"h_pdgIdFromScalar",         "Final state content from scalars"                  , nPdgIdsFromScalar, 0, Double_t(nPdgIdsFromScalar) }}; 
-    TH1I* h_pdgIdFromScalarStatus1  {new TH1I{"h_pdgIdFromScalarStatus1",  "Final state content from scalars with status 1"    , nPdgIdsFromScalarStatus1, 0, Double_t(nPdgIdsFromScalarStatus1) }}; 
+    TH1I* h_pdgIdFromScalar          {new TH1I{"h_pdgIdFromScalar",         "Final state content from scalars"                  , nPdgIdsFromScalar, 0, Double_t(nPdgIdsFromScalar) }}; 
+    TH1I* h_pdgIdFromScalarStatus1   {new TH1I{"h_pdgIdFromScalarStatus1",  "Final state content from scalars with status 1"    , nPdgIdsFromScalarStatus1, 0, Double_t(nPdgIdsFromScalarStatus1) }}; 
     TH1I* h_pdgIdFromScalarStatus23  {new TH1I{"h_pdgIdFromScalarStatus23",  "Final state content from scalars with status 23" , nPdgIdsFromScalarStatus23, 0, Double_t(nPdgIdsFromScalarStatus23) }}; 
     TH1I* h_pdgIdFromScalarStatus71  {new TH1I{"h_pdgIdFromScalarStatus71",  "Final state content from scalars with status 71" , nPdgIdsFromScalarStatus71, 0, Double_t(nPdgIdsFromScalarStatus71) }}; 
+
+    TH1I* h_outgoingStatus23 {new TH1I{"h_outgoingStatus23", "Number of outgoing particles - hardest subprocess"   , nOutgoingStatus23Max+1 , -0.5, Double_t(nOutgoingStatus23Max+0.5) }};
+    TH1I* h_outgoingStatus33 {new TH1I{"h_outgoingStatus33", "Number of outgoing particles - hardest subprocess"   , nOutgoingStatus33Max+1 , -0.5, Double_t(nOutgoingStatus33Max+0.5) }};
 
     uint binCounter {1};
     for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
@@ -331,6 +352,12 @@ int main(int argc, char* argv[])
         binCounterFromScalarStatus71++;
     }
 
+    for (auto it = nOutgoingStatus23.begin(); it != nOutgoingStatus23.end(); ++it) {
+        h_outgoingStatus23->Fill(*it);
+    }
+    for (auto it = nOutgoingStatus33.begin(); it != nOutgoingStatus33.end(); ++it) {
+        h_outgoingStatus33->Fill(*it);
+    }
 
     TFile* outFile{new TFile{outFileString.c_str(), "RECREATE"}};
     outFile->cd();
@@ -346,6 +373,8 @@ int main(int argc, char* argv[])
     h_pdgIdFromScalarStatus1->Write();
     h_pdgIdFromScalarStatus23->Write();
     h_pdgIdFromScalarStatus71->Write();
+    h_outgoingStatus23->Write();
+    h_outgoingStatus33->Write();
 
     outFile->Close();
 
@@ -585,7 +614,9 @@ std::string pdgIdCode (const Int_t parId, const bool unicode) {
       case 5232 : particle += unicode ? "\u039E0_b" : "#Xi_{b}^{0}"; break;
 
       case 10313: particle += unicode ? "K0_1 (1270)" : "K_{1} (1270)^{0}"; break;
-      case 10441: particle += unicode ? "\u03C7_C0(1P)" : "#chi_{c0}(1P)"; break;
+      case 10441: particle += unicode ? "\u03C7_c0(1P)" : "#chi_{c0}(1P)"; break;
+      case 10551: particle += unicode ? "\u03C7_b0(1P)" : "#chi_{b0}(1P)"; break;
+      case 20443: particle += unicode ? "\u03C7_c1(1P)" : "#chi_{c1}(1P)"; break;
       case 20313: particle += unicode ? "K0_1 (1400)" : "K_{1}(1400)^0}"; break;
       case 20213: particle += unicode ? "a1" : "a_{1} (1260)^{+}"; break;
 
