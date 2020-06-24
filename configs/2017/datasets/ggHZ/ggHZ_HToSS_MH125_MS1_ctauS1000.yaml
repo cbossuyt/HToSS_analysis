@@ -1,7 +1,7 @@
-name: "ggHZ_HToSSTodddd_MS1_ctauS1000"
+name: "ggHZ_HToSS_MS1_ctauS1000"
 locations:
-    - "/vols/cms/adm10/skims2017/ggHZ/NLO_ggHZ_HToSSTodddd_Vleptonic_M125_MS1_ctauS1000/"
-total_events: 500
+    - "/vols/cms/adm10/skims2017/ggHZ/NLO_ggHZ_HToSS_Vleptonic_M125_MS1_ctauS1000/"
+total_events: 1000
 cross_section: 0.006185
 mc: true
 histogram: "ggHZ_HToSS_MS1_ctauS1000"
