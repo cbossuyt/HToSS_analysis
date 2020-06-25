@@ -1,7 +1,7 @@
-name: "ggH_HToSSTouuuu_MS40_ctauS10"
+name: "ggH_HToSS_MS40_ctauS10"
 locations:
-    - "/vols/cms/adm10/skims2017/ggH/NLO_HToSSTouuuu_MH125_MS40_ctauS10/"
-total_events: 1000
+    - "/vols/cms/adm10/skims2017/ggH/NLO_HToSS_MH125_MS40_ctauS10/"
+total_events: 10000
 cross_section: 21.46
 mc: true
 histogram: "ggH_HToSS_MS40_ctauS10"

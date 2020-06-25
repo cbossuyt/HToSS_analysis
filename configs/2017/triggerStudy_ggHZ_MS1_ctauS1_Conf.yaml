@@ -1,3 +1,2 @@
 datasets:
-  - "configs/2017/datasets/ggHZ/ggHZ_HToSS_dddd_MH125_MS1_ctauS1.yaml"
-  - "configs/2017/datasets/ggHZ/ggHZ_HToSS_uuuu_MH125_MS1_ctauS1.yaml"
+  - "configs/2017/datasets/ggHZ/ggHZ_HToSS_MH125_MS1_ctauS1.yaml"
