@@ -1,6 +1,6 @@
-name: "HZJ_HToSSTocccc_MS40_ctauS10"
+name: "HZJ_HToSS_MS40_ctauS10"
 locations:
-    - "/vols/cms/adm10/skims2017/HZJ/NLO_HZJ_HToSSTocccc_Vleptonic_M125_MS40_ctauS10/"
+    - "/vols/cms/adm10/skims2017/HZJ/NLO_HZJ_HToSS_Vleptonic_M125_MS40_ctauS10/"
 total_events: 500
 cross_section: 0.07924
 mc: true

@@ -1,6 +1,6 @@
-name: "HZJ_HToSSTodddd_MS1_ctauS1"
+name: "HZJ_HToSS_MS1_ctauS1"
 locations:
-    - "/vols/cms/adm10/skims2017/HZJ/NLO_HZJ_HToSSTodddd_Vleptonic_M125_MS1_ctauS1/"
+    - "/vols/cms/adm10/skims2017/HZJ/NLO_HZJ_HToSS_Vleptonic_M125_MS1_ctauS1/"
 total_events: 500
 cross_section: 0.07924
 mc: true
