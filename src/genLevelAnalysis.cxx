@@ -64,6 +64,7 @@ int main(int argc, char* argv[])
 
     std::map<int, int> pdgIdMapScalarDecayProducts;
 
+    std::vector <int>  nOutgoingStatus;
     std::vector <int>  nOutgoingStatus23;
     std::vector <int>  nOutgoingStatus33;
 
@@ -181,6 +182,7 @@ int main(int argc, char* argv[])
 
             event.GetEntry(i);      
 
+            int nOutgoingStatusCounter {0};
             int nOutgoingStatus23Counter {0};
             int nOutgoingStatus33Counter {0};
 
@@ -201,11 +203,18 @@ int main(int argc, char* argv[])
 		if (status == 1 && numDaughters == 0) pdgIdMapStatus1[pdgId]++;
 		if (status == 2 && numDaughters == 0) pdgIdMapStatus2[pdgId]++;
                 if (status == 23) {
+                   uint localCounter {0};
+                   for (Int_t m{0}; m < event.nGenPar; m++) {
+                       if (event.genParStatus[m] == 23) localCounter++;
+                   }
+//                   if (localCounter == 4) pdgIdMapStatus23[pdgId]++;
                     pdgIdMapStatus23[pdgId]++;
+                    nOutgoingStatusCounter++;
                     nOutgoingStatus23Counter++;
                 }
                 if (status == 33) {
                     pdgIdMapStatus33[pdgId]++;
+                    nOutgoingStatusCounter++;
                     nOutgoingStatus33Counter++;
                 }
 		if ((status == 61 && status == 62 || status == 63) && numDaughters == 0) pdgIdMapStatus6X[pdgId]++;
@@ -250,6 +259,7 @@ int main(int argc, char* argv[])
 //  	        std::cout << k << " / " << pdgIdCode( pdgId, false ) << " / " << pdgIdCode( motherId, false ) << " / " << motherIndex << " / " << numDaughters << " / " << pythiaStatus( status ) << std::endl;
 //              }
 	    }
+            nOutgoingStatus.emplace_back(nOutgoingStatusCounter);
             nOutgoingStatus23.emplace_back(nOutgoingStatus23Counter);
             nOutgoingStatus33.emplace_back(nOutgoingStatus33Counter);
 //	    std::cout << std::endl;
@@ -277,6 +287,7 @@ int main(int argc, char* argv[])
 
     int nPdgIdsScalarDecayProducts = pdgIdMapScalarDecayProducts.size(); // number of physical decay products from scalars (before decaying)
 
+    int nOutgoingStatusMax   = *std::max_element(nOutgoingStatus.begin(),nOutgoingStatus.end());
     int nOutgoingStatus23Max = *std::max_element(nOutgoingStatus23.begin(),nOutgoingStatus23.end());
     int nOutgoingStatus33Max = *std::max_element(nOutgoingStatus33.begin(),nOutgoingStatus33.end());
 
@@ -303,6 +314,7 @@ int main(int argc, char* argv[])
 
     TH1* h_pdgIdMapScalarDecayProducts {new TH1I{"h_pdgIdMapScalarDecayProducts", "Physical decay products from scalar decays" , nPdgIdsScalarDecayProducts, 0, Double_t(nPdgIdsScalarDecayProducts) }};
 
+    TH1I* h_outgoingStatus   {new TH1I{"h_outgoingStatus"  , "Number of outgoing particles - hardest subprocess"   , nOutgoingStatusMax+1   , -0.5, Double_t(nOutgoingStatusMax+0.5) }};
     TH1I* h_outgoingStatus23 {new TH1I{"h_outgoingStatus23", "Number of outgoing particles - hardest subprocess"   , nOutgoingStatus23Max+1 , -0.5, Double_t(nOutgoingStatus23Max+0.5) }};
     TH1I* h_outgoingStatus33 {new TH1I{"h_outgoingStatus33", "Number of outgoing particles - hardest subprocess"   , nOutgoingStatus33Max+1 , -0.5, Double_t(nOutgoingStatus33Max+0.5) }};
 
@@ -416,6 +428,9 @@ int main(int argc, char* argv[])
         binCounterScalarDecayProducts++;        
     }
 
+    for (auto it = nOutgoingStatus.begin(); it != nOutgoingStatus.end(); ++it) {
+        h_outgoingStatus->Fill(*it);
+    }
     for (auto it = nOutgoingStatus23.begin(); it != nOutgoingStatus23.end(); ++it) {
         h_outgoingStatus23->Fill(*it);
     }
@@ -440,6 +455,7 @@ int main(int argc, char* argv[])
     h_pdgIdFromScalarStatus33->Write();
     h_pdgIdFromScalarStatus71->Write();
     h_pdgIdMapScalarDecayProducts->Write();
+    h_outgoingStatus->Write();
     h_outgoingStatus23->Write();
     h_outgoingStatus33->Write();
 
