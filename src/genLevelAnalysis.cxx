@@ -68,6 +68,9 @@ int main(int argc, char* argv[])
     std::vector <int>  nOutgoingStatus23;
     std::vector <int>  nOutgoingStatus33;
 
+    std::map<int, int> pdgIdMapJetsFromScalar;
+    std::map<int, int> pdgIdMapGenJetsFromScalar;
+
     std::string outFileString{"plots/distributions/output.root"};
     bool is2016_;
     int numFiles;
@@ -188,6 +191,22 @@ int main(int argc, char* argv[])
 
 //            std::cout << "eventNum: " << event.eventNum << std::endl;
 
+
+            //////// JET STUFF
+
+            for (Int_t k{0}; k < event.numJetPF2PAT; k++) {
+                const Int_t jetPid       {event.jetPF2PATPID[k]};
+                const Int_t genJetPid    {event.genJetPF2PATPID[k]};
+                const Int_t fromScalar   {event.genJetPF2PATScalarGrandmother[k]};
+
+                if ( fromScalar ) pdgIdMapJetsFromScalar[std::abs(jetPid)]++;
+                if ( fromScalar ) pdgIdMapGenJetsFromScalar[std::abs(genJetPid)]++;
+            }
+
+            //////// GENERATOR PARTICLE STUFF
+
+///
+
             for (Int_t k{0}; k < event.nGenPar; k++) {
                 const Int_t pdgId    { std::abs(event.genParId[k]) };
 		const Int_t status   { event.genParStatus[k] };
@@ -258,14 +277,14 @@ int main(int argc, char* argv[])
 //		std::cout << "index / pdgId / mother / motherIndex / nDaughers / status: " << std::endl;
 //  	        std::cout << k << " / " << pdgIdCode( pdgId, false ) << " / " << pdgIdCode( motherId, false ) << " / " << motherIndex << " / " << numDaughters << " / " << pythiaStatus( status ) << std::endl;
 //              }
-	    }
+	    } ///
             nOutgoingStatus.emplace_back(nOutgoingStatusCounter);
             nOutgoingStatus23.emplace_back(nOutgoingStatus23Counter);
             nOutgoingStatus33.emplace_back(nOutgoingStatus33Counter);
 //	    std::cout << std::endl;
-	}
+	} 
     }
-    
+
     std::cout << std::endl;
     std::cout << "Total no. of events:\t\t\t" << totalEvents << std::endl;
     std::cout << std::endl;
@@ -290,6 +309,9 @@ int main(int argc, char* argv[])
     int nOutgoingStatusMax   = *std::max_element(nOutgoingStatus.begin(),nOutgoingStatus.end());
     int nOutgoingStatus23Max = *std::max_element(nOutgoingStatus23.begin(),nOutgoingStatus23.end());
     int nOutgoingStatus33Max = *std::max_element(nOutgoingStatus33.begin(),nOutgoingStatus33.end());
+
+    int nPdgIdsFromJetsFromScalar     = pdgIdMapJetsFromScalar.size();
+    int nPdgIdsFromGenJetsFromScalar  = pdgIdMapGenJetsFromScalar.size();
 
     // status == 1 for final state particles
     // status == 2 for a decayed Standard Model hadron or tau or mu lepton, excepting virtual intermediate states thereof (i.e. the particle must undergo a normal decay, not e.g. a shower branching);
@@ -317,6 +339,9 @@ int main(int argc, char* argv[])
     TH1I* h_outgoingStatus   {new TH1I{"h_outgoingStatus"  , "Number of outgoing particles - hardest subprocess"   , nOutgoingStatusMax+1   , -0.5, Double_t(nOutgoingStatusMax+0.5) }};
     TH1I* h_outgoingStatus23 {new TH1I{"h_outgoingStatus23", "Number of outgoing particles - hardest subprocess"   , nOutgoingStatus23Max+1 , -0.5, Double_t(nOutgoingStatus23Max+0.5) }};
     TH1I* h_outgoingStatus33 {new TH1I{"h_outgoingStatus33", "Number of outgoing particles - hardest subprocess"   , nOutgoingStatus33Max+1 , -0.5, Double_t(nOutgoingStatus33Max+0.5) }};
+
+    TH1I* h_pdgIdMapJetsFromScalar {new TH1I{"h_pdgIdMapJetsFromScalar",       "reco jet which is descended from generator scalar", nPdgIdsFromJetsFromScalar+1,    -0.5, Double_t(nPdgIdsFromJetsFromScalar+0.5)    }};
+    TH1I* h_pdgIdMapGenJetsFromScalar {new TH1I{"h_pdgIdMapGenJetsFromScalar", "gen jet which is descended from generator scalar",  nPdgIdsFromGenJetsFromScalar+1, -0.5, Double_t(nPdgIdsFromGenJetsFromScalar+0.5) }};
 
     uint binCounter {1};
     for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
@@ -438,6 +463,21 @@ int main(int argc, char* argv[])
         h_outgoingStatus33->Fill(*it);
     }
 
+    uint binCounterJetsFromScalar {1};
+    for (auto it = pdgIdMapJetsFromScalar.begin(); it != pdgIdMapJetsFromScalar.end(); ++it) {
+        h_pdgIdMapJetsFromScalar->SetBinContent(binCounterJetsFromScalar, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdMapJetsFromScalar->GetXaxis()->SetBinLabel(binCounterJetsFromScalar, label);
+        binCounterJetsFromScalar++;
+    }
+    uint binCounterGenJetsFromScalar {1};
+    for (auto it = pdgIdMapGenJetsFromScalar.begin(); it != pdgIdMapGenJetsFromScalar.end(); ++it) {
+        h_pdgIdMapGenJetsFromScalar->SetBinContent(binCounterGenJetsFromScalar, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdMapGenJetsFromScalar->GetXaxis()->SetBinLabel(binCounterGenJetsFromScalar, label);
+        binCounterGenJetsFromScalar++;
+    }
+
     TFile* outFile{new TFile{outFileString.c_str(), "RECREATE"}};
     outFile->cd();
 
@@ -458,6 +498,8 @@ int main(int argc, char* argv[])
     h_outgoingStatus->Write();
     h_outgoingStatus23->Write();
     h_outgoingStatus33->Write();
+    h_pdgIdMapJetsFromScalar->Write();
+    h_pdgIdMapGenJetsFromScalar->Write();
 
     outFile->Close();
 
