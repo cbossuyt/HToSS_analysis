@@ -64,12 +64,25 @@ int main(int argc, char* argv[])
 
     std::map<int, int> pdgIdMapScalarDecayProducts;
 
+    std::vector <int>  nJetsFromScalar;
+    std::vector <int>  nJetsPerEvent;
     std::vector <int>  nOutgoingStatus;
     std::vector <int>  nOutgoingStatus23;
     std::vector <int>  nOutgoingStatus33;
 
+    std::map<int, int> pdgIdMapJets;
+    std::map<int, int> pdgIdMapGenJets;
     std::map<int, int> pdgIdMapJetsFromScalar;
     std::map<int, int> pdgIdMapGenJetsFromScalar;
+    std::map<int, int> pdgIdMapJetsNotFromScalar;
+    std::map<int, int> pdgIdMapGenJetsNotFromScalar;
+
+    std::map<int, int> pdgIdMap1GenJetFromScalar;
+    std::map<int, int> pdgIdMap2GenJetsFromScalar;
+    std::map<int, int> pdgIdMap3GenJetsFromScalar;
+    std::map<int, int> pdgIdMap4GenJetsFromScalar;
+    std::map<int, int> pdgIdMap5GenJetsFromScalar;
+    std::map<int, int> pdgIdMap6GenJetsFromScalar;
 
     std::string outFileString{"plots/distributions/output.root"};
     bool is2016_;
@@ -185,6 +198,9 @@ int main(int argc, char* argv[])
 
             event.GetEntry(i);      
 
+            int nJetsFromScalarCounter {0};
+            int nJetsPerEventCounter   {0};
+
             int nOutgoingStatusCounter {0};
             int nOutgoingStatus23Counter {0};
             int nOutgoingStatus33Counter {0};
@@ -197,16 +213,45 @@ int main(int argc, char* argv[])
             for (Int_t k{0}; k < event.numJetPF2PAT; k++) {
                 const Int_t jetPid       {event.jetPF2PATPID[k]};
                 const Int_t genJetPid    {event.genJetPF2PATPID[k]};
-                const Int_t fromScalar   {event.genJetPF2PATScalarGrandmother[k]};
+                const Int_t fromScalar   {event.genJetPF2PATScalarAncestor[k]};
 
-                if ( fromScalar ) pdgIdMapJetsFromScalar[std::abs(jetPid)]++;
-                if ( fromScalar ) pdgIdMapGenJetsFromScalar[std::abs(genJetPid)]++;
+                pdgIdMapJets[std::abs(jetPid)]++;
+                pdgIdMapGenJets[std::abs(genJetPid)]++;
+
+                nJetsPerEventCounter++;
+
+                if ( fromScalar ) { 
+                    pdgIdMapJetsFromScalar[std::abs(jetPid)]++;
+                    pdgIdMapGenJetsFromScalar[std::abs(genJetPid)]++;
+
+                    nJetsFromScalarCounter++;
+                }
+                else {
+                    pdgIdMapJetsNotFromScalar[std::abs(jetPid)]++;
+                    pdgIdMapGenJetsNotFromScalar[std::abs(genJetPid)]++;
+                }
             }
+
+            if ( nJetsFromScalarCounter > 0 ) {
+                for (Int_t k{0}; k < event.numJetPF2PAT; k++) {
+                    const Int_t genJetPid    {event.genJetPF2PATPID[k]};
+                    const Int_t fromScalar   {event.genJetPF2PATScalarAncestor[k]};
+                    if ( nJetsFromScalarCounter == 1 && fromScalar ) pdgIdMap1GenJetFromScalar[std::abs(genJetPid)]++;
+                    else if ( nJetsFromScalarCounter == 2 && fromScalar ) pdgIdMap2GenJetsFromScalar[std::abs(genJetPid)]++;
+                    else if ( nJetsFromScalarCounter == 3 && fromScalar ) pdgIdMap3GenJetsFromScalar[std::abs(genJetPid)]++;
+                    else if ( nJetsFromScalarCounter == 4 && fromScalar ) pdgIdMap4GenJetsFromScalar[std::abs(genJetPid)]++;
+                    else if ( nJetsFromScalarCounter == 5 && fromScalar ) pdgIdMap5GenJetsFromScalar[std::abs(genJetPid)]++;
+                    else if ( nJetsFromScalarCounter == 6 && fromScalar ) pdgIdMap6GenJetsFromScalar[std::abs(genJetPid)]++;
+                }
+            }
+
+            nJetsFromScalar.emplace_back(nJetsFromScalarCounter);
+            nJetsPerEvent.emplace_back(nJetsPerEventCounter);
 
             //////// GENERATOR PARTICLE STUFF
 
 ///
-
+/*
             for (Int_t k{0}; k < event.nGenPar; k++) {
                 const Int_t pdgId    { std::abs(event.genParId[k]) };
 		const Int_t status   { event.genParStatus[k] };
@@ -278,6 +323,7 @@ int main(int argc, char* argv[])
 //  	        std::cout << k << " / " << pdgIdCode( pdgId, false ) << " / " << pdgIdCode( motherId, false ) << " / " << motherIndex << " / " << numDaughters << " / " << pythiaStatus( status ) << std::endl;
 //              }
 	    } ///
+*/
             nOutgoingStatus.emplace_back(nOutgoingStatusCounter);
             nOutgoingStatus23.emplace_back(nOutgoingStatus23Counter);
             nOutgoingStatus33.emplace_back(nOutgoingStatus33Counter);
@@ -306,12 +352,26 @@ int main(int argc, char* argv[])
 
     int nPdgIdsScalarDecayProducts = pdgIdMapScalarDecayProducts.size(); // number of physical decay products from scalars (before decaying)
 
+    int nJetsFromScalarMax   = *std::max_element(nJetsFromScalar.begin(),nJetsFromScalar.end());
+    int nJetsPerEventMax     = *std::max_element(nJetsPerEvent.begin(),nJetsPerEvent.end());
     int nOutgoingStatusMax   = *std::max_element(nOutgoingStatus.begin(),nOutgoingStatus.end());
     int nOutgoingStatus23Max = *std::max_element(nOutgoingStatus23.begin(),nOutgoingStatus23.end());
     int nOutgoingStatus33Max = *std::max_element(nOutgoingStatus33.begin(),nOutgoingStatus33.end());
 
+    int nPdgIdsFromJets               = pdgIdMapJets.size();
+    int nPdgIdsFromGenJets            = pdgIdMapGenJets.size();
     int nPdgIdsFromJetsFromScalar     = pdgIdMapJetsFromScalar.size();
     int nPdgIdsFromGenJetsFromScalar  = pdgIdMapGenJetsFromScalar.size();
+    int nPdgIdsFromJetsNotFromScalar     = pdgIdMapJetsNotFromScalar.size();
+    int nPdgIdsFromGenJetsNotFromScalar  = pdgIdMapGenJetsNotFromScalar.size();
+
+    int nPdgIds1GenJetFromScalar   = pdgIdMap1GenJetFromScalar.size();
+    int nPdgIds2GenJetsFromScalar  = pdgIdMap2GenJetsFromScalar.size();
+    int nPdgIds3GenJetsFromScalar  = pdgIdMap3GenJetsFromScalar.size();
+    int nPdgIds4GenJetsFromScalar  = pdgIdMap4GenJetsFromScalar.size();
+    int nPdgIds5GenJetsFromScalar  = pdgIdMap5GenJetsFromScalar.size();
+    int nPdgIds6GenJetsFromScalar  = pdgIdMap6GenJetsFromScalar.size();
+
 
     // status == 1 for final state particles
     // status == 2 for a decayed Standard Model hadron or tau or mu lepton, excepting virtual intermediate states thereof (i.e. the particle must undergo a normal decay, not e.g. a shower branching);
@@ -336,12 +396,27 @@ int main(int argc, char* argv[])
 
     TH1* h_pdgIdMapScalarDecayProducts {new TH1I{"h_pdgIdMapScalarDecayProducts", "Physical decay products from scalar decays" , nPdgIdsScalarDecayProducts, 0, Double_t(nPdgIdsScalarDecayProducts) }};
 
-    TH1I* h_outgoingStatus   {new TH1I{"h_outgoingStatus"  , "Number of outgoing particles - hardest subprocess"   , nOutgoingStatusMax+1   , -0.5, Double_t(nOutgoingStatusMax+0.5) }};
+    TH1I* h_outgoingStatus   {new TH1I{"h_outgoingStatus"  , "Number of outgoing particles - hardest subprocess"   , nOutgoingStatusMax+1   , -0.5, Double_t(nOutgoingStatusMax+0.5)   }};
     TH1I* h_outgoingStatus23 {new TH1I{"h_outgoingStatus23", "Number of outgoing particles - hardest subprocess"   , nOutgoingStatus23Max+1 , -0.5, Double_t(nOutgoingStatus23Max+0.5) }};
     TH1I* h_outgoingStatus33 {new TH1I{"h_outgoingStatus33", "Number of outgoing particles - hardest subprocess"   , nOutgoingStatus33Max+1 , -0.5, Double_t(nOutgoingStatus33Max+0.5) }};
 
-    TH1I* h_pdgIdMapJetsFromScalar {new TH1I{"h_pdgIdMapJetsFromScalar",       "reco jet which is descended from generator scalar", nPdgIdsFromJetsFromScalar+1,    -0.5, Double_t(nPdgIdsFromJetsFromScalar+0.5)    }};
+    TH1I* h_jetsFromScalar   {new TH1I{"h_jetsFromScalar"  , "Number of jets per event from scalar decays"          , nJetsFromScalarMax+1   , -0.5, Double_t(nJetsFromScalarMax+0.5)   }}; 
+    TH1I* h_jetsPerEvent     {new TH1I{"h_jetsPerEvent"    , "Number of jets per event"                             , nJetsPerEventMax+1     , -0.5, Double_t(nJetsPerEventMax+0.5)     }}; 
+
+    TH1I* h_pdgIdMapJets              {new TH1I{"h_pdgIdMapJets",              "reco jet pid", nPdgIdsFromJets+1,    -0.5, Double_t(nPdgIdsFromJets+0.5)    }};
+    TH1I* h_pdgIdMapGenJets           {new TH1I{"h_pdgIdMapGenJets",           "gen jet pid",  nPdgIdsFromGenJets+1, -0.5, Double_t(nPdgIdsFromGenJets+0.5) }};
+    TH1I* h_pdgIdMapJetsFromScalar    {new TH1I{"h_pdgIdMapJetsFromScalar",    "reco jet which is descended from generator scalar", nPdgIdsFromJetsFromScalar+1,    -0.5, Double_t(nPdgIdsFromJetsFromScalar+0.5)    }};
     TH1I* h_pdgIdMapGenJetsFromScalar {new TH1I{"h_pdgIdMapGenJetsFromScalar", "gen jet which is descended from generator scalar",  nPdgIdsFromGenJetsFromScalar+1, -0.5, Double_t(nPdgIdsFromGenJetsFromScalar+0.5) }};
+    TH1I* h_pdgIdMapJetsNotFromScalar    {new TH1I{"h_pdgIdMapJetsNotFromScalar",    "reco jet which is not descended from generator scalar", nPdgIdsFromJetsNotFromScalar+1,    -0.5, Double_t(nPdgIdsFromJetsNotFromScalar+0.5)    }};
+    TH1I* h_pdgIdMapGenJetsNotFromScalar {new TH1I{"h_pdgIdMapGenJetsNotFromScalar", "gen jet which is not descended from generator scalar",  nPdgIdsFromGenJetsNotFromScalar+1, -0.5, Double_t(nPdgIdsFromGenJetsNotFromScalar+0.5) }};
+
+    TH1I* h_pdgIdMap1GenJetFromScalar  {new TH1I{"h_pdgIdMap1GenJetFromScalar",  "1 gen jet pid descended from generator scalar",   nPdgIds1GenJetFromScalar+1,  -0.5, Double_t(nPdgIds1GenJetFromScalar+0.5) }};
+    TH1I* h_pdgIdMap2GenJetsFromScalar {new TH1I{"h_pdgIdMap2GenJetsFromScalar", "2 gen jets pid descended from generator scalar",  nPdgIds2GenJetsFromScalar+1, -0.5, Double_t(nPdgIds2GenJetsFromScalar+0.5) }};
+    TH1I* h_pdgIdMap3GenJetsFromScalar {new TH1I{"h_pdgIdMap3GenJetsFromScalar", "3 gen jets pid descended from generator scalar",  nPdgIds3GenJetsFromScalar+1, -0.5, Double_t(nPdgIds3GenJetsFromScalar+0.5) }};
+    TH1I* h_pdgIdMap4GenJetsFromScalar {new TH1I{"h_pdgIdMap4GenJetsFromScalar", "4 gen jets pid descended from generator scalar",  nPdgIds4GenJetsFromScalar+1, -0.5, Double_t(nPdgIds4GenJetsFromScalar+0.5) }};
+    TH1I* h_pdgIdMap5GenJetsFromScalar {new TH1I{"h_pdgIdMap5GenJetsFromScalar", "5 gen jets pid descended from generator scalar",  nPdgIds5GenJetsFromScalar+1, -0.5, Double_t(nPdgIds5GenJetsFromScalar+0.5) }};
+    TH1I* h_pdgIdMap6GenJetsFromScalar {new TH1I{"h_pdgIdMap6GenJetsFromScalar", "6 gen jets pid descended from generator scalar",  nPdgIds6GenJetsFromScalar+1, -0.5, Double_t(nPdgIds6GenJetsFromScalar+0.5) }};
+
 
     uint binCounter {1};
     for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
@@ -463,6 +538,29 @@ int main(int argc, char* argv[])
         h_outgoingStatus33->Fill(*it);
     }
 
+    for (auto it = nJetsFromScalar.begin(); it != nJetsFromScalar.end(); ++it) {
+        h_jetsFromScalar->Fill(*it);
+    }
+
+    for (auto it = nJetsPerEvent.begin(); it != nJetsPerEvent.end(); ++it) {
+        h_jetsPerEvent->Fill(*it);
+    }
+
+    uint binCounterJets {1};
+    for (auto it = pdgIdMapJets.begin(); it != pdgIdMapJets.end(); ++it) {
+        h_pdgIdMapJets->SetBinContent(binCounterJets, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdMapJets->GetXaxis()->SetBinLabel(binCounterJets, label);
+        binCounterJets++;
+    }
+    uint binCounterGenJets {1};
+    for (auto it = pdgIdMapGenJets.begin(); it != pdgIdMapGenJets.end(); ++it) {
+        h_pdgIdMapGenJets->SetBinContent(binCounterGenJets, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdMapGenJets->GetXaxis()->SetBinLabel(binCounterGenJets, label);
+        binCounterGenJets++;
+    }
+
     uint binCounterJetsFromScalar {1};
     for (auto it = pdgIdMapJetsFromScalar.begin(); it != pdgIdMapJetsFromScalar.end(); ++it) {
         h_pdgIdMapJetsFromScalar->SetBinContent(binCounterJetsFromScalar, it->second);
@@ -478,9 +576,72 @@ int main(int argc, char* argv[])
         binCounterGenJetsFromScalar++;
     }
 
+    uint binCounterJetsNotFromScalar {1};
+    for (auto it = pdgIdMapJetsNotFromScalar.begin(); it != pdgIdMapJetsNotFromScalar.end(); ++it) {
+        h_pdgIdMapJetsNotFromScalar->SetBinContent(binCounterJetsNotFromScalar, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdMapJetsNotFromScalar->GetXaxis()->SetBinLabel(binCounterJetsNotFromScalar, label);
+        binCounterJetsNotFromScalar++;
+    }
+    uint binCounterGenJetsNotFromScalar {1};
+    for (auto it = pdgIdMapGenJetsNotFromScalar.begin(); it != pdgIdMapGenJetsNotFromScalar.end(); ++it) {
+        h_pdgIdMapGenJetsNotFromScalar->SetBinContent(binCounterGenJetsNotFromScalar, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdMapGenJetsNotFromScalar->GetXaxis()->SetBinLabel(binCounterGenJetsNotFromScalar, label);
+        binCounterGenJetsNotFromScalar++;
+    }
+
+    uint binCounter1GenJetFromScalar {1};
+    for (auto it = pdgIdMap1GenJetFromScalar.begin(); it != pdgIdMap1GenJetFromScalar.end(); ++it) {
+        h_pdgIdMap1GenJetFromScalar->SetBinContent(binCounter1GenJetFromScalar, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdMap1GenJetFromScalar->GetXaxis()->SetBinLabel(binCounter1GenJetFromScalar, label);
+        binCounter1GenJetFromScalar++;
+    }
+
+    uint binCounter2GenJetsFromScalar {1};
+    for (auto it = pdgIdMap2GenJetsFromScalar.begin(); it != pdgIdMap2GenJetsFromScalar.end(); ++it) {
+        h_pdgIdMap2GenJetsFromScalar->SetBinContent(binCounter2GenJetsFromScalar, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdMap2GenJetsFromScalar->GetXaxis()->SetBinLabel(binCounter2GenJetsFromScalar, label);
+        binCounter2GenJetsFromScalar++;
+    }
+
+    uint binCounter3GenJetsFromScalar {1};
+    for (auto it = pdgIdMap3GenJetsFromScalar.begin(); it != pdgIdMap3GenJetsFromScalar.end(); ++it) {
+        h_pdgIdMap3GenJetsFromScalar->SetBinContent(binCounter3GenJetsFromScalar, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdMap3GenJetsFromScalar->GetXaxis()->SetBinLabel(binCounter3GenJetsFromScalar, label);
+        binCounter3GenJetsFromScalar++;
+    }
+
+    uint binCounter4GenJetsFromScalar {1};
+    for (auto it = pdgIdMap4GenJetsFromScalar.begin(); it != pdgIdMap4GenJetsFromScalar.end(); ++it) {
+        h_pdgIdMap4GenJetsFromScalar->SetBinContent(binCounter4GenJetsFromScalar, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdMap4GenJetsFromScalar->GetXaxis()->SetBinLabel(binCounter4GenJetsFromScalar, label);
+        binCounter4GenJetsFromScalar++;
+    }
+
+    uint binCounter5GenJetsFromScalar {1};
+    for (auto it = pdgIdMap5GenJetsFromScalar.begin(); it != pdgIdMap5GenJetsFromScalar.end(); ++it) {
+        h_pdgIdMap5GenJetsFromScalar->SetBinContent(binCounter5GenJetsFromScalar, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdMap5GenJetsFromScalar->GetXaxis()->SetBinLabel(binCounter5GenJetsFromScalar, label);
+        binCounter5GenJetsFromScalar++;
+    }
+
+    uint binCounter6GenJetsFromScalar {1};
+    for (auto it = pdgIdMap6GenJetsFromScalar.begin(); it != pdgIdMap6GenJetsFromScalar.end(); ++it) {
+        h_pdgIdMap6GenJetsFromScalar->SetBinContent(binCounter6GenJetsFromScalar, it->second);
+        const char *label = ( pdgIdCode(it->first, false) ).c_str();
+        h_pdgIdMap6GenJetsFromScalar->GetXaxis()->SetBinLabel(binCounter6GenJetsFromScalar, label);
+        binCounter6GenJetsFromScalar++;
+    }
+
     TFile* outFile{new TFile{outFileString.c_str(), "RECREATE"}};
     outFile->cd();
-
+/*
     h_pdgId->Write();
     h_pdgIdStatus1->Write();
     h_pdgIdStatus2->Write();
@@ -497,9 +658,23 @@ int main(int argc, char* argv[])
     h_pdgIdMapScalarDecayProducts->Write();
     h_outgoingStatus->Write();
     h_outgoingStatus23->Write();
-    h_outgoingStatus33->Write();
+    h_outgoingStatus33->Write();*/
+
+    h_jetsFromScalar->Write();
+    h_jetsPerEvent->Write();
+    h_pdgIdMapJets->Write();
+    h_pdgIdMapGenJets->Write();
     h_pdgIdMapJetsFromScalar->Write();
     h_pdgIdMapGenJetsFromScalar->Write();
+    h_pdgIdMapJetsNotFromScalar->Write();
+    h_pdgIdMapGenJetsNotFromScalar->Write();
+
+    if ( nJetsFromScalarMax > 0 ) h_pdgIdMap1GenJetFromScalar->Write();
+    if ( nJetsFromScalarMax > 1 ) h_pdgIdMap2GenJetsFromScalar->Write();
+    if ( nJetsFromScalarMax > 2 ) h_pdgIdMap3GenJetsFromScalar->Write();
+    if ( nJetsFromScalarMax > 3 ) h_pdgIdMap4GenJetsFromScalar->Write();
+    if ( nJetsFromScalarMax > 4 ) h_pdgIdMap5GenJetsFromScalar->Write();
+    if ( nJetsFromScalarMax > 5 ) h_pdgIdMap6GenJetsFromScalar->Write();
 
     outFile->Close();
 
@@ -723,7 +898,7 @@ std::string pdgIdCode (const Int_t parId, const bool unicode) {
       case 3212 : particle += unicode ? "\u03A30" : "#Sigma^{0}"; break;
       case 3322 : particle += unicode ? "\u03A30" : "#Xi^{0}"; break;
       case 3312 : particle += unicode ? "\u03A3-" : "#Xi^{-}"; break;
-      case 3112 : particle += unicode ? "\u03A3-" : "#Sigma{-}"; break;
+      case 3112 : particle += unicode ? "\u03A3-" : "#Sigma_{-}"; break;
 
       case 3324 : particle += unicode ? "\u039E*0" : "#Xi^{*0}"; break;
       case 3334 : particle += unicode ? "\u03A9-" : "#Omega^{-}"; break;
