@@ -246,6 +246,7 @@ class AnalysisEvent
     Float_t genJetPF2PATPX[NJETSMAX];
     Float_t genJetPF2PATPY[NJETSMAX];
     Float_t genJetPF2PATPZ[NJETSMAX];
+    Float_t genJetPF2PATMass[NJETSMAX];
     Float_t genJetPF2PATPhi[NJETSMAX];
     Float_t genJetPF2PATTheta[NJETSMAX];
     Float_t genJetPF2PATEta[NJETSMAX];
@@ -1249,6 +1250,7 @@ class AnalysisEvent
     TBranch* b_genJetPF2PATPX; //!
     TBranch* b_genJetPF2PATPY; //!
     TBranch* b_genJetPF2PATPZ; //!
+    TBranch* b_genJetPF2PATMass; //!
     TBranch* b_genJetPF2PATPhi; //!
     TBranch* b_genJetPF2PATTheta; //!
     TBranch* b_genJetPF2PATEta; //!
@@ -2329,6 +2331,7 @@ inline AnalysisEvent::AnalysisEvent(const bool isMC,
        fChain->SetBranchAddress("genJetPF2PATPX", genJetPF2PATPX, &b_genJetPF2PATPX);
        fChain->SetBranchAddress("genJetPF2PATPY", genJetPF2PATPY, &b_genJetPF2PATPY);
        fChain->SetBranchAddress("genJetPF2PATPZ", genJetPF2PATPZ, &b_genJetPF2PATPZ);
+       fChain->SetBranchAddress("genJetPF2PATMass", genJetPF2PATMass, &b_genJetPF2PATMass);
        fChain->SetBranchAddress("genJetPF2PATPhi", genJetPF2PATPhi, &b_genJetPF2PATPhi);
        fChain->SetBranchAddress("genJetPF2PATTheta", genJetPF2PATTheta, &b_genJetPF2PATTheta);
        fChain->SetBranchAddress("genJetPF2PATEta", genJetPF2PATEta, &b_genJetPF2PATEta);

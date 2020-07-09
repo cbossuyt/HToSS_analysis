@@ -1,6 +1,7 @@
 #include "AnalysisEvent.hpp"
 #include "TChain.h"
 #include "TFile.h"
+#include "TH1F.h"
 #include "TH1I.h"
 #include "TLegend.h"
 #include "TStyle.h"
@@ -8,6 +9,7 @@
 #include "TLatex.h"
 #include "TMVA/Timer.h"
 #include "TTree.h"
+#include "TLorentzVector.h"
 #include "TString.h"
 #include "config_parser.hpp"
 
@@ -32,6 +34,7 @@
 std::string pythiaStatus (const Int_t status);
 std::string pdgIdCode (const Int_t status, const bool unicode = false);
 bool scalarGrandparent(const AnalysisEvent event, const Int_t k, const Int_t pdgId_);
+TLorentzVector getJetLVec(const AnalysisEvent& event, const int index, const bool isGen);
 
 uint debugCounter;
 
@@ -84,12 +87,40 @@ int main(int argc, char* argv[])
     std::map<int, int> pdgIdMap5GenJetsFromScalar;
     std::map<int, int> pdgIdMap6GenJetsFromScalar;
 
+   
     std::string outFileString{"plots/distributions/output.root"};
     bool is2016_;
     int numFiles;
     Long64_t nEvents;
     Long64_t totalEvents {0};
     const std::regex mask{".*\\.root"};
+
+    TH1I* h_pidsFromScalarDecays  {new TH1I("h_pidsFromScalarDecays",  "pids of scalar decays"    , 6, 0, 6)};
+    TH1I* h_kaonsFromScalarDecays {new TH1I("h_kaonsFromScalarDecays", "kaons from scalar decays" , 6, 0, 6)};
+    h_pidsFromScalarDecays->GetXaxis()->SetBinLabel(1, "K K");
+    h_pidsFromScalarDecays->GetXaxis()->SetBinLabel(2, "K #pi^{#pm}");
+    h_pidsFromScalarDecays->GetXaxis()->SetBinLabel(3, "K #gamma");
+    h_pidsFromScalarDecays->GetXaxis()->SetBinLabel(4, "#pi^{#pm} #pi^{#pm}");
+    h_pidsFromScalarDecays->GetXaxis()->SetBinLabel(5, "#pi^{#pm} #gamma");
+    h_pidsFromScalarDecays->GetXaxis()->SetBinLabel(6, "#gamma #gamma");
+
+    h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(1, "K^{#pm} K^{#pm}");
+    h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(2, "K^{#pm} K_{S}^{0}");
+    h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(3, "K^{#pm} K_{L}^{0}");
+    h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(4, "K_{S}^{0} K_{S}^{0}");
+    h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(5, "K_{S}^{0} K_{L}^{0}");
+    h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(6, "K_{L}^{0} K_{L}^{0}");
+
+    TH1F* h_recoJetInvMass {new TH1F("h_recoJetInvMass", "Invariant mass of all reco jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_genJetInvMass  {new TH1F("h_genJetInvMass",  "Invariant mass of all gen jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_genJetMass     {new TH1F("h_genJetMass",     "Reco::jet mass of all gen jets descended from scalar particles",200, 0.0, 200.)};
+
+    TH1F* h_recoJet1InvMass {new TH1F("h_recoJet1InvMass", "Invariant mass of 1 reco jet descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_genJet1InvMass  {new TH1F("h_genJet1InvMass",  "Invariant mass of 1 gen jet descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_genJet1Mass     {new TH1F("h_genJet1Mass",      "Reco::jet mass of 1 gen jet descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_recoJet2InvMass {new TH1F("h_recoJet2InvMass", "Invariant mass of 2 reco jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_genJet2InvMass  {new TH1F("h_genJet2InvMass",  "Invariant mass of 2 gen jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_genJet2Mass     {new TH1F("h_genJet2Mass",      "Reco::jet mass of 2 gen jets descended from scalar particles",200, 0.0, 200.)};
 
 ////
 
@@ -210,10 +241,16 @@ int main(int argc, char* argv[])
 
             //////// JET STUFF
 
+            std::vector< TLorentzVector > recoJetVecFromScalar;
+            std::vector< TLorentzVector > genJetVecFromScalar;
+
             for (Int_t k{0}; k < event.numJetPF2PAT; k++) {
                 const Int_t jetPid       {event.jetPF2PATPID[k]};
                 const Int_t genJetPid    {event.genJetPF2PATPID[k]};
                 const Int_t fromScalar   {event.genJetPF2PATScalarAncestor[k]};
+
+                TLorentzVector recoJet = getJetLVec(event, k, false);
+                TLorentzVector genJet  = getJetLVec(event, k, true);
 
                 pdgIdMapJets[std::abs(jetPid)]++;
                 pdgIdMapGenJets[std::abs(genJetPid)]++;
@@ -223,7 +260,8 @@ int main(int argc, char* argv[])
                 if ( fromScalar ) { 
                     pdgIdMapJetsFromScalar[std::abs(jetPid)]++;
                     pdgIdMapGenJetsFromScalar[std::abs(genJetPid)]++;
-
+                    recoJetVecFromScalar.emplace_back(recoJet);
+                    genJetVecFromScalar.emplace_back(genJet);
                     nJetsFromScalarCounter++;
                 }
                 else {
@@ -232,7 +270,15 @@ int main(int argc, char* argv[])
                 }
             }
 
+
+            ///////// jet multiplicity dependant jet stuff
+
             if ( nJetsFromScalarCounter > 0 ) {
+
+                float genJetMassFromScalar {0.0}, genJet1MassFromScalar{0.0}, genJet2MassFromScalar{0.0};
+
+                uint pionFlag {0}, kaonFlag {0}, photonFlag{0}, kChargedFlag{0}, kShortFlag{0}, kLongFlag{0};
+
                 for (Int_t k{0}; k < event.numJetPF2PAT; k++) {
                     const Int_t genJetPid    {event.genJetPF2PATPID[k]};
                     const Int_t fromScalar   {event.genJetPF2PATScalarAncestor[k]};
@@ -242,11 +288,67 @@ int main(int argc, char* argv[])
                     else if ( nJetsFromScalarCounter == 4 && fromScalar ) pdgIdMap4GenJetsFromScalar[std::abs(genJetPid)]++;
                     else if ( nJetsFromScalarCounter == 5 && fromScalar ) pdgIdMap5GenJetsFromScalar[std::abs(genJetPid)]++;
                     else if ( nJetsFromScalarCounter == 6 && fromScalar ) pdgIdMap6GenJetsFromScalar[std::abs(genJetPid)]++;
+
+                    if (fromScalar) {
+                        genJetMassFromScalar += event.genJetPF2PATMass[k];
+                        if ( nJetsFromScalarCounter == 1 ) genJet1MassFromScalar += event.genJetPF2PATMass[k];
+                        if ( nJetsFromScalarCounter == 2 ) genJet2MassFromScalar += event.genJetPF2PATMass[k];
+                    }
+
+                    if ( nJetsFromScalarCounter == 2 && fromScalar ) {
+                        if ( std::abs(genJetPid) == 321 ) { kaonFlag++; kChargedFlag++;}
+                        if ( std::abs(genJetPid) == 130 ) { kaonFlag++; kShortFlag++;}
+                        if ( std::abs(genJetPid) == 310 ) { kaonFlag++; kLongFlag++;}
+                        if ( std::abs(genJetPid) == 22  ) photonFlag++;
+                        if ( std::abs(genJetPid) == 211 ) pionFlag++;
+                    }
+                    if ( kaonFlag == 2 ) {
+                        h_pidsFromScalarDecays->AddBinContent(1);
+                        if ( kChargedFlag == 2 ) h_kaonsFromScalarDecays->AddBinContent(1);
+                        if ( kChargedFlag == 1 && kShortFlag == 1 ) h_kaonsFromScalarDecays->AddBinContent(2);
+                        if ( kChargedFlag == 1 && kLongFlag == 1 ) h_kaonsFromScalarDecays->AddBinContent(3);
+                        if ( kShortFlag == 2 ) h_kaonsFromScalarDecays->AddBinContent(4);
+                        if ( kShortFlag == 1 && kLongFlag == 1 ) h_kaonsFromScalarDecays->AddBinContent(5);
+                        if ( kLongFlag == 2 ) h_kaonsFromScalarDecays->AddBinContent(6);
+                    }
+                    if ( kaonFlag == 1 && pionFlag == 1 ) h_pidsFromScalarDecays->AddBinContent(2);
+                    if ( kaonFlag == 1 && photonFlag == 1 ) h_pidsFromScalarDecays->AddBinContent(3);
+                    if ( pionFlag == 2 )  h_pidsFromScalarDecays->AddBinContent(4);
+                    if ( pionFlag == 1 && photonFlag == 1 ) h_pidsFromScalarDecays->AddBinContent(5);
+                    if ( photonFlag == 2 ) h_pidsFromScalarDecays->AddBinContent(6);
+                }
+
+                h_genJetMass->Fill(genJetMassFromScalar);
+                h_genJet1Mass->Fill(genJet1MassFromScalar);
+                h_genJet2Mass->Fill(genJet2MassFromScalar);
+
+                float recoJetInvMass {0.0}, genJetInvMass {0.0};
+                for (auto it : recoJetVecFromScalar ) recoJetInvMass += it.M();
+                for (auto it : genJetVecFromScalar )  genJetInvMass += it.M();
+                
+
+                h_recoJetInvMass->Fill(recoJetInvMass);
+                h_genJetInvMass->Fill(genJetInvMass);
+
+                float recoJet1InvMass {0.0}, genJet1InvMass {0.0}, recoJet2InvMass {0.0}, genJet2InvMass {0.0};
+                if ( nJetsFromScalarCounter == 1 ) {
+                    for (auto it : recoJetVecFromScalar ) recoJet1InvMass += it.M();
+                    for (auto it : genJetVecFromScalar )  genJet1InvMass += it.M();
+                    h_recoJet1InvMass->Fill(recoJet1InvMass);
+                    h_genJet1InvMass->Fill(genJet1InvMass);
+                }
+                if ( nJetsFromScalarCounter == 2 ) {
+                    for (auto it : recoJetVecFromScalar ) recoJet2InvMass += it.M();
+                    for (auto it : genJetVecFromScalar )  genJet2InvMass += it.M();
+                    h_recoJet2InvMass->Fill(recoJet2InvMass);
+                    h_genJet2InvMass->Fill(genJet2InvMass);
                 }
             }
 
             nJetsFromScalar.emplace_back(nJetsFromScalarCounter);
             nJetsPerEvent.emplace_back(nJetsPerEventCounter);
+
+
 
             //////// GENERATOR PARTICLE STUFF
 
@@ -676,6 +778,19 @@ int main(int argc, char* argv[])
     if ( nJetsFromScalarMax > 4 ) h_pdgIdMap5GenJetsFromScalar->Write();
     if ( nJetsFromScalarMax > 5 ) h_pdgIdMap6GenJetsFromScalar->Write();
 
+    h_pidsFromScalarDecays->Write();
+    h_kaonsFromScalarDecays->Write();
+
+    h_recoJetInvMass->Write();
+    h_genJetInvMass->Write();
+    h_genJetMass->Write();
+    h_recoJet1InvMass->Write();
+    h_genJet1InvMass->Write();
+    h_genJet1Mass->Write();
+    h_recoJet2InvMass->Write();
+    h_genJet2InvMass->Write();
+    h_genJet2Mass->Write();
+
     outFile->Close();
 
 //    std::cout << "Max nGenPar: " << maxGenPars << std::endl;    
@@ -954,3 +1069,13 @@ bool scalarGrandparent (const AnalysisEvent event, const Int_t k, const Int_t gr
         return scalarGrandparent(event, motherIndex, grandparentId); // otherwise check mother's mother ...
     }
 }
+
+TLorentzVector getJetLVec(const AnalysisEvent& event, const int index, const bool genJet = false) {
+    TLorentzVector returnJet;
+
+    if (!genJet) returnJet.SetPxPyPzE(event.jetPF2PATPx[index], event.jetPF2PATPy[index], event.jetPF2PATPz[index], event.jetPF2PATE[index]);
+    else returnJet.SetPxPyPzE(event.genJetPF2PATPX[index], event.genJetPF2PATPY[index], event.genJetPF2PATPZ[index], event.genJetPF2PATE[index]);
+
+    return returnJet;    
+}
+
