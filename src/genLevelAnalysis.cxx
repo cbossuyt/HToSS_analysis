@@ -111,9 +111,32 @@ int main(int argc, char* argv[])
     h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(5, "K_{S}^{0} K_{L}^{0}");
     h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(6, "K_{L}^{0} K_{L}^{0}");
 
-    TH1F* h_recoJetInvMass {new TH1F("h_recoJetInvMass", "Invariant mass of all reco jets descended from scalar particles",200, 0.0, 200.)};
-    TH1F* h_genJetInvMass  {new TH1F("h_genJetInvMass",  "Invariant mass of all gen jets descended from scalar particles",200, 0.0, 200.)};
-    TH1F* h_genJetMass     {new TH1F("h_genJetMass",     "Reco::jet mass of all gen jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_recoJetInvMass       {new TH1F("h_recoJetInvMass", "Invariant mass of all reco jets",200, 0.0, 200.)};
+    TH1F* h_recoJetPt            {new TH1F("h_recoJetPt",      "p_{T} mass of all reco jets",200, 0.0, 200.)};
+    TH1F* h_recoJetEta           {new TH1F("h_recoJetEta",     "#eta of all reco jets", 200, -7., 7.)};
+
+    TH1F* h_recoJetScalarInvMass {new TH1F("h_recoJetScalarInvMass", "Invariant mass of all reco jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_recoJetScalarPt      {new TH1F("h_recoJetScalarPt",      "p_{T} of all reco jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_recoJetScalarEta     {new TH1F("h_recoJetScalarEta",     "#eta of all reco jets descended from scalar particles",200, -7., 7.)};
+    TH1F* h_genJetScalarInvMass  {new TH1F("h_genJetScalarInvMass",  "Invariant mass of all gen jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_genJetScalarPt       {new TH1F("h_genJetScalarPt",       "p_{T} of all gen jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_genJetScalarEta      {new TH1F("h_genJetScalarEta",      "#eta of all gen jets descended from scalar particles",200, -7., 7.)};
+
+    TH1F* h_recoJetPionInvMass   {new TH1F("h_recoJetPionInvMass",   "Reco invariant mass of #pi jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_recoJetPionPt        {new TH1F("h_recoJetPionPt",        "Reco p_{T} of #pi jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_recoJetPionEta       {new TH1F("h_recoJetPionEta",       "Reco #eta of #pi jets descended from scalar particles",200, -7., 7.)};
+    TH1F* h_genJetPionInvMass    {new TH1F("h_genJetPionInvMass",    "Gen invariant mass of #pi jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_genJetPionPt         {new TH1F("h_genJetPionPt",         "Gen p_{T} of #pi jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_genJetPionEta        {new TH1F("h_genJetPionEta",        "Gen #eta of #pi jets descended from scalar particles",200, -7., 7.)};
+
+    TH1F* h_recoJetKaonInvMass   {new TH1F("h_recoJetKaonInvMass",   "Reco invariant mass of Kaon jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_recoJetKaonPt        {new TH1F("h_recoJetKaonPt",        "Reco p_{T} of Kaon jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_recoJetKaonEta       {new TH1F("h_recoJetKaonEta",       "Reco #eta of Kaon descended from scalar particles",200, -7., 7.)};
+    TH1F* h_genJetKaonInvMass    {new TH1F("h_genJetKaonInvMass",    "Gen invariant mass of Kaon jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_genJetKaonPt         {new TH1F("h_genJetKaonPt",         "Gen p_{T} of Kaon jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_genJetKaonEta        {new TH1F("h_genJetKaonPt",         "Gen #eta of Kaon descended from scalar particles",200, -7., 7.)};
+
+    TH1F* h_genJetMass           {new TH1F("h_genJetMass",            "GenJet MC truth mass of all gen jets descended from scalar particles",200, 0.0, 200.)};
 
     TH1F* h_recoJet1InvMass {new TH1F("h_recoJet1InvMass", "Invariant mass of 1 reco jet descended from scalar particles",200, 0.0, 200.)};
     TH1F* h_genJet1InvMass  {new TH1F("h_genJet1InvMass",  "Invariant mass of 1 gen jet descended from scalar particles",200, 0.0, 200.)};
@@ -241,8 +264,9 @@ int main(int argc, char* argv[])
 
             //////// JET STUFF
 
-            std::vector< TLorentzVector > recoJetVecFromScalar;
-            std::vector< TLorentzVector > genJetVecFromScalar;
+            std::vector< std::pair<TLorentzVector, int> > recoJetVec;
+            std::vector< std::pair<TLorentzVector, int> > recoJetVecFromScalar;
+            std::vector< std::pair<TLorentzVector, int> > genJetVecFromScalar;
 
             for (Int_t k{0}; k < event.numJetPF2PAT; k++) {
                 const Int_t jetPid       {event.jetPF2PATPID[k]};
@@ -252,6 +276,8 @@ int main(int argc, char* argv[])
                 TLorentzVector recoJet = getJetLVec(event, k, false);
                 TLorentzVector genJet  = getJetLVec(event, k, true);
 
+                recoJetVec.emplace_back(std::make_pair(recoJet,genJetPid));
+
                 pdgIdMapJets[std::abs(jetPid)]++;
                 pdgIdMapGenJets[std::abs(genJetPid)]++;
 
@@ -260,8 +286,8 @@ int main(int argc, char* argv[])
                 if ( fromScalar ) { 
                     pdgIdMapJetsFromScalar[std::abs(jetPid)]++;
                     pdgIdMapGenJetsFromScalar[std::abs(genJetPid)]++;
-                    recoJetVecFromScalar.emplace_back(recoJet);
-                    genJetVecFromScalar.emplace_back(genJet);
+                    recoJetVecFromScalar.emplace_back(std::make_pair(recoJet,genJetPid));
+                    genJetVecFromScalar.emplace_back(std::make_pair(genJet,genJetPid));
                     nJetsFromScalarCounter++;
                 }
                 else {
@@ -322,24 +348,40 @@ int main(int argc, char* argv[])
                 h_genJet1Mass->Fill(genJet1MassFromScalar);
                 h_genJet2Mass->Fill(genJet2MassFromScalar);
 
-                float recoJetInvMass {0.0}, genJetInvMass {0.0};
-                for (auto it : recoJetVecFromScalar ) recoJetInvMass += it.M();
-                for (auto it : genJetVecFromScalar )  genJetInvMass += it.M();
-                
-
+                float recoJetInvMass {0.0};
+                for (auto it : recoJetVec ) {
+                    recoJetInvMass += it.first.M();
+                    h_recoJetPt->Fill(it.first.Pt());
+                    h_recoJetEta->Fill(it.first.Eta());
+                }
                 h_recoJetInvMass->Fill(recoJetInvMass);
-                h_genJetInvMass->Fill(genJetInvMass);
+
+                float recoJetScalarInvMass {0.0};
+                for (auto it : recoJetVecFromScalar ) {
+                    recoJetScalarInvMass += it.first.M();
+                    h_recoJetScalarPt->Fill(it.first.Pt());
+                    h_recoJetScalarEta->Fill(it.first.Eta());
+                }
+                h_recoJetScalarInvMass->Fill(recoJetScalarInvMass);
+
+                float genJetScalarInvMass {0.0};
+                for (auto it : genJetVecFromScalar ) {
+                    genJetScalarInvMass += it.first.M();
+                    h_genJetScalarPt->Fill(it.first.Pt());
+                    h_genJetScalarEta->Fill(it.first.Eta());
+                }
+                h_genJetScalarInvMass->Fill(genJetScalarInvMass);
 
                 float recoJet1InvMass {0.0}, genJet1InvMass {0.0}, recoJet2InvMass {0.0}, genJet2InvMass {0.0};
                 if ( nJetsFromScalarCounter == 1 ) {
-                    for (auto it : recoJetVecFromScalar ) recoJet1InvMass += it.M();
-                    for (auto it : genJetVecFromScalar )  genJet1InvMass += it.M();
+                    for (auto it : recoJetVecFromScalar ) recoJet1InvMass += it.first.M();
+                    for (auto it : genJetVecFromScalar )  genJet1InvMass += it.first.M();
                     h_recoJet1InvMass->Fill(recoJet1InvMass);
                     h_genJet1InvMass->Fill(genJet1InvMass);
                 }
                 if ( nJetsFromScalarCounter == 2 ) {
-                    for (auto it : recoJetVecFromScalar ) recoJet2InvMass += it.M();
-                    for (auto it : genJetVecFromScalar )  genJet2InvMass += it.M();
+                    for (auto it : recoJetVecFromScalar ) recoJet2InvMass += it.first.M();
+                    for (auto it : genJetVecFromScalar )  genJet2InvMass += it.first.M();
                     h_recoJet2InvMass->Fill(recoJet2InvMass);
                     h_genJet2InvMass->Fill(genJet2InvMass);
                 }
@@ -760,8 +802,8 @@ int main(int argc, char* argv[])
     h_pdgIdMapScalarDecayProducts->Write();
     h_outgoingStatus->Write();
     h_outgoingStatus23->Write();
-    h_outgoingStatus33->Write();*/
-
+    h_outgoingStatus33->Write();
+*/
     h_jetsFromScalar->Write();
     h_jetsPerEvent->Write();
     h_pdgIdMapJets->Write();
@@ -782,7 +824,28 @@ int main(int argc, char* argv[])
     h_kaonsFromScalarDecays->Write();
 
     h_recoJetInvMass->Write();
-    h_genJetInvMass->Write();
+    h_recoJetPt->Write();
+    h_recoJetEta->Write();
+    h_recoJetScalarInvMass->Write();
+    h_recoJetScalarPt->Write();
+    h_recoJetScalarEta->Write();
+    h_genJetScalarInvMass->Write();
+    h_genJetScalarPt->Write();
+    h_genJetScalarEta->Write();
+
+    h_recoJetPionInvMass->Write();
+    h_recoJetPionPt->Write();
+    h_recoJetPionEta->Write();
+    h_genJetPionInvMass->Write();
+    h_genJetPionPt->Write();
+    h_genJetPionEta->Write();
+    h_recoJetKaonInvMass->Write();
+    h_recoJetKaonPt->Write();
+    h_recoJetKaonEta->Write();
+    h_genJetKaonInvMass->Write();
+    h_genJetKaonPt->Write();
+    h_genJetKaonEta->Write();
+
     h_genJetMass->Write();
     h_recoJet1InvMass->Write();
     h_genJet1InvMass->Write();
