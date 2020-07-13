@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
     TH1F* h_recoJetKaonEta       {new TH1F("h_recoJetKaonEta",       "Reco #eta of Kaon descended from scalar particles",200, -7., 7.)};
     TH1F* h_genJetKaonInvMass    {new TH1F("h_genJetKaonInvMass",    "Gen invariant mass of Kaon jets descended from scalar particles",200, 0.0, 200.)};
     TH1F* h_genJetKaonPt         {new TH1F("h_genJetKaonPt",         "Gen p_{T} of Kaon jets descended from scalar particles",200, 0.0, 200.)};
-    TH1F* h_genJetKaonEta        {new TH1F("h_genJetKaonPt",         "Gen #eta of Kaon descended from scalar particles",200, -7., 7.)};
+    TH1F* h_genJetKaonEta        {new TH1F("h_genJetKaonEta",         "Gen #eta of Kaon descended from scalar particles",200, -7., 7.)};
 
     TH1F* h_genJetMass           {new TH1F("h_genJetMass",            "GenJet MC truth mass of all gen jets descended from scalar particles",200, 0.0, 200.)};
 
