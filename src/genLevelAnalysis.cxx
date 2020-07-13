@@ -348,6 +348,7 @@ int main(int argc, char* argv[])
                 h_genJet1Mass->Fill(genJet1MassFromScalar);
                 h_genJet2Mass->Fill(genJet2MassFromScalar);
 
+                // All reco  jets
                 float recoJetInvMass {0.0};
                 for (auto it : recoJetVec ) {
                     recoJetInvMass += it.first.M();
@@ -356,19 +357,43 @@ int main(int argc, char* argv[])
                 }
                 h_recoJetInvMass->Fill(recoJetInvMass);
 
+                // All reco jets matched to a gen jet descended from a sclaar
                 float recoJetScalarInvMass {0.0};
                 for (auto it : recoJetVecFromScalar ) {
                     recoJetScalarInvMass += it.first.M();
                     h_recoJetScalarPt->Fill(it.first.Pt());
                     h_recoJetScalarEta->Fill(it.first.Eta());
+                    const int pid = std::abs(it.second);
+                    if (pid == 22) {
+                        h_recoJetPionInvMass->Fill(it.first.M());
+                        h_recoJetPionPt->Fill(it.first.Pt());
+                        h_recoJetPionEta->Fill(it.first.Eta());
+                    }
+                    if (pid == 321 || pid == 130 || pid == 310 ) { 
+                        h_recoJetKaonInvMass->Fill(it.first.M());
+                        h_recoJetKaonPt->Fill(it.first.Pt());
+                        h_recoJetKaonEta->Fill(it.first.Eta());
+                    }
                 }
                 h_recoJetScalarInvMass->Fill(recoJetScalarInvMass);
 
+                // All gen jets matched to a gen jet descended from a sclaar
                 float genJetScalarInvMass {0.0};
                 for (auto it : genJetVecFromScalar ) {
                     genJetScalarInvMass += it.first.M();
                     h_genJetScalarPt->Fill(it.first.Pt());
                     h_genJetScalarEta->Fill(it.first.Eta());
+                    const int pid = std::abs(it.second);
+                    if (pid == 22) {
+                        h_genJetPionInvMass->Fill(it.first.M());
+                        h_genJetPionPt->Fill(it.first.Pt());
+                        h_genJetPionEta->Fill(it.first.Eta());
+                    }
+                    if (pid == 321 || pid == 130 || pid == 310 ) { 
+                        h_genJetKaonInvMass->Fill(it.first.M());
+                        h_genJetKaonPt->Fill(it.first.Pt());
+                        h_genJetKaonEta->Fill(it.first.Eta());
+                    }
                 }
                 h_genJetScalarInvMass->Fill(genJetScalarInvMass);
 
