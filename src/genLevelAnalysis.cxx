@@ -34,7 +34,6 @@
 std::string pythiaStatus (const Int_t status);
 std::string pdgIdCode (const Int_t status, const bool unicode = false);
 bool scalarGrandparent(const AnalysisEvent event, const Int_t k, const Int_t pdgId_);
-TLorentzVector getJetLVec(const AnalysisEvent& event, const int index, const bool isGen);
 
 uint debugCounter;
 
@@ -111,16 +110,19 @@ int main(int argc, char* argv[])
     h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(5, "K_{S}^{0} K_{L}^{0}");
     h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(6, "K_{L}^{0} K_{L}^{0}");
 
-    TH1F* h_recoJetInvMass       {new TH1F("h_recoJetInvMass", "Invariant mass of all reco jets",200, 0.0, 200.)};
-    TH1F* h_recoJetPt            {new TH1F("h_recoJetPt",      "p_{T} mass of all reco jets",200, 0.0, 200.)};
-    TH1F* h_recoJetEta           {new TH1F("h_recoJetEta",     "#eta of all reco jets", 200, -7., 7.)};
+    TH1F* h_recoJetSumInvMass    {new TH1F("h_recoJetSumInvMass", "Sum of invariant masses of all reco jets",1000, 0.0, 1000.)};
+    TH1F* h_recoJetInvMass       {new TH1F("h_recoJetInvMass",    "Invariant mass of each reco jet",1000, 0.0, 1000.)};
+    TH1F* h_recoJetPt            {new TH1F("h_recoJetPt",         "p_{T} mass of all reco jets",200, 0.0, 200.)};
+    TH1F* h_recoJetEta           {new TH1F("h_recoJetEta",        "#eta of all reco jets", 200, -7., 7.)};
 
-    TH1F* h_recoJetScalarInvMass {new TH1F("h_recoJetScalarInvMass", "Invariant mass of all reco jets descended from scalar particles",200, 0.0, 200.)};
-    TH1F* h_recoJetScalarPt      {new TH1F("h_recoJetScalarPt",      "p_{T} of all reco jets descended from scalar particles",200, 0.0, 200.)};
-    TH1F* h_recoJetScalarEta     {new TH1F("h_recoJetScalarEta",     "#eta of all reco jets descended from scalar particles",200, -7., 7.)};
-    TH1F* h_genJetScalarInvMass  {new TH1F("h_genJetScalarInvMass",  "Invariant mass of all gen jets descended from scalar particles",200, 0.0, 200.)};
-    TH1F* h_genJetScalarPt       {new TH1F("h_genJetScalarPt",       "p_{T} of all gen jets descended from scalar particles",200, 0.0, 200.)};
-    TH1F* h_genJetScalarEta      {new TH1F("h_genJetScalarEta",      "#eta of all gen jets descended from scalar particles",200, -7., 7.)};
+    TH1F* h_recoJetScalarSumInvMass {new TH1F("h_recoJetScalarSumInvMass", "Sum of invariant masses of reco jets descended from scalar particles",1000, 0.0, 1000.)};
+    TH1F* h_recoJetScalarInvMass    {new TH1F("h_recoJetScalarInvMass",    "Invariant mass of each reco jet descended from scalar particles",1000, 0.0, 1000.)};
+    TH1F* h_recoJetScalarPt         {new TH1F("h_recoJetScalarPt",         "p_{T} of all reco jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_recoJetScalarEta        {new TH1F("h_recoJetScalarEta",        "#eta of all reco jets descended from scalar particles",200, -7., 7.)};
+    TH1F* h_genJetScalarSumInvMass  {new TH1F("h_genJetScalarSumInvMass",  "Sum of the invariant masses of gen jets descended from scalar particles",1000, 0.0, 200.)};
+    TH1F* h_genJetScalarInvMass     {new TH1F("h_genJetScalarInvMass",     "Invariant mass of each gen jet descended from scalar particles",1000, 0.0, 200.)};
+    TH1F* h_genJetScalarPt          {new TH1F("h_genJetScalarPt",          "p_{T} of all gen jets descended from scalar particles",200, 0.0, 200.)};
+    TH1F* h_genJetScalarEta         {new TH1F("h_genJetScalarEta",         "#eta of all gen jets descended from scalar particles",200, -7., 7.)};
 
     TH1F* h_recoJetPionInvMass   {new TH1F("h_recoJetPionInvMass",   "Reco invariant mass of #pi jets descended from scalar particles",200, 0.0, 200.)};
     TH1F* h_recoJetPionPt        {new TH1F("h_recoJetPionPt",        "Reco p_{T} of #pi jets descended from scalar particles",200, 0.0, 200.)};
@@ -273,8 +275,8 @@ int main(int argc, char* argv[])
                 const Int_t genJetPid    {event.genJetPF2PATPID[k]};
                 const Int_t fromScalar   {event.genJetPF2PATScalarAncestor[k]};
 
-                TLorentzVector recoJet = getJetLVec(event, k, false);
-                TLorentzVector genJet  = getJetLVec(event, k, true);
+                const TLorentzVector recoJet {event.jetPF2PATPx[k], event.jetPF2PATPy[k], event.jetPF2PATPz[k], event.jetPF2PATE[k]};
+                const TLorentzVector genJet  {event.genJetPF2PATPX[k], event.genJetPF2PATPY[k], event.genJetPF2PATPZ[k], event.genJetPF2PATE[k]};
 
                 recoJetVec.emplace_back(std::make_pair(recoJet,genJetPid));
 
@@ -349,18 +351,20 @@ int main(int argc, char* argv[])
                 h_genJet2Mass->Fill(genJet2MassFromScalar);
 
                 // All reco  jets
-                float recoJetInvMass {0.0};
+                TLorentzVector recoJetSumInvMass;
                 for (auto it : recoJetVec ) {
-                    recoJetInvMass += it.first.M();
+                    recoJetSumInvMass += it.first;
+                    h_recoJetInvMass->Fill(it.first.M());
                     h_recoJetPt->Fill(it.first.Pt());
                     h_recoJetEta->Fill(it.first.Eta());
                 }
-                h_recoJetInvMass->Fill(recoJetInvMass);
+                h_recoJetSumInvMass->Fill(recoJetSumInvMass.M());
 
                 // All reco jets matched to a gen jet descended from a sclaar
-                float recoJetScalarInvMass {0.0};
+                TLorentzVector recoJetScalarSumInvMass;
                 for (auto it : recoJetVecFromScalar ) {
-                    recoJetScalarInvMass += it.first.M();
+                    recoJetScalarSumInvMass += it.first;
+                    h_recoJetScalarInvMass->Fill(it.first.M());
                     h_recoJetScalarPt->Fill(it.first.Pt());
                     h_recoJetScalarEta->Fill(it.first.Eta());
                     const int pid = std::abs(it.second);
@@ -375,12 +379,13 @@ int main(int argc, char* argv[])
                         h_recoJetKaonEta->Fill(it.first.Eta());
                     }
                 }
-                h_recoJetScalarInvMass->Fill(recoJetScalarInvMass);
+                h_recoJetScalarSumInvMass->Fill(recoJetScalarSumInvMass.M());
 
                 // All gen jets matched to a gen jet descended from a sclaar
-                float genJetScalarInvMass {0.0};
+                TLorentzVector genJetScalarSumInvMass;
                 for (auto it : genJetVecFromScalar ) {
-                    genJetScalarInvMass += it.first.M();
+                    genJetScalarSumInvMass += it.first;
+                    h_genJetScalarInvMass->Fill(it.first.M());
                     h_genJetScalarPt->Fill(it.first.Pt());
                     h_genJetScalarEta->Fill(it.first.Eta());
                     const int pid = std::abs(it.second);
@@ -395,7 +400,7 @@ int main(int argc, char* argv[])
                         h_genJetKaonEta->Fill(it.first.Eta());
                     }
                 }
-                h_genJetScalarInvMass->Fill(genJetScalarInvMass);
+                h_genJetScalarSumInvMass->Fill(genJetScalarSumInvMass.M());
 
                 float recoJet1InvMass {0.0}, genJet1InvMass {0.0}, recoJet2InvMass {0.0}, genJet2InvMass {0.0};
                 if ( nJetsFromScalarCounter == 1 ) {
@@ -854,6 +859,7 @@ int main(int argc, char* argv[])
     h_recoJetScalarInvMass->Write();
     h_recoJetScalarPt->Write();
     h_recoJetScalarEta->Write();
+    h_genJetScalarSumInvMass->Write();
     h_genJetScalarInvMass->Write();
     h_genJetScalarPt->Write();
     h_genJetScalarEta->Write();
@@ -1156,14 +1162,5 @@ bool scalarGrandparent (const AnalysisEvent event, const Int_t k, const Int_t gr
 //        std::cout << "debugCounter: " << debugCounter << std::endl;
         return scalarGrandparent(event, motherIndex, grandparentId); // otherwise check mother's mother ...
     }
-}
-
-TLorentzVector getJetLVec(const AnalysisEvent& event, const int index, const bool genJet = false) {
-    TLorentzVector returnJet;
-
-    if (!genJet) returnJet.SetPxPyPzE(event.jetPF2PATPx[index], event.jetPF2PATPy[index], event.jetPF2PATPz[index], event.jetPF2PATE[index]);
-    else returnJet.SetPxPyPzE(event.genJetPF2PATPX[index], event.genJetPF2PATPY[index], event.genJetPF2PATPZ[index], event.genJetPF2PATE[index]);
-
-    return returnJet;    
 }
 
