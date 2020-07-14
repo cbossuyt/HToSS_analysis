@@ -853,12 +853,16 @@ int main(int argc, char* argv[])
     h_pidsFromScalarDecays->Write();
     h_kaonsFromScalarDecays->Write();
 
+    h_recoJetSumInvMass->Write();
     h_recoJetInvMass->Write();
     h_recoJetPt->Write();
     h_recoJetEta->Write();
+
+    h_recoJetScalarSumInvMass->Write();
     h_recoJetScalarInvMass->Write();
     h_recoJetScalarPt->Write();
     h_recoJetScalarEta->Write();
+
     h_genJetScalarSumInvMass->Write();
     h_genJetScalarInvMass->Write();
     h_genJetScalarPt->Write();
