@@ -110,16 +110,20 @@ int main(int argc, char* argv[])
     h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(5, "K_{S}^{0} K_{L}^{0}");
     h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(6, "K_{L}^{0} K_{L}^{0}");
 
-    TH1F* h_recoJetSumInvMass    {new TH1F("h_recoJetSumInvMass", "Sum of invariant masses of all reco jets",1000, 0.0, 1000.)};
-    TH1F* h_recoJetInvMass       {new TH1F("h_recoJetInvMass",    "Invariant mass of each reco jet",1000, 0.0, 1000.)};
+    TH1F* h_recoJetSumInvMass    {new TH1F("h_recoJetSumInvMass", "Sum of invariant masses of all reco jets",10000, 0.0, 2000.)};
+    TH1F* h_recoJetInvMass       {new TH1F("h_recoJetInvMass",    "Invariant mass of each reco jet",10000, 0.0, 2000.)};
     TH1F* h_recoJetPt            {new TH1F("h_recoJetPt",         "p_{T} mass of all reco jets",200, 0.0, 200.)};
     TH1F* h_recoJetEta           {new TH1F("h_recoJetEta",        "#eta of all reco jets", 200, -7., 7.)};
 
-    TH1F* h_recoJetScalarSumInvMass {new TH1F("h_recoJetScalarSumInvMass", "Sum of invariant masses of reco jets descended from scalar particles",1000, 0.0, 1000.)};
+    TH1F* h_recoJetScalarSumInvMass  {new TH1F("h_recoJetScalarSumInvMass", "Sum of invariant masses of reco jets descended from scalar particles",1000, 0.0, 1000.)};
+    TH1F* h_reco2JetScalarSumInvMass {new TH1F("h_reco2JetScalarSumInvMass", "Sum of invariant masses of two reco jets descended from scalar particles",1000, 0.0, 1000.)};
+    TH1F* h_reco2JetMinScalarSumInvMass {new TH1F("h_reco2JetMinScalarSumInvMass", "Sum of invariant masses of at least two reco jets descended from scalar particles",1000, 0.0, 1000.)};
     TH1F* h_recoJetScalarInvMass    {new TH1F("h_recoJetScalarInvMass",    "Invariant mass of each reco jet descended from scalar particles",1000, 0.0, 1000.)};
     TH1F* h_recoJetScalarPt         {new TH1F("h_recoJetScalarPt",         "p_{T} of all reco jets descended from scalar particles",200, 0.0, 200.)};
     TH1F* h_recoJetScalarEta        {new TH1F("h_recoJetScalarEta",        "#eta of all reco jets descended from scalar particles",200, -7., 7.)};
     TH1F* h_genJetScalarSumInvMass  {new TH1F("h_genJetScalarSumInvMass",  "Sum of the invariant masses of gen jets descended from scalar particles",1000, 0.0, 200.)};
+    TH1F* h_gen2JetScalarSumInvMass  {new TH1F("h_gen2JetScalarSumInvMass","Sum of the invariant masses of two gen jets descended from scalar particles",1000, 0.0, 200.)};
+    TH1F* h_gen2JetMinScalarSumInvMass  {new TH1F("h_gen2JetMinScalarSumInvMass","Sum of the invariant masses of at least two gen jets descended from scalar particles",1000, 0.0, 200.)};
     TH1F* h_genJetScalarInvMass     {new TH1F("h_genJetScalarInvMass",     "Invariant mass of each gen jet descended from scalar particles",1000, 0.0, 200.)};
     TH1F* h_genJetScalarPt          {new TH1F("h_genJetScalarPt",          "p_{T} of all gen jets descended from scalar particles",200, 0.0, 200.)};
     TH1F* h_genJetScalarEta         {new TH1F("h_genJetScalarEta",         "#eta of all gen jets descended from scalar particles",200, -7., 7.)};
@@ -361,9 +365,11 @@ int main(int argc, char* argv[])
                 h_recoJetSumInvMass->Fill(recoJetSumInvMass.M());
 
                 // All reco jets matched to a gen jet descended from a sclaar
-                TLorentzVector recoJetScalarSumInvMass;
+                TLorentzVector recoJetScalarSumInvMass, reco2JetScalarSumInvMass, reco2JetMinScalarSumInvMass;
                 for (auto it : recoJetVecFromScalar ) {
                     recoJetScalarSumInvMass += it.first;
+                    if ( nJetsFromScalarCounter == 2 ) reco2JetScalarSumInvMass += it.first;
+                    if ( nJetsFromScalarCounter > 1 ) reco2JetMinScalarSumInvMass += it.first;
                     h_recoJetScalarInvMass->Fill(it.first.M());
                     h_recoJetScalarPt->Fill(it.first.Pt());
                     h_recoJetScalarEta->Fill(it.first.Eta());
@@ -379,12 +385,16 @@ int main(int argc, char* argv[])
                         h_recoJetKaonEta->Fill(it.first.Eta());
                     }
                 }
-                h_recoJetScalarSumInvMass->Fill(recoJetScalarSumInvMass.M());
+                if ( recoJetScalarSumInvMass.M() > 0.1 ) h_recoJetScalarSumInvMass->Fill(recoJetScalarSumInvMass.M());
+                if ( reco2JetScalarSumInvMass.M() > 0.1 ) h_reco2JetScalarSumInvMass->Fill(reco2JetScalarSumInvMass.M());
+                if ( reco2JetMinScalarSumInvMass.M() > 0.1 ) h_reco2JetMinScalarSumInvMass->Fill(reco2JetMinScalarSumInvMass.M());
 
                 // All gen jets matched to a gen jet descended from a sclaar
-                TLorentzVector genJetScalarSumInvMass;
+                TLorentzVector genJetScalarSumInvMass, gen2JetScalarSumInvMass, gen2JetMinScalarSumInvMass;
                 for (auto it : genJetVecFromScalar ) {
                     genJetScalarSumInvMass += it.first;
+                    if ( nJetsFromScalarCounter == 2 ) gen2JetScalarSumInvMass += it.first;
+                    if ( nJetsFromScalarCounter > 1 ) gen2JetMinScalarSumInvMass += it.first;
                     h_genJetScalarInvMass->Fill(it.first.M());
                     h_genJetScalarPt->Fill(it.first.Pt());
                     h_genJetScalarEta->Fill(it.first.Eta());
@@ -400,7 +410,9 @@ int main(int argc, char* argv[])
                         h_genJetKaonEta->Fill(it.first.Eta());
                     }
                 }
-                h_genJetScalarSumInvMass->Fill(genJetScalarSumInvMass.M());
+                if ( genJetScalarSumInvMass.M() ) h_genJetScalarSumInvMass->Fill(genJetScalarSumInvMass.M());
+                if ( gen2JetScalarSumInvMass.M() ) h_gen2JetScalarSumInvMass->Fill(gen2JetScalarSumInvMass.M());
+                if ( gen2JetMinScalarSumInvMass.M() ) h_gen2JetMinScalarSumInvMass->Fill(gen2JetMinScalarSumInvMass.M());
 
                 float recoJet1InvMass {0.0}, genJet1InvMass {0.0}, recoJet2InvMass {0.0}, genJet2InvMass {0.0};
                 if ( nJetsFromScalarCounter == 1 ) {
@@ -859,11 +871,15 @@ int main(int argc, char* argv[])
     h_recoJetEta->Write();
 
     h_recoJetScalarSumInvMass->Write();
+    h_reco2JetScalarSumInvMass->Write();
+    h_reco2JetMinScalarSumInvMass->Write();
     h_recoJetScalarInvMass->Write();
     h_recoJetScalarPt->Write();
     h_recoJetScalarEta->Write();
 
     h_genJetScalarSumInvMass->Write();
+    h_gen2JetScalarSumInvMass->Write();
+    h_gen2JetMinScalarSumInvMass->Write();
     h_genJetScalarInvMass->Write();
     h_genJetScalarPt->Write();
     h_genJetScalarEta->Write();
