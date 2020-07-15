@@ -386,7 +386,7 @@ int main(int argc, char* argv[])
                         h_recoJetPionEta->Fill(it.first.Eta());
                     }
                     if (pid == 321 || pid == 130 || pid == 310 ) { 
-                        kaonRecoJetScalarSumInvMass ,= it.first;
+                        kaonRecoJetScalarSumInvMass += it.first;
                         h_recoJetKaonInvMass->Fill(it.first.M());
                         h_recoJetKaonPt->Fill(it.first.Pt());
                         h_recoJetKaonEta->Fill(it.first.Eta());
@@ -396,8 +396,8 @@ int main(int argc, char* argv[])
                 if ( reco2JetScalarSumInvMass.M() > 0.1 ) h_reco2JetScalarSumInvMass->Fill(reco2JetScalarSumInvMass.M());
                 if ( reco2JetMinScalarSumInvMass.M() > 0.1 ) h_reco2JetMinScalarSumInvMass->Fill(reco2JetMinScalarSumInvMass.M());
 
-                h_recoJetPionScalarInvMass->Fill(pionRecoJetScalarSumInvMass.first.M());
-                h_recoJetKaonScalarInvMass->Fill(kaonRecoJetScalarSumInvMass.first.M());
+                h_recoJetPionScalarInvMass->Fill(pionRecoJetScalarSumInvMass.M());
+                h_recoJetKaonScalarInvMass->Fill(kaonRecoJetScalarSumInvMass.M());
 
 
                 // All gen jets matched to a gen jet descended from a sclaar
