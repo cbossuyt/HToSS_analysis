@@ -271,9 +271,21 @@ int main(int argc, char* argv[])
 
 //            std::cout << "eventNum: " << event.eventNum << std::endl;
 
+            //////// ISO TRACK STUFF
+
+            for (Int_t k{0}; k < event.numIsolatedTracks; k++) {
+                const Int_t isoTrackPid                {event.isoTracksPdgId[k]};
+                const Float_t isoTrackCaloJetEmEnergy  {event.isoTracksMatchedCaloJetEmEnergy[k]};
+                const Float_t isoTrackCaloJetHadEnergy {event.isoTracksMatchedCaloJetHadEnergy[k]};
+		const Float_t isoTrackPt               {event.isoTracksPt[k]};
+
+		const TLorentzVector isoTrackLVec {event.isoTracksPx[k], event.isoTracksPy[k], event.isoTracksPz[k], event.isoTracksE[k]};
+                std::cout << isoTrackPid << " : " << isoTrackPt << " : " << isoTrackCaloJetEmEnergy << " : " << isoTrackCaloJetHadEnergy << " : LVec mass = " << isoTrackLVec.M() << std::endl;
+
+            }
 
             //////// JET STUFF
-
+/*
             std::vector< std::pair<TLorentzVector, int> > recoJetVec;
             std::vector< std::pair<TLorentzVector, int> > recoJetVecFromScalar;
             std::vector< std::pair<TLorentzVector, int> > genJetVecFromScalar;
@@ -448,7 +460,7 @@ int main(int argc, char* argv[])
             nJetsFromScalar.emplace_back(nJetsFromScalarCounter);
             nJetsPerEvent.emplace_back(nJetsPerEventCounter);
 
-
+*/
 
             //////// GENERATOR PARTICLE STUFF
 
@@ -862,6 +874,7 @@ int main(int argc, char* argv[])
     h_outgoingStatus23->Write();
     h_outgoingStatus33->Write();
 */
+/*
     h_jetsFromScalar->Write();
     h_jetsPerEvent->Write();
     h_pdgIdMapJets->Write();
@@ -924,7 +937,7 @@ int main(int argc, char* argv[])
     h_recoJet2InvMass->Write();
     h_genJet2InvMass->Write();
     h_genJet2Mass->Write();
-
+*/
     outFile->Close();
 
 //    std::cout << "Max nGenPar: " << maxGenPars << std::endl;    
