@@ -110,8 +110,8 @@ int main(int argc, char* argv[])
     h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(5, "K_{S}^{0} K_{L}^{0}");
     h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(6, "K_{L}^{0} K_{L}^{0}");
 
-    TH1F* h_recoJetSumInvMass    {new TH1F("h_recoJetSumInvMass", "Sum of invariant masses of all reco jets",10000, 0.0, 2000.)};
-    TH1F* h_recoJetInvMass       {new TH1F("h_recoJetInvMass",    "Invariant mass of each reco jet",10000, 0.0, 2000.)};
+    TH1F* h_recoJetSumInvMass    {new TH1F("h_recoJetSumInvMass", "Sum of invariant masses of all reco jets",1000, 0.0, 200.)};
+    TH1F* h_recoJetInvMass       {new TH1F("h_recoJetInvMass",    "Invariant mass of each reco jet",1000, 0.0, 200.)};
     TH1F* h_recoJetPt            {new TH1F("h_recoJetPt",         "p_{T} mass of all reco jets",200, 0.0, 200.)};
     TH1F* h_recoJetEta           {new TH1F("h_recoJetEta",        "#eta of all reco jets", 200, -7., 7.)};
 
