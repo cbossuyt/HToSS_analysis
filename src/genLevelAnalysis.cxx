@@ -273,16 +273,20 @@ int main(int argc, char* argv[])
 
             //////// ISO TRACK STUFF
 
+            unsigned pionTrackCounter {0};
+
             for (Int_t k{0}; k < event.numIsolatedTracks; k++) {
                 const Int_t isoTrackPid                {event.isoTracksPdgId[k]};
                 const Float_t isoTrackCaloJetEmEnergy  {event.isoTracksMatchedCaloJetEmEnergy[k]};
                 const Float_t isoTrackCaloJetHadEnergy {event.isoTracksMatchedCaloJetHadEnergy[k]};
 		const Float_t isoTrackPt               {event.isoTracksPt[k]};
+                const bool isPion {std::abs(isoTrackPid) == 211};
 
 		const TLorentzVector isoTrackLVec {event.isoTracksPx[k], event.isoTracksPy[k], event.isoTracksPz[k], event.isoTracksE[k]};
                 std::cout << isoTrackPid << " : " << isoTrackPt << " : " << isoTrackCaloJetEmEnergy << " : " << isoTrackCaloJetHadEnergy << " : LVec mass = " << isoTrackLVec.M() << std::endl;
 
             }
+            std::cout << "Number of isolated pion tracks: " << pionTrackCounter << std::endl;
 
             //////// JET STUFF
 /*
