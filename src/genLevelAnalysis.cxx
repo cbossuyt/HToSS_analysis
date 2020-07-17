@@ -269,7 +269,7 @@ int main(int argc, char* argv[])
             int nOutgoingStatus23Counter {0};
             int nOutgoingStatus33Counter {0};
 
-//            std::cout << "eventNum: " << event.eventNum << std::endl;
+            std::cout << "eventNum: " << event.eventNum << std::endl;
 
             //////// ISO TRACK STUFF
 
@@ -548,7 +548,7 @@ int main(int argc, char* argv[])
     std::cout << std::endl;
     std::cout << "Total no. of events:\t\t\t" << totalEvents << std::endl;
     std::cout << std::endl;
-
+/*
     // Do scalable histograms
     int nPdgIds                   = pdgIdMap.size();                   // number of different final state pdgIds
     int nPdgIdsStatus1            = pdgIdMapStatus1.size();            // number of different final state pdgIds with status 1
@@ -852,7 +852,7 @@ int main(int argc, char* argv[])
         h_pdgIdMap6GenJetsFromScalar->GetXaxis()->SetBinLabel(binCounter6GenJetsFromScalar, label);
         binCounter6GenJetsFromScalar++;
     }
-
+*/
     TFile* outFile{new TFile{outFileString.c_str(), "RECREATE"}};
     outFile->cd();
 /*
