@@ -271,6 +271,16 @@ int main(int argc, char* argv[])
 
             std::cout << "eventNum: " << event.eventNum << std::endl;
 
+            for (Int_t k{0}; k < event.numGeneralTracks; k++) {
+                const Int_t genTrackPid                {event.generalTracksPdgId[k]};
+                const Float_t genTrackPt               {event.generalTracksPt[k]};
+                const bool isPion {std::abs(genTrackPid) == 211};
+
+                const TLorentzVector genTrackLVec {event.generalTracksPx[k], event.generalTracksPy[k], event.generalTracksPz[k], event.generalTracksE[k]};
+                std::cout << genTrackPid << " : " << genTrackPt << " : " << event.generalTracksHasTrackDetails << " : " << event.generalTracksIsJet << " : LVec mass = " << genTrackLVec.M() << std::endl;
+
+            }
+
             //////// ISO TRACK STUFF
 
             unsigned pionTrackCounter {0};
