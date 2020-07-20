@@ -273,6 +273,8 @@ int main(int argc, char* argv[])
 
             std::cout << "PackedCands COLLECTION" << std::endl;
 
+            std::cout << "event.numPackedCands: " << event.numPackedCands << std::endl;
+
             for (Int_t k{0}; k < event.numPackedCands; k++) {
                 const TLorentzVector packedCandsLVec {event.packedCandsPx[k], event.packedCandsPy[k], event.packedCandsPz[k], event.packedCandsE[k]};
 
@@ -307,8 +309,10 @@ int main(int argc, char* argv[])
             }
             std::cout << "Number of isolated pion tracks: " << pionTrackCounter << std::endl;
 
+
             //////// JET STUFF
-/*
+
+
             std::vector< std::pair<TLorentzVector, int> > recoJetVec;
             std::vector< std::pair<TLorentzVector, int> > recoJetVecFromScalar;
             std::vector< std::pair<TLorentzVector, int> > genJetVecFromScalar;
@@ -373,21 +377,22 @@ int main(int argc, char* argv[])
                         if ( std::abs(genJetPid) == 22  ) photonFlag++;
                         if ( std::abs(genJetPid) == 211 ) pionFlag++;
                     }
-                    if ( kaonFlag == 2 ) {
-                        h_pidsFromScalarDecays->AddBinContent(1);
-                        if ( kChargedFlag == 2 ) h_kaonsFromScalarDecays->AddBinContent(1);
-                        if ( kChargedFlag == 1 && kShortFlag == 1 ) h_kaonsFromScalarDecays->AddBinContent(2);
-                        if ( kChargedFlag == 1 && kLongFlag == 1 ) h_kaonsFromScalarDecays->AddBinContent(3);
-                        if ( kShortFlag == 2 ) h_kaonsFromScalarDecays->AddBinContent(4);
-                        if ( kShortFlag == 1 && kLongFlag == 1 ) h_kaonsFromScalarDecays->AddBinContent(5);
-                        if ( kLongFlag == 2 ) h_kaonsFromScalarDecays->AddBinContent(6);
-                    }
-                    if ( kaonFlag == 1 && pionFlag == 1 ) h_pidsFromScalarDecays->AddBinContent(2);
-                    if ( kaonFlag == 1 && photonFlag == 1 ) h_pidsFromScalarDecays->AddBinContent(3);
-                    if ( pionFlag == 2 )  h_pidsFromScalarDecays->AddBinContent(4);
-                    if ( pionFlag == 1 && photonFlag == 1 ) h_pidsFromScalarDecays->AddBinContent(5);
-                    if ( photonFlag == 2 ) h_pidsFromScalarDecays->AddBinContent(6);
                 }
+                if ( kaonFlag == 2 ) {
+                    h_pidsFromScalarDecays->AddBinContent(1);
+                    if ( kChargedFlag == 2 ) h_kaonsFromScalarDecays->AddBinContent(1);
+                    if ( kChargedFlag == 1 && kShortFlag == 1 ) h_kaonsFromScalarDecays->AddBinContent(2);
+                    if ( kChargedFlag == 1 && kLongFlag == 1 ) h_kaonsFromScalarDecays->AddBinContent(3);
+                    if ( kShortFlag == 2 ) h_kaonsFromScalarDecays->AddBinContent(4);
+                    if ( kShortFlag == 1 && kLongFlag == 1 ) h_kaonsFromScalarDecays->AddBinContent(5);
+                    if ( kLongFlag == 2 ) h_kaonsFromScalarDecays->AddBinContent(6);
+                }
+                if ( kaonFlag == 1 && pionFlag == 1 ) h_pidsFromScalarDecays->AddBinContent(2);
+                if ( kaonFlag == 1 && photonFlag == 1 ) h_pidsFromScalarDecays->AddBinContent(3);
+                if ( pionFlag == 2 )  h_pidsFromScalarDecays->AddBinContent(4);
+                if ( pionFlag == 1 && photonFlag == 1 ) h_pidsFromScalarDecays->AddBinContent(5);
+                if ( photonFlag == 2 ) h_pidsFromScalarDecays->AddBinContent(6);
+                std::cout << "Scalar jet flags: kaonFlag = " << kaonFlag << "; pionFlag = " << pionFlag << "; photonFlag = " << photonFlag <<std::endl;
 
                 h_genJetMass->Fill(genJetMassFromScalar);
                 h_genJet1Mass->Fill(genJet1MassFromScalar);
@@ -483,7 +488,7 @@ int main(int argc, char* argv[])
             nJetsFromScalar.emplace_back(nJetsFromScalarCounter);
             nJetsPerEvent.emplace_back(nJetsPerEventCounter);
 
-*/
+
 
             //////// GENERATOR PARTICLE STUFF
 
