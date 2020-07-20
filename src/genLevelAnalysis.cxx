@@ -271,23 +271,23 @@ int main(int argc, char* argv[])
 
             std::cout << "eventNum: " << event.eventNum << std::endl;
 
-            std::cout << "GENERAL TRACKS COLLECTION" << std::endl;
+            std::cout << "PackedCands COLLECTION" << std::endl;
 
             unsigned pionTrackCounter {0}, pionAndTrackCounter{0}, pionAndJetCounter{0}, pionAndTrackJetCounter{0};
 
-            for (Int_t k{0}; k < event.numGeneralTracks; k++) {
-                const Int_t genTrackPid                {event.generalTracksPdgId[k]};
-                const Float_t genTrackPt               {event.generalTracksPt[k]};
-                const bool isPion {std::abs(genTrackPid) == 211};
-                const bool isTrack {event.generalTracksHasTrackDetails[k]};
-                const bool isJet {event.generalTracksHasTrackDetails[k]};
+            for (Int_t k{0}; k < event.numPackedCands; k++) {
+                const Int_t packedCandsPid                {event.packedCandsPdgId[k]};
+                const Float_t packedCandsPt               {event.packedCandsPt[k]};
+                const bool isPion {std::abs(packedCandsPid) == 211};
+                const bool isTrack {event.packedCandsHasTrackDetails[k]};
+                const bool isJet {event.packedCandsIsJet[k]};
                 if (isPion) pionTrackCounter++;
                 if (isPion && isTrack) pionAndTrackCounter++;
                 if (isPion && isJet) pionAndJetCounter++;
                 if (isPion && isTrack && isJet) pionAndTrackJetCounter++;
                 
-                const TLorentzVector genTrackLVec {event.generalTracksPx[k], event.generalTracksPy[k], event.generalTracksPz[k], event.generalTracksE[k]};
-                std::cout << genTrackPid << " : " << genTrackPt << " : " << isTrack << " : " << isJet << " : LVec mass = " << genTrackLVec.M() << std::endl;
+                const TLorentzVector packedCandsLVec {event.packedCandsPx[k], event.packedCandsPy[k], event.packedCandsPz[k], event.packedCandsE[k]};
+                std::cout << packedCandsPid << " : " << packedCandsPt << " : " << isTrack << " : " << isJet << " : LVec mass = " << packedCandsLVec.M() << std::endl;
 
             }
 
