@@ -273,32 +273,24 @@ int main(int argc, char* argv[])
 
             std::cout << "PackedCands COLLECTION" << std::endl;
 
-            unsigned pionTrackCounter {0}, pionAndTrackCounter{0}, pionAndJetCounter{0}, pionAndTrackJetCounter{0};
-
             for (Int_t k{0}; k < event.numPackedCands; k++) {
-                const Int_t packedCandsPid                {event.packedCandsPdgId[k]};
-                const Float_t packedCandsPt               {event.packedCandsPt[k]};
-                const bool isPion {std::abs(packedCandsPid) == 211};
-                const bool isTrack {event.packedCandsHasTrackDetails[k]};
-                const bool isJet {event.packedCandsIsJet[k]};
-                if (isPion) pionTrackCounter++;
-                if (isPion && isTrack) pionAndTrackCounter++;
-                if (isPion && isJet) pionAndJetCounter++;
-                if (isPion && isTrack && isJet) pionAndTrackJetCounter++;
-                
                 const TLorentzVector packedCandsLVec {event.packedCandsPx[k], event.packedCandsPy[k], event.packedCandsPz[k], event.packedCandsE[k]};
-                std::cout << packedCandsPid << " : " << packedCandsPt << " : " << isTrack << " : " << isJet << " : LVec mass = " << packedCandsLVec.M() << std::endl;
+
+                const Int_t packedCandsPid                {event.packedCandsPdgId[k]};
+                const Float_t packedCandsPt               {packedCandsLVec.Pt()};
+                
+//                std::cout << packedCandsPid << " : " << packedCandsPt << " : " << isTrack << " : " << isJet << " : LVec mass = " << packedCandsLVec.M() << std::endl;
 
             }
 
-            std::cout << "Number of general pions: " << pionTrackCounter << std::endl;
-            std::cout << "Number of general pions with tracks: " << pionAndTrackCounter << std::endl;
-            std::cout << "Number of general pions with jets: " << pionAndJetCounter << std::endl;
-            std::cout << "Number of general pions with tracks and jets: " << pionAndTrackJetCounter << std::endl;
+//            std::cout << "Number of general pions: " << pionTrackCounter << std::endl;
+//            std::cout << "Number of general pions with tracks: " << pionAndTrackCounter << std::endl;
+//            std::cout << "Number of general pions with jets: " << pionAndJetCounter << std::endl;
+//            std::cout << "Number of general pions with tracks and jets: " << pionAndTrackJetCounter << std::endl;
 
             //////// ISO TRACK STUFF
 
-            pionTrackCounter = 0;
+            uint pionTrackCounter = 0;
             std::cout << "ISO TRACKS COLLECTION" << std::endl;
 
             for (Int_t k{0}; k < event.numIsolatedTracks; k++) {

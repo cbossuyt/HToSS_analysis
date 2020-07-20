@@ -1598,7 +1598,7 @@ bool TriggerScaleFactors::displacedJetsTracksTriggerCut(const AnalysisEvent& eve
                      || event.HLT_HT400_DisplacedDijet40_DisplacedTrack_v10 > 0;
     // clang-format on
 }
-
+/*
 bool TriggerScaleFactors::photonTriggerCut(const AnalysisEvent& event) const
 {
     // clang-format off
@@ -1700,7 +1700,7 @@ bool TriggerScaleFactors::photonHoverETrig(const AnalysisEvent& event) const
                || event.HLT_Photon60_HoverELoose_v9 > 0;
     // clang-format on
 }
-
+*/
 bool TriggerScaleFactors::metFilters(const AnalysisEvent& event,
                                      const bool isMC) const
 {
