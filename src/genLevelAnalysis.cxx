@@ -279,7 +279,7 @@ int main(int argc, char* argv[])
                 const Int_t packedCandsPid                {event.packedCandsPdgId[k]};
                 const Float_t packedCandsPt               {packedCandsLVec.Pt()};
                 
-//                std::cout << packedCandsPid << " : " << packedCandsPt << " : " << isTrack << " : " << isJet << " : LVec mass = " << packedCandsLVec.M() << std::endl;
+                std::cout << "PID = " << packedCandsPid << " ; pT= " << packedCandsPt << " ; LVec mass = " << packedCandsLVec.M() << std::endl;
 
             }
 
