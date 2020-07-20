@@ -655,8 +655,10 @@ void TriggerScaleFactors::runMainAnalysis()
             // selection?
             if (passDoubleElectronSelection)
             {
-                triggerDoubleEG = event.eTrig() && event.eeTrig();
-                triggerMetDoubleEG = triggerDoubleEG && metTriggerCut(event);
+//                triggerDoubleEG = event.eTrig() && event.eeTrig();
+                triggerDoubleEG = false;
+//                triggerMetDoubleEG = triggerDoubleEG && metTriggerCut(event);
+                triggerMetDoubleEG = false;
             }
             // Does event pass Single/Double Muon trigger and the muon
             // selection?
@@ -670,7 +672,8 @@ void TriggerScaleFactors::runMainAnalysis()
             // the muon selection?
             if (passMuonElectronSelection)
             {
-                triggerMuonElectron = event.muEGTrig();
+//                triggerMuonElectron = event.muEGTrig();
+                triggerMuonElectron = false;
                 triggerMetMuonElectron =
                     triggerMuonElectron && metTriggerCut(event);
             }

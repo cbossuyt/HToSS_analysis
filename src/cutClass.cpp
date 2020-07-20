@@ -1398,18 +1398,21 @@ bool Cuts::triggerCuts(const AnalysisEvent& event,
 
     // MuEG triggers
     // clang-format off
-    const bool muEGTrig{event.muEGTrig()};
+//    const bool muEGTrig{event.muEGTrig()};
+    const bool muEGTrig{true};
 
     // clang-format on
 
     // double electron triggers
-    const bool eeTrig{event.eeTrig()};
+//    const bool eeTrig{event.eeTrig()};
+    const bool eeTrig{true};
 
     // double muon triggers
     const bool mumuTrig{event.mumuTrig()};
 
     // single electron triggers
-    const bool eTrig{event.eTrig()};
+//    const bool eTrig{event.eTrig()};
+    const bool eTrig{true};
 
     // single muon triggers
     const bool muTrig{event.muTrig()};

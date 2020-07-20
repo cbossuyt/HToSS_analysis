@@ -134,7 +134,8 @@ int main(int argc, char* argv[])
                 if (channel == "ee")
                 {
                     // clang-format off
-                    const bool eeTrig{event.eeTrig()};
+//                    const bool eeTrig{event.eeTrig()};
+                    const bool eeTrig{false};
                     // clang-format on
 
                     if (eeTrig)
@@ -159,7 +160,8 @@ int main(int argc, char* argv[])
 
                 if (channel == "emu")
                 {
-                    const bool muEGTrig{event.muEGTrig()};
+//                    const bool muEGTrig{event.muEGTrig()};
+                    const bool muEGTrig{false};
 
                     if (muEGTrig)
                     {
@@ -229,7 +231,8 @@ int main(int argc, char* argv[])
                 event.GetEntry(i);
                 if (channel == "ee")
                 {
-                    const bool eTrig{event.eTrig()};
+//                    const bool eTrig{event.eTrig()};
+                    const bool eTrig{false};
                     if (eTrig)
                     {
                         auto it{triggerDoubleCountCheck.find(
@@ -281,7 +284,8 @@ int main(int argc, char* argv[])
                 {
                     // check eTrigger for emu first
                     // clang-format off
-                    const bool eTrig{event.eTrig()};
+//                    const bool eTrig{event.eTrig()};
+                    const bool eTrig{false};
                     // then check muTrigger for emu
                     const bool muTrig{event.muTrig()};
                     // clang-format on

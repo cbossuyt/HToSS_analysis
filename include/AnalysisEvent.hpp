@@ -2137,10 +2137,10 @@ class AnalysisEvent
     Long64_t LoadTree(const Long64_t entry);
     void Loop();
     void Show(const Long64_t entry = -1) const;
-    bool eTrig() const;
+//    bool eTrig() const;
     bool muTrig() const;
-    bool eeTrig() const;
-    bool muEGTrig() const;
+//    bool eeTrig() const;
+//    bool muEGTrig() const;
     bool mumuTrig() const;
 
 //    bool displacedJetTrig() const;
