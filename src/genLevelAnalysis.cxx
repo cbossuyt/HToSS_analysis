@@ -271,19 +271,35 @@ int main(int argc, char* argv[])
 
             std::cout << "eventNum: " << event.eventNum << std::endl;
 
+            std::cout << "GENERAL TRACKS COLLECTION" << std::endl;
+
+            unsigned pionTrackCounter {0}, pionAndTrackCounter{0}, pionAndJetCounter{0}, pionAndTrackJetCounter{0};
+
             for (Int_t k{0}; k < event.numGeneralTracks; k++) {
                 const Int_t genTrackPid                {event.generalTracksPdgId[k]};
                 const Float_t genTrackPt               {event.generalTracksPt[k]};
                 const bool isPion {std::abs(genTrackPid) == 211};
-
+                const bool isTrack {event.generalTracksHasTrackDetails[k]};
+                const bool isJet {event.generalTracksHasTrackDetails[k]};
+                if (isPion) pionTrackCounter++;
+                if (isPion && isTrack) pionAndTrackCounter++;
+                if (isPion && isJet) pionAndJetCounter++;
+                if (isPion && isTrack && isJet) pionAndTrackJetCounter++;
+                
                 const TLorentzVector genTrackLVec {event.generalTracksPx[k], event.generalTracksPy[k], event.generalTracksPz[k], event.generalTracksE[k]};
-                std::cout << genTrackPid << " : " << genTrackPt << " : " << event.generalTracksHasTrackDetails << " : " << event.generalTracksIsJet << " : LVec mass = " << genTrackLVec.M() << std::endl;
+                std::cout << genTrackPid << " : " << genTrackPt << " : " << isTrack << " : " << isJet << " : LVec mass = " << genTrackLVec.M() << std::endl;
 
             }
 
+            std::cout << "Number of general pions: " << pionTrackCounter << std::endl;
+            std::cout << "Number of general pions with tracks: " << pionAndTrackCounter << std::endl;
+            std::cout << "Number of general pions with jets: " << pionAndJetCounter << std::endl;
+            std::cout << "Number of general pions with tracks and jets: " << pionAndTrackJetCounter << std::endl;
+
             //////// ISO TRACK STUFF
 
-            unsigned pionTrackCounter {0};
+            pionTrackCounter = 0;
+            std::cout << "ISO TRACKS COLLECTION" << std::endl;
 
             for (Int_t k{0}; k < event.numIsolatedTracks; k++) {
                 const Int_t isoTrackPid                {event.isoTracksPdgId[k]};
@@ -291,6 +307,7 @@ int main(int argc, char* argv[])
                 const Float_t isoTrackCaloJetHadEnergy {event.isoTracksMatchedCaloJetHadEnergy[k]};
 		const Float_t isoTrackPt               {event.isoTracksPt[k]};
                 const bool isPion {std::abs(isoTrackPid) == 211};
+                if (isPion) pionTrackCounter++;
 
 		const TLorentzVector isoTrackLVec {event.isoTracksPx[k], event.isoTracksPy[k], event.isoTracksPz[k], event.isoTracksE[k]};
                 std::cout << isoTrackPid << " : " << isoTrackPt << " : " << isoTrackCaloJetEmEnergy << " : " << isoTrackCaloJetHadEnergy << " : LVec mass = " << isoTrackLVec.M() << std::endl;
