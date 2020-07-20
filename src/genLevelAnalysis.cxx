@@ -576,7 +576,7 @@ int main(int argc, char* argv[])
     std::cout << std::endl;
     std::cout << "Total no. of events:\t\t\t" << totalEvents << std::endl;
     std::cout << std::endl;
-/*
+
     // Do scalable histograms
     int nPdgIds                   = pdgIdMap.size();                   // number of different final state pdgIds
     int nPdgIdsStatus1            = pdgIdMapStatus1.size();            // number of different final state pdgIds with status 1
@@ -659,7 +659,7 @@ int main(int argc, char* argv[])
     TH1I* h_pdgIdMap5GenJetsFromScalar {new TH1I{"h_pdgIdMap5GenJetsFromScalar", "5 gen jets pid descended from generator scalar",  nPdgIds5GenJetsFromScalar+1, -0.5, Double_t(nPdgIds5GenJetsFromScalar+0.5) }};
     TH1I* h_pdgIdMap6GenJetsFromScalar {new TH1I{"h_pdgIdMap6GenJetsFromScalar", "6 gen jets pid descended from generator scalar",  nPdgIds6GenJetsFromScalar+1, -0.5, Double_t(nPdgIds6GenJetsFromScalar+0.5) }};
 
-
+/*
     uint binCounter {1};
     for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
 //        std::cout << "Add " << it->second << " to bin " << binCounter << " for pdgId " << it->first << std::endl;
@@ -783,7 +783,7 @@ int main(int argc, char* argv[])
     for (auto it = nJetsFromScalar.begin(); it != nJetsFromScalar.end(); ++it) {
         h_jetsFromScalar->Fill(*it);
     }
-
+*/
     for (auto it = nJetsPerEvent.begin(); it != nJetsPerEvent.end(); ++it) {
         h_jetsPerEvent->Fill(*it);
     }
@@ -880,7 +880,7 @@ int main(int argc, char* argv[])
         h_pdgIdMap6GenJetsFromScalar->GetXaxis()->SetBinLabel(binCounter6GenJetsFromScalar, label);
         binCounter6GenJetsFromScalar++;
     }
-*/
+
     TFile* outFile{new TFile{outFileString.c_str(), "RECREATE"}};
     outFile->cd();
 /*
@@ -902,7 +902,7 @@ int main(int argc, char* argv[])
     h_outgoingStatus23->Write();
     h_outgoingStatus33->Write();
 */
-/*
+
     h_jetsFromScalar->Write();
     h_jetsPerEvent->Write();
     h_pdgIdMapJets->Write();
@@ -965,7 +965,7 @@ int main(int argc, char* argv[])
     h_recoJet2InvMass->Write();
     h_genJet2InvMass->Write();
     h_genJet2Mass->Write();
-*/
+
     outFile->Close();
 
 //    std::cout << "Max nGenPar: " << maxGenPars << std::endl;    
