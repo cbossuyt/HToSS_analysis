@@ -110,6 +110,10 @@ int main(int argc, char* argv[])
     h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(5, "K_{S}^{0} K_{L}^{0}");
     h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(6, "K_{L}^{0} K_{L}^{0}");
 
+    TH1F* h_scalarDR        {new TH1F("h_scalarDR",       "#DeltaR between generator level scalars" ,    100, 0., 10.)};
+    TH1F* h_scalarDPhi      {new TH1F("h_scalarDPhi",     "#Delta#phi between generator level scalars",  100, -3.5, 3.5)};
+    TH1F* h_scalarDrEtaPhi  {new TH1F("h_scalarDrEtaPhi", "#Deltar#eta#phi between generator level scalars", 100, 0., 7.)};
+
     TH1F* h_recoJetSumInvMass    {new TH1F("h_recoJetSumInvMass", "Sum of invariant masses of all reco jets",1000, 0.0, 200.)};
     TH1F* h_recoJetInvMass       {new TH1F("h_recoJetInvMass",    "Invariant mass of each reco jet",1000, 0.0, 200.)};
     TH1F* h_recoJetPt            {new TH1F("h_recoJetPt",         "p_{T} mass of all reco jets",200, 0.0, 200.)};
@@ -269,11 +273,11 @@ int main(int argc, char* argv[])
             int nOutgoingStatus23Counter {0};
             int nOutgoingStatus33Counter {0};
 
-            std::cout << "eventNum: " << event.eventNum << std::endl;
+//            std::cout << "eventNum: " << event.eventNum << std::endl;
 
-            std::cout << "PackedCands COLLECTION" << std::endl;
+//            std::cout << "PackedCands COLLECTION" << std::endl;
 
-            std::cout << "event.numPackedCands: " << event.numPackedCands << std::endl;
+//            std::cout << "event.numPackedCands: " << event.numPackedCands << std::endl;
 
             for (Int_t k{0}; k < event.numPackedCands; k++) {
                 const TLorentzVector packedCandsLVec {event.packedCandsPx[k], event.packedCandsPy[k], event.packedCandsPz[k], event.packedCandsE[k]};
@@ -281,7 +285,9 @@ int main(int argc, char* argv[])
                 const Int_t packedCandsPid                {event.packedCandsPdgId[k]};
                 const Float_t packedCandsPt               {packedCandsLVec.Pt()};
                 
-                std::cout << "PID = " << packedCandsPid << " ; pT= " << packedCandsPt << " ; LVec mass = " << packedCandsLVec.M() << std::endl;
+//                std::cout << "PID = " << packedCandsPid << " ; pT= " << packedCandsPt << " ; LVec mass = " << packedCandsLVec.M() << std::endl;
+//                std::cout << "Vx = " << event.packedCandsPseudoTrkVx[k] << "; Vy = " << event.packedCandsPseudoTrkVy[k] << "; Vz = " << event.packedCandsPseudoTrkVz[k] << std::endl;
+//                std::cout << "dz = " << event.packedCandsDz[k] << "; dxy = " << event.packedCandsDz[k] << "; highQuality[k] = " << event.packedCandsHighPurityTrack[k] << std::endl;
 
             }
 
@@ -293,7 +299,7 @@ int main(int argc, char* argv[])
             //////// ISO TRACK STUFF
 
             uint pionTrackCounter = 0;
-            std::cout << "ISO TRACKS COLLECTION" << std::endl;
+//            std::cout << "ISO TRACKS COLLECTION" << std::endl;
 
             for (Int_t k{0}; k < event.numIsolatedTracks; k++) {
                 const Int_t isoTrackPid                {event.isoTracksPdgId[k]};
@@ -304,10 +310,10 @@ int main(int argc, char* argv[])
                 if (isPion) pionTrackCounter++;
 
 		const TLorentzVector isoTrackLVec {event.isoTracksPx[k], event.isoTracksPy[k], event.isoTracksPz[k], event.isoTracksE[k]};
-                std::cout << isoTrackPid << " : " << isoTrackPt << " : " << isoTrackCaloJetEmEnergy << " : " << isoTrackCaloJetHadEnergy << " : LVec mass = " << isoTrackLVec.M() << std::endl;
+//                std::cout << isoTrackPid << " : " << isoTrackPt << " : " << isoTrackCaloJetEmEnergy << " : " << isoTrackCaloJetHadEnergy << " : LVec mass = " << isoTrackLVec.M() << std::endl;
 
             }
-            std::cout << "Number of isolated pion tracks: " << pionTrackCounter << std::endl;
+//            std::cout << "Number of isolated pion tracks: " << pionTrackCounter << std::endl;
 
 
             //////// JET STUFF
@@ -392,7 +398,8 @@ int main(int argc, char* argv[])
                 if ( pionFlag == 2 )  h_pidsFromScalarDecays->AddBinContent(4);
                 if ( pionFlag == 1 && photonFlag == 1 ) h_pidsFromScalarDecays->AddBinContent(5);
                 if ( photonFlag == 2 ) h_pidsFromScalarDecays->AddBinContent(6);
-                std::cout << "Scalar jet flags: kaonFlag = " << kaonFlag << "; pionFlag = " << pionFlag << "; photonFlag = " << photonFlag <<std::endl;
+//                std::cout << "Scalar jet flags: kaonFlag = " << kaonFlag << "; pionFlag = " << pionFlag << "; photonFlag = " << photonFlag <<std::endl;
+//                if ( pionFlag == 2 ) std::cout << "genJetPt: " << event.genJetPF2PATPT << std::endl;
 
                 h_genJetMass->Fill(genJetMassFromScalar);
                 h_genJet1Mass->Fill(genJet1MassFromScalar);
@@ -493,7 +500,8 @@ int main(int argc, char* argv[])
             //////// GENERATOR PARTICLE STUFF
 
 ///
-/*
+            std::vector< int > scalarIndex;
+
             for (Int_t k{0}; k < event.nGenPar; k++) {
                 const Int_t pdgId    { std::abs(event.genParId[k]) };
 		const Int_t status   { event.genParStatus[k] };
@@ -501,6 +509,9 @@ int main(int argc, char* argv[])
 		const Int_t numDaughters { event.genParNumDaughters[k] };
 		const bool isOwnParent { pdgId == motherId ? true : false };
                 const Int_t motherIndex  { std::abs(event.genParMotherIndex[k]) };
+
+                if ( pdgId == 9000006 ) scalarIndex.emplace_back(k);
+/*
                 const bool isScalarGrandparent{ scalarGrandparent(event, k, 9000006) };
 
 //                if ( motherId == 9000006 ) std::cout << "MOTHER IS SCALAR and has " << daughters << " daughters and status " << status << " and pdgId " << pdgId << std::endl;                
@@ -558,14 +569,24 @@ int main(int argc, char* argv[])
                     // k-short, pi+
                     else if ( status == 1 && quarkParent && !isQuark ) pdgIdMapScalarDecayProducts[pdgId]++; // is from quark from scalar and is final status
                  }
-
+*/
 //		if ( !daughters ) {
 //              if ( isScalarGrandparent == true ) {
 //		std::cout << "index / pdgId / mother / motherIndex / nDaughers / status: " << std::endl;
 //  	        std::cout << k << " / " << pdgIdCode( pdgId, false ) << " / " << pdgIdCode( motherId, false ) << " / " << motherIndex << " / " << numDaughters << " / " << pythiaStatus( status ) << std::endl;
 //              }
 	    } ///
-*/
+
+            if ( scalarIndex.size() == 2 ) {
+                const int index1 {scalarIndex[0]}, index2 {scalarIndex[1]};
+                TLorentzVector scalar1, scalar2;
+                scalar1.SetPtEtaPhiE(event.genParPt[index1], event.genParEta[index1], event.genParPhi[index1], event.genParE[index1]);
+                scalar2.SetPtEtaPhiE(event.genParPt[index2], event.genParEta[index2], event.genParPhi[index2], event.genParE[index2]);
+                h_scalarDR->Fill(scalar1.DeltaR(scalar2));
+                h_scalarDPhi->Fill(scalar1.DeltaPhi(scalar2));
+                h_scalarDrEtaPhi->Fill(scalar1.DrEtaPhi(scalar2));
+            }
+
             nOutgoingStatus.emplace_back(nOutgoingStatusCounter);
             nOutgoingStatus23.emplace_back(nOutgoingStatus23Counter);
             nOutgoingStatus33.emplace_back(nOutgoingStatus33Counter);
@@ -619,7 +640,7 @@ int main(int argc, char* argv[])
     // status == 2 for a decayed Standard Model hadron or tau or mu lepton, excepting virtual intermediate states thereof (i.e. the particle must undergo a normal decay, not e.g. a shower branching);
     // status == 61-63 for particles produced by beam-remnant treatment
     // status == 71 for partons in preparation of hadronization process and 72+74 (but exclude particles who are their own parent)
-
+/*
     TH1I* h_pdgId            {new TH1I{"h_pdgId",            "Final state content - all final state codes"   , nPdgIds,           0, Double_t(nPdgIds)           }};
     TH1I* h_pdgIdStatus1     {new TH1I{"h_pdgIdStatus1",     "Final state content - status code 1"           , nPdgIdsStatus1,    0, Double_t(nPdgIdsStatus1)    }};
     TH1I* h_pdgIdStatus2     {new TH1I{"h_pdgIdStatus2",     "Final state content - status code 2"           , nPdgIdsStatus2,    0, Double_t(nPdgIdsStatus2)    }};
@@ -641,7 +662,7 @@ int main(int argc, char* argv[])
     TH1I* h_outgoingStatus   {new TH1I{"h_outgoingStatus"  , "Number of outgoing particles - hardest subprocess"   , nOutgoingStatusMax+1   , -0.5, Double_t(nOutgoingStatusMax+0.5)   }};
     TH1I* h_outgoingStatus23 {new TH1I{"h_outgoingStatus23", "Number of outgoing particles - hardest subprocess"   , nOutgoingStatus23Max+1 , -0.5, Double_t(nOutgoingStatus23Max+0.5) }};
     TH1I* h_outgoingStatus33 {new TH1I{"h_outgoingStatus33", "Number of outgoing particles - hardest subprocess"   , nOutgoingStatus33Max+1 , -0.5, Double_t(nOutgoingStatus33Max+0.5) }};
-
+*/
     TH1I* h_jetsFromScalar   {new TH1I{"h_jetsFromScalar"  , "Number of jets per event from scalar decays"          , nJetsFromScalarMax+1   , -0.5, Double_t(nJetsFromScalarMax+0.5)   }}; 
     TH1I* h_jetsPerEvent     {new TH1I{"h_jetsPerEvent"    , "Number of jets per event"                             , nJetsPerEventMax+1     , -0.5, Double_t(nJetsPerEventMax+0.5)     }}; 
 
@@ -780,10 +801,11 @@ int main(int argc, char* argv[])
         h_outgoingStatus33->Fill(*it);
     }
 
+*/
     for (auto it = nJetsFromScalar.begin(); it != nJetsFromScalar.end(); ++it) {
         h_jetsFromScalar->Fill(*it);
     }
-*/
+
     for (auto it = nJetsPerEvent.begin(); it != nJetsPerEvent.end(); ++it) {
         h_jetsPerEvent->Fill(*it);
     }
@@ -902,7 +924,6 @@ int main(int argc, char* argv[])
     h_outgoingStatus23->Write();
     h_outgoingStatus33->Write();
 */
-
     h_jetsFromScalar->Write();
     h_jetsPerEvent->Write();
     h_pdgIdMapJets->Write();
@@ -921,6 +942,10 @@ int main(int argc, char* argv[])
 
     h_pidsFromScalarDecays->Write();
     h_kaonsFromScalarDecays->Write();
+
+    h_scalarDR->Write();
+    h_scalarDPhi->Write();
+    h_scalarDrEtaPhi->Write();
 
     h_recoJetSumInvMass->Write();
     h_recoJetInvMass->Write();
