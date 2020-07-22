@@ -114,6 +114,26 @@ int main(int argc, char* argv[])
     TH1F* h_scalarDPhi      {new TH1F("h_scalarDPhi",     "#Delta#phi between generator level scalars",  100, -3.5, 3.5)};
     TH1F* h_scalarDrEtaPhi  {new TH1F("h_scalarDrEtaPhi", "#Deltar#eta#phi between generator level scalars", 100, 0., 7.)};
 
+    TH1F* h_genParKaonDR        {new TH1F("h_genParKaonDR",       "#DeltaR between genParticle kaons from scalar decays" ,    100, 0., 10.)};
+    TH1F* h_genParKaonDPhi      {new TH1F("h_genParKaonDPhi",     "#Delta#phi between genParticle kaons from scalar decays",  100, -3.5, 3.5)};
+    TH1F* h_genParKaonDrEtaPhi  {new TH1F("h_genParKaonDrEtaPhi", "#Deltar#eta#phi between genParticle kaons from scalar decays", 100, 0., 7.)};
+    TH1F* h_genJetKaonDR        {new TH1F("h_genJetKaonDR",       "#DeltaR between genJet kaons from scalar decays" ,    100, 0., 10.)};
+    TH1F* h_genJetKaonDPhi      {new TH1F("h_genJetKaonDPhi",     "#Delta#phi between genJet kaons from scalar decays",  100, -3.5, 3.5)};
+    TH1F* h_genJetKaonDrEtaPhi  {new TH1F("h_genJetKaonDrEtaPhi", "#Deltar#eta#phi between genJet kaons from scalar decays", 100, 0., 7.)};
+    TH1F* h_recoJetKaonDR        {new TH1F("h_recoJetKaonDR",       "#DeltaR between recoJet kaons from scalar decays" ,    100, 0., 10.)};
+    TH1F* h_recoJetKaonDPhi      {new TH1F("h_recoJetKaonDPhi",     "#Delta#phi between recoJet kaons from scalar decays",  100, -3.5, 3.5)};
+    TH1F* h_recoJetKaonDrEtaPhi  {new TH1F("h_recoJetKaonDrEtaPhi", "#Deltar#eta#phi between recoJet kaons from scalar decays", 100, 0., 7.)};
+
+    TH1F* h_genParKshortDR        {new TH1F("h_genParKshortDR",       "#DeltaR between genParticle K_{S}^{0} from scalar decays" ,    100, 0., 10.)};
+    TH1F* h_genParKshortDPhi      {new TH1F("h_genParKshortDPhi",     "#Delta#phi between genParticle K_{S}^{0} from scalar decays",  100, -3.5, 3.5)};
+    TH1F* h_genParKshortDrEtaPhi  {new TH1F("h_genParKshortDrEtaPhi", "#Deltar#eta#phi between genParticle K_{S}^{0} from scalar decays", 100, 0., 7.)};
+    TH1F* h_genJetKshortDR        {new TH1F("h_genJetKshortDR",       "#DeltaR between genJet K_{S}^{0} from scalar decays" ,    100, 0., 10.)};
+    TH1F* h_genJetKshortDPhi      {new TH1F("h_genJetKshortDPhi",     "#Delta#phi between genJet K_{S}^{0} from scalar decays",  100, -3.5, 3.5)};
+    TH1F* h_genJetKshortDrEtaPhi  {new TH1F("h_genJetKshortDrEtaPhi", "#Deltar#eta#phi between genJet K_{S}^{0} from scalar decays", 100, 0., 7.)};
+    TH1F* h_recoJetKshortDR        {new TH1F("h_recoJetKshortDR",       "#DeltaR between recoJet K_{S}^{0} from scalar decays" ,    100, 0., 10.)};
+    TH1F* h_recoJetKshortDPhi      {new TH1F("h_recoJetKshortDPhi",     "#Delta#phi between recoJet K_{S}^{0} from scalar decays",  100, -3.5, 3.5)};
+    TH1F* h_recoJetKshortDrEtaPhi  {new TH1F("h_recoJetKshortDrEtaPhi", "#Deltar#eta#phi between recoJet K_{S}^{0} from scalar decays", 100, 0., 7.)};
+
     TH1F* h_recoJetSumInvMass    {new TH1F("h_recoJetSumInvMass", "Sum of invariant masses of all reco jets",1000, 0.0, 200.)};
     TH1F* h_recoJetInvMass       {new TH1F("h_recoJetInvMass",    "Invariant mass of each reco jet",1000, 0.0, 200.)};
     TH1F* h_recoJetPt            {new TH1F("h_recoJetPt",         "p_{T} mass of all reco jets",200, 0.0, 200.)};
@@ -360,6 +380,8 @@ int main(int argc, char* argv[])
 
                 uint pionFlag {0}, kaonFlag {0}, photonFlag{0}, kChargedFlag{0}, kShortFlag{0}, kLongFlag{0};
 
+                std::vector<int> kaonIndex{}, kShortIndex{};
+
                 for (Int_t k{0}; k < event.numJetPF2PAT; k++) {
                     const Int_t genJetPid    {event.genJetPF2PATPID[k]};
                     const Int_t fromScalar   {event.genJetPF2PATScalarAncestor[k]};
@@ -377,19 +399,47 @@ int main(int argc, char* argv[])
                     }
 
                     if ( nJetsFromScalarCounter == 2 && fromScalar ) {
-                        if ( std::abs(genJetPid) == 321 ) { kaonFlag++; kChargedFlag++;}
-                        if ( std::abs(genJetPid) == 130 ) { kaonFlag++; kShortFlag++;}
-                        if ( std::abs(genJetPid) == 310 ) { kaonFlag++; kLongFlag++;}
+                        if ( std::abs(genJetPid) == 321 ) { kaonFlag++; kChargedFlag++; kaonIndex.emplace_back(k);}
+                        if ( std::abs(genJetPid) == 130 ) { kaonFlag++; kShortFlag++; kaonIndex.emplace_back(k);  kShortIndex.emplace_back(k);}
+                        if ( std::abs(genJetPid) == 310 ) { kaonFlag++; kLongFlag++; kaonIndex.emplace_back(k);}
                         if ( std::abs(genJetPid) == 22  ) photonFlag++;
                         if ( std::abs(genJetPid) == 211 ) pionFlag++;
+
                     }
                 }
                 if ( kaonFlag == 2 ) {
+
+                    const int k1 {kaonIndex[0]}, k2 {kaonIndex[1]};
+                    const TLorentzVector genJetK1  {event.genJetPF2PATPX[k1], event.genJetPF2PATPY[k1], event.genJetPF2PATPZ[k1], event.genJetPF2PATE[k1]};
+                    const TLorentzVector genJetK2  {event.genJetPF2PATPX[k2], event.genJetPF2PATPY[k2], event.genJetPF2PATPZ[k2], event.genJetPF2PATE[k2]};
+                    const TLorentzVector recoJetK1 {event.jetPF2PATPx[k1], event.jetPF2PATPy[k1], event.jetPF2PATPz[k1], event.jetPF2PATE[k1]};
+                    const TLorentzVector recoJetK2 {event.jetPF2PATPx[k2], event.jetPF2PATPy[k2], event.jetPF2PATPz[k2], event.jetPF2PATE[k2]};
+
+                    h_genJetKaonDR->Fill(genJetK1.DeltaR(genJetK2));
+                    h_genJetKaonDPhi->Fill(genJetK1.DeltaPhi(genJetK2));
+                    h_genJetKaonDrEtaPhi->Fill(genJetK1.DrEtaPhi(genJetK2));
+                    h_recoJetKaonDR->Fill(recoJetK1.DeltaR(recoJetK2));
+                    h_recoJetKaonDPhi->Fill(recoJetK1.DeltaPhi(recoJetK2));
+                    h_recoJetKaonDrEtaPhi->Fill(recoJetK1.DrEtaPhi(recoJetK2));
+
                     h_pidsFromScalarDecays->AddBinContent(1);
                     if ( kChargedFlag == 2 ) h_kaonsFromScalarDecays->AddBinContent(1);
                     if ( kChargedFlag == 1 && kShortFlag == 1 ) h_kaonsFromScalarDecays->AddBinContent(2);
                     if ( kChargedFlag == 1 && kLongFlag == 1 ) h_kaonsFromScalarDecays->AddBinContent(3);
-                    if ( kShortFlag == 2 ) h_kaonsFromScalarDecays->AddBinContent(4);
+                    if ( kShortFlag == 2 ) {
+                        h_kaonsFromScalarDecays->AddBinContent(4);                
+                        const int ks1 {kShortIndex[0]}, ks2 {kShortIndex[1]};
+                        const TLorentzVector genJetKS1  {event.genJetPF2PATPX[ks1], event.genJetPF2PATPY[ks1], event.genJetPF2PATPZ[ks1], event.genJetPF2PATE[ks1]};
+                        const TLorentzVector genJetKS2  {event.genJetPF2PATPX[ks2], event.genJetPF2PATPY[ks2], event.genJetPF2PATPZ[ks2], event.genJetPF2PATE[ks2]};
+                        const TLorentzVector recoJetKS1 {event.jetPF2PATPx[ks1], event.jetPF2PATPy[ks1], event.jetPF2PATPz[ks1], event.jetPF2PATE[ks1]};
+                        const TLorentzVector recoJetKS2 {event.jetPF2PATPx[ks2], event.jetPF2PATPy[ks2], event.jetPF2PATPz[ks2], event.jetPF2PATE[ks2]};
+                        h_genJetKshortDR->Fill(genJetKS1.DeltaR(genJetKS2));
+                        h_genJetKshortDPhi->Fill(genJetKS1.DeltaPhi(genJetKS2));
+                        h_genJetKshortDrEtaPhi->Fill(genJetKS1.DrEtaPhi(genJetKS2));
+                        h_recoJetKshortDR->Fill(recoJetKS1.DeltaR(recoJetKS2));
+                        h_recoJetKshortDPhi->Fill(recoJetKS1.DeltaPhi(recoJetKS2));
+                        h_recoJetKshortDrEtaPhi->Fill(recoJetKS1.DrEtaPhi(recoJetKS2));
+                    }
                     if ( kShortFlag == 1 && kLongFlag == 1 ) h_kaonsFromScalarDecays->AddBinContent(5);
                     if ( kLongFlag == 2 ) h_kaonsFromScalarDecays->AddBinContent(6);
                 }
@@ -501,6 +551,8 @@ int main(int argc, char* argv[])
 
 ///
             std::vector< int > scalarIndex;
+            std::vector< int > kaonIndex;
+            std::vector< int > kShortIndex;
 
             for (Int_t k{0}; k < event.nGenPar; k++) {
                 const Int_t pdgId    { std::abs(event.genParId[k]) };
@@ -568,6 +620,11 @@ int main(int argc, char* argv[])
 
                     // k-short, pi+
                     else if ( status == 1 && quarkParent && !isQuark ) pdgIdMapScalarDecayProducts[pdgId]++; // is from quark from scalar and is final status
+                    // if it is a kaon and is descended from scalar
+                    if ( (pdgId == 130 || pdgId == 310 || pdgId == 311 || pdgId == 321) ) kaonIndex.emplace_back(k);
+                    // if it is a kShort and is descended from scalar
+                    if ( pdgId == 310 ) kShortIndex.emplace_back(k);
+
                  }
 */
 //		if ( !daughters ) {
@@ -585,6 +642,26 @@ int main(int argc, char* argv[])
                 h_scalarDR->Fill(scalar1.DeltaR(scalar2));
                 h_scalarDPhi->Fill(scalar1.DeltaPhi(scalar2));
                 h_scalarDrEtaPhi->Fill(scalar1.DrEtaPhi(scalar2));
+            }
+
+            if ( kaonIndex.size() == 2 ) {
+                const int index1 {kaonIndex[0]}, index2 {kaonIndex[1]};
+                TLorentzVector scalar1, scalar2;
+                scalar1.SetPtEtaPhiE(event.genParPt[index1], event.genParEta[index1], event.genParPhi[index1], event.genParE[index1]);
+                scalar2.SetPtEtaPhiE(event.genParPt[index2], event.genParEta[index2], event.genParPhi[index2], event.genParE[index2]);
+                h_genParKaonDR->Fill(scalar1.DeltaR(scalar2));
+                h_genParKaonDPhi->Fill(scalar1.DeltaPhi(scalar2));
+                h_genParKaonDrEtaPhi->Fill(scalar1.DrEtaPhi(scalar2));
+            }
+
+            if ( kShortIndex.size() == 2 ) {
+                const int index1 {kShortIndex[0]}, index2 {kShortIndex[1]};
+                TLorentzVector scalar1, scalar2;
+                scalar1.SetPtEtaPhiE(event.genParPt[index1], event.genParEta[index1], event.genParPhi[index1], event.genParE[index1]);
+                scalar2.SetPtEtaPhiE(event.genParPt[index2], event.genParEta[index2], event.genParPhi[index2], event.genParE[index2]);
+                h_genParKshortDR->Fill(scalar1.DeltaR(scalar2));
+                h_genParKshortDPhi->Fill(scalar1.DeltaPhi(scalar2));
+                h_genParKshortDrEtaPhi->Fill(scalar1.DrEtaPhi(scalar2));
             }
 
             nOutgoingStatus.emplace_back(nOutgoingStatusCounter);
@@ -946,6 +1023,26 @@ int main(int argc, char* argv[])
     h_scalarDR->Write();
     h_scalarDPhi->Write();
     h_scalarDrEtaPhi->Write();
+
+    h_genParKaonDR->Write();
+    h_genParKaonDPhi->Write();
+    h_genParKaonDrEtaPhi->Write();
+    h_genJetKaonDR->Write();
+    h_genJetKaonDPhi->Write();
+    h_genJetKaonDrEtaPhi->Write();
+    h_recoJetKaonDR->Write();
+    h_recoJetKaonDPhi->Write();
+    h_recoJetKaonDrEtaPhi->Write();
+
+    h_genParKshortDR->Write();
+    h_genParKshortDPhi->Write();
+    h_genParKshortDrEtaPhi->Write();
+    h_genJetKshortDR->Write();
+    h_genJetKshortDPhi->Write();
+    h_genJetKshortDrEtaPhi->Write();
+    h_recoJetKshortDR->Write();
+    h_recoJetKshortDPhi->Write();
+    h_recoJetKshortDrEtaPhi->Write();
 
     h_recoJetSumInvMass->Write();
     h_recoJetInvMass->Write();
