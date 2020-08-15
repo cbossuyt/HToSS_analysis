@@ -1,6 +1,6 @@
 name: "HZJ_HToSS_MS55_ctauS100"
 locations:
-    - "/vols/cms/adm10/skims2017/HZJ/NLO_HZJ_HToSS_Vleptonic_M125_MS55_ctauS100/"
+    - "/vols/cms/adm10/skims2017/HZJ/NLO_HZJ_HToSS_Shadronic_Vleptonic_M125_MS55_ctauS100/"
 total_events: 3500
 cross_section: 0.07924
 mc: true
