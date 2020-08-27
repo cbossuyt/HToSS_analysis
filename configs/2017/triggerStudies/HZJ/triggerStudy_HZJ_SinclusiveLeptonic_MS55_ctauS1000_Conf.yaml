@@ -1,0 +1,2 @@
+datasets:
+  - "configs/2017/datasets/HZJ/HZJ_HToSS_SinclusiveLeptonic_MH125_MS55_ctauS1000.yaml"
