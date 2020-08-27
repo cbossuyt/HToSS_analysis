@@ -94,6 +94,7 @@ int main(int argc, char* argv[])
     Long64_t totalEvents {0};
     const std::regex mask{".*\\.root"};
 
+
     TH1I* h_pidsFromScalarDecays  {new TH1I("h_pidsFromScalarDecays",  "pids of scalar decays"    , 6, 0, 6)};
     TH1I* h_kaonsFromScalarDecays {new TH1I("h_kaonsFromScalarDecays", "kaons from scalar decays" , 6, 0, 6)};
     h_pidsFromScalarDecays->GetXaxis()->SetBinLabel(1, "K K");
@@ -109,6 +110,56 @@ int main(int argc, char* argv[])
     h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(4, "K_{S}^{0} K_{S}^{0}");
     h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(5, "K_{S}^{0} K_{L}^{0}");
     h_kaonsFromScalarDecays->GetXaxis()->SetBinLabel(6, "K_{L}^{0} K_{L}^{0}");
+
+    // GenPar scalar decay product kinematics
+    TH1F* h_genParKaonPt  {new TH1F("h_genParKaonPt",  "genPar K from scalar decay p_{T}", 1000, 0., 1000.)};
+    TH1F* h_genParKaonEta {new TH1F("h_genParKaonEta", "genPar K from scalar decay #eta",  200, -7., 7.)}; 
+    TH1F* h_genParKaonPhi {new TH1F("h_genParKaonPhi", "genPar K from scalar decay #phi",  100, -3.5, 3.5)};
+    TH1F* h_genParKaonE   {new TH1F("h_genParKaonE",   "genPar K from scalar decay E",     1000, 0., 1000.)};
+
+    TH1F* h_genParChargedKaonPt  {new TH1F("h_genParChargedKaonPt",  "genPar K^{#pm} from scalar decay p_{T}", 1000, 0., 1000.)};
+    TH1F* h_genParChargedKaonEta {new TH1F("h_genParChargedKaonEta", "genPar K^{#pm} from scalar decay #eta",  200, -7., 7.)};
+    TH1F* h_genParChargedKaonPhi {new TH1F("h_genParChargedKaonPhi", "genPar K^{#pm} from scalar decay #phi",  100, -3.5, 3.5)};
+    TH1F* h_genParChargedKaonE   {new TH1F("h_genParChargedKaonE",   "genPar K^{#pm} from scalar decay E",     1000, 0., 1000.)};
+
+    TH1F* h_genParNeutralKaonPt  {new TH1F("h_genParNeutralKaonPt",  "genPar K^{0} from scalar decay p_{T}", 1000, 0., 1000.)};
+    TH1F* h_genParNeutralKaonEta {new TH1F("h_genParNeutralKaonEta", "genPar K^{0} from scalar decay #eta",  200, -7., 7.)};
+    TH1F* h_genParNeutralKaonPhi {new TH1F("h_genParNeutralKaonPhi", "genPar K^{0} from scalar decay #phi",  100, -3.5, 3.5)};
+    TH1F* h_genParNeutralKaonE   {new TH1F("h_genParNeutralKaonE",   "genPar K^{0} from scalar decay E",     1000, 0., 1000.)};
+
+    TH1F* h_genParKshortPt  {new TH1F("h_genParKshortPt",  "genPar K^{0}_{S} from scalar decay p_{T}", 1000, 0., 1000.)};
+    TH1F* h_genParKshortEta {new TH1F("h_genParKshortEta", "genPar K^{0}_{S} from scalar decay #eta",  200, -7., 7.)};
+    TH1F* h_genParKshortPhi {new TH1F("h_genParKshortPhi", "genPar K^{0}_{S} from scalar decay #phi",  100, -3.5, 3.5)};
+    TH1F* h_genParKshortE   {new TH1F("h_genParKshortE",   "genPar K^{0}_{S} from scalar decay E",     1000, 0., 1000.)};
+
+    TH1F* h_genParKlongPt  {new TH1F("h_genParKlongPt",  "genPar K^{0}_{L} from scalar decay p_{T}", 1000, 0., 1000.)};
+    TH1F* h_genParKlongEta {new TH1F("h_genParKlongEta", "genPar K^{0}_{L} from scalar decay #eta",  200, -7., 7.)};
+    TH1F* h_genParKlongPhi {new TH1F("h_genParKlongPhi", "genPar K^{0}_{L} from scalar decay #phi",  100, -3.5, 3.5)}; 
+    TH1F* h_genParKlongE   {new TH1F("h_genParKlongE",   "genPar K^{0}_{L} from scalar decay E",     1000, 0., 1000.)};
+
+    TH1F* h_genParPionPt  {new TH1F("h_genParPionPt",  "genPar #pi from scalar decay p_{T}", 1000, 0., 1000.)};
+    TH1F* h_genParPionEta {new TH1F("h_genParPionEta", "genPar #pi from scalar decay #eta",  200, -7., 7.)}; 
+    TH1F* h_genParPionPhi {new TH1F("h_genParPionPhi", "genPar #pi from scalar decay #phi",  100, -3.5, 3.5)};
+    TH1F* h_genParPionE   {new TH1F("h_genParPionE",   "genPar #pi from scalar decay E",     1000, 0., 1000.)};
+
+    TH1F* h_genParChargedPionPt  {new TH1F("h_genParChargedPionPt",  "genPar #pi^{#pm} from scalar decay p_{T}", 1000, 0., 1000.)};
+    TH1F* h_genParChargedPionEta {new TH1F("h_genParChargedPionEta", "genPar #pi^{#pm} from scalar decay #eta",  200, -7., 7.)};
+    TH1F* h_genParChargedPionPhi {new TH1F("h_genParChargedPionPhi", "genPar #pi^{#pm} from scalar decay #phi",  100, -3.5, 3.5)};
+    TH1F* h_genParChargedPionE   {new TH1F("h_genParChargedPionE",   "genPar #pi^{#pm} from scalar decay E",     1000, 0., 1000.)};
+
+    TH1F* h_genParNeutralPionPt  {new TH1F("h_genParNeutralPionPt",  "genPar #pi^{0} from scalar decay p_{T}", 1000, 0., 1000.)};
+    TH1F* h_genParNeutralPionEta {new TH1F("h_genParNeutralPionEta", "genPar #pi^{0} from scalar decay #eta",  200, -7., 7.)};
+    TH1F* h_genParNeutralPionPhi {new TH1F("h_genParNeutralPionPhi", "genPar #pi^{0} from scalar decay #phi",  100, -3.5, 3.5)};
+    TH1F* h_genParNeutralPionE   {new TH1F("h_genParNeutralPionE",   "genPar #pi^{0} from scalar decay E",     1000, 0., 1000.)};
+
+    //
+
+    TH1F* h_packedCandDxy   {new TH1F("h_packedCandDxy", "Packed Candidate dxy",       300,  -150., 150.)};
+    TH1F* h_packedCandDz    {new TH1F("h_packedCandDz",  "Packed Candidate dz",        1200, -600., 600.)};
+    TH1F* h_packedCandVx    {new TH1F("h_packedCandVx",  "Packed Candidate track vx",  300,  -150., 150.)};
+    TH1F* h_packedCandVy    {new TH1F("h_packedCandVy",  "Packed Candidate track vy",  300,  -150., 150.)};
+    TH1F* h_packedCandVxy   {new TH1F("h_packedCandVxy", "Packed Candidate track vxy", 300,  -150., 150.)};
+    TH1F* h_packedCandVz    {new TH1F("h_packedCandVz",  "Packed Candidate track vz",  1200, -600., 600.)};
 
     TH1F* h_scalarDR        {new TH1F("h_scalarDR",       "#DeltaR between generator level scalars" ,    100, 0., 10.)};
     TH1F* h_scalarDPhi      {new TH1F("h_scalarDPhi",     "#Delta#phi between generator level scalars",  100, -3.5, 3.5)};
@@ -293,10 +344,12 @@ int main(int argc, char* argv[])
             int nOutgoingStatus23Counter {0};
             int nOutgoingStatus33Counter {0};
 
+
 //            std::cout << "eventNum: " << event.eventNum << std::endl;
 
-//            std::cout << "PackedCands COLLECTION" << std::endl;
+            //////// PACKED CAND STUFF
 
+//            std::cout << "PackedCands COLLECTION" << std::endl;
 //            std::cout << "event.numPackedCands: " << event.numPackedCands << std::endl;
 
             for (Int_t k{0}; k < event.numPackedCands; k++) {
@@ -309,12 +362,20 @@ int main(int argc, char* argv[])
 //                std::cout << "Vx = " << event.packedCandsPseudoTrkVx[k] << "; Vy = " << event.packedCandsPseudoTrkVy[k] << "; Vz = " << event.packedCandsPseudoTrkVz[k] << std::endl;
 //                std::cout << "dz = " << event.packedCandsDz[k] << "; dxy = " << event.packedCandsDz[k] << "; highQuality[k] = " << event.packedCandsHighPurityTrack[k] << std::endl;
 
+                  h_packedCandDxy->Fill(event.packedCandsDxy[k]);
+                  h_packedCandDz->Fill(event.packedCandsDz[k]);
+                  if ( event.packedCandsHasTrackDetails[k] ) {
+                      h_packedCandVx->Fill(event.packedCandsPseudoTrkVx[k]);
+                      h_packedCandVy->Fill(event.packedCandsPseudoTrkVy[k]);
+                      float Vxy = std::sqrt(event.packedCandsPseudoTrkVx[k]*event.packedCandsPseudoTrkVx[k] + event.packedCandsPseudoTrkVy[k]*event.packedCandsPseudoTrkVy[k]);
+                      h_packedCandVxy->Fill(Vxy);
+                      h_packedCandVz->Fill(event.packedCandsPseudoTrkVz[k]);
+                  }
             }
 
 //            std::cout << "Number of general pions: " << pionTrackCounter << std::endl;
 //            std::cout << "Number of general pions with tracks: " << pionAndTrackCounter << std::endl;
 //            std::cout << "Number of general pions with jets: " << pionAndJetCounter << std::endl;
-//            std::cout << "Number of general pions with tracks and jets: " << pionAndTrackJetCounter << std::endl;
 
             //////// ISO TRACK STUFF
 
@@ -329,7 +390,7 @@ int main(int argc, char* argv[])
                 const bool isPion {std::abs(isoTrackPid) == 211};
                 if (isPion) pionTrackCounter++;
 
-		const TLorentzVector isoTrackLVec {event.isoTracksPx[k], event.isoTracksPy[k], event.isoTracksPz[k], event.isoTracksE[k]};
+//		const TLorentzVector isoTrackLVec {event.isoTracksPx[k], event.isoTracksPy[k], event.isoTracksPz[k], event.isoTracksE[k]};
 //                std::cout << isoTrackPid << " : " << isoTrackPt << " : " << isoTrackCaloJetEmEnergy << " : " << isoTrackCaloJetHadEnergy << " : LVec mass = " << isoTrackLVec.M() << std::endl;
 
             }
@@ -342,6 +403,8 @@ int main(int argc, char* argv[])
             std::vector< std::pair<TLorentzVector, int> > recoJetVec;
             std::vector< std::pair<TLorentzVector, int> > recoJetVecFromScalar;
             std::vector< std::pair<TLorentzVector, int> > genJetVecFromScalar;
+
+            int jetDaughtersCounter {0};
 
             for (Int_t k{0}; k < event.numJetPF2PAT; k++) {
                 const Int_t jetPid       {event.jetPF2PATPID[k]};
@@ -370,7 +433,6 @@ int main(int argc, char* argv[])
                     pdgIdMapGenJetsNotFromScalar[std::abs(genJetPid)]++;
                 }
             }
-
 
             ///////// jet multiplicity dependant jet stuff
 
@@ -562,8 +624,13 @@ int main(int argc, char* argv[])
 		const bool isOwnParent { pdgId == motherId ? true : false };
                 const Int_t motherIndex  { std::abs(event.genParMotherIndex[k]) };
 
+                const Float_t genParPt  { event.genParPt[k] };
+                const Float_t genParEta { event.genParEta[k] };
+                const Float_t genParPhi { event.genParPhi[k] };
+                const Float_t genParE   { event.genParE[k] };
+
                 if ( pdgId == 9000006 ) scalarIndex.emplace_back(k);
-/*
+
                 const bool isScalarGrandparent{ scalarGrandparent(event, k, 9000006) };
 
 //                if ( motherId == 9000006 ) std::cout << "MOTHER IS SCALAR and has " << daughters << " daughters and status " << status << " and pdgId " << pdgId << std::endl;                
@@ -620,13 +687,69 @@ int main(int argc, char* argv[])
 
                     // k-short, pi+
                     else if ( status == 1 && quarkParent && !isQuark ) pdgIdMapScalarDecayProducts[pdgId]++; // is from quark from scalar and is final status
+
                     // if it is a kaon and is descended from scalar
                     if ( (pdgId == 130 || pdgId == 310 || pdgId == 311 || pdgId == 321) ) kaonIndex.emplace_back(k);
                     // if it is a kShort and is descended from scalar
                     if ( pdgId == 310 ) kShortIndex.emplace_back(k);
 
+                    // kaon and pion distributions in pT, eta, phi
+                    if ( (pdgId == 130 || pdgId == 310 || pdgId == 311 || pdgId == 321) ) {
+                        h_genParKaonPt->Fill(genParPt);
+                        h_genParKaonEta->Fill(genParEta);
+                        h_genParKaonPhi->Fill(genParPhi);
+                        h_genParKaonE->Fill(genParE);
+                        // If charged kaon
+                        if ( pdgId == 321 ) {
+                            h_genParChargedKaonPt->Fill(genParPt);
+                            h_genParChargedKaonEta->Fill(genParEta);
+                            h_genParChargedKaonPhi->Fill(genParPhi);
+                            h_genParChargedKaonE->Fill(genParE);
+                        }
+                        // If neutral kaon
+                        if ( pdgId == 311 ) {
+                            h_genParNeutralKaonPt->Fill(genParPt);
+                            h_genParNeutralKaonEta->Fill(genParEta);
+                            h_genParNeutralKaonPhi->Fill(genParPhi);
+                            h_genParNeutralKaonE->Fill(genParE);
+                        }
+                        // If kShort
+                        if ( pdgId == 310 ) {
+                            h_genParKshortPt->Fill(genParPt);
+                            h_genParKshortEta->Fill(genParEta);
+                            h_genParKshortPhi->Fill(genParPhi);
+                            h_genParKshortE->Fill(genParE);
+                        }
+                        // If kLong
+                        if ( pdgId == 130 ) {
+                            h_genParKlongPt->Fill(genParPt);
+                            h_genParKlongEta->Fill(genParEta);
+                            h_genParKlongPhi->Fill(genParPhi);
+                            h_genParKlongE->Fill(genParE);
+                        }
+                    }
+                    if ( pdgId == 111 || pdgId == 211 ) {
+                        h_genParPionPt->Fill(genParPt);
+                        h_genParPionEta->Fill(genParEta);
+                        h_genParPionPhi->Fill(genParPhi);
+                        h_genParPionE->Fill(genParE);
+                        // If charged pion
+                        if ( pdgId == 211 ) {
+                            h_genParChargedPionPt->Fill(genParPt);
+                            h_genParChargedPionEta->Fill(genParEta);
+                            h_genParChargedPionPhi->Fill(genParPhi);
+                            h_genParChargedPionE->Fill(genParE);
+                        }
+                        // If neutral pion
+                        if ( pdgId == 111 ) {
+                            h_genParNeutralPionPt->Fill(genParPt);
+                            h_genParNeutralPionEta->Fill(genParEta);
+                            h_genParNeutralPionPhi->Fill(genParPhi);
+                            h_genParNeutralPionE->Fill(genParE);                        
+                        }
+                    }
                  }
-*/
+
 //		if ( !daughters ) {
 //              if ( isScalarGrandparent == true ) {
 //		std::cout << "index / pdgId / mother / motherIndex / nDaughers / status: " << std::endl;
@@ -717,7 +840,7 @@ int main(int argc, char* argv[])
     // status == 2 for a decayed Standard Model hadron or tau or mu lepton, excepting virtual intermediate states thereof (i.e. the particle must undergo a normal decay, not e.g. a shower branching);
     // status == 61-63 for particles produced by beam-remnant treatment
     // status == 71 for partons in preparation of hadronization process and 72+74 (but exclude particles who are their own parent)
-/*
+
     TH1I* h_pdgId            {new TH1I{"h_pdgId",            "Final state content - all final state codes"   , nPdgIds,           0, Double_t(nPdgIds)           }};
     TH1I* h_pdgIdStatus1     {new TH1I{"h_pdgIdStatus1",     "Final state content - status code 1"           , nPdgIdsStatus1,    0, Double_t(nPdgIdsStatus1)    }};
     TH1I* h_pdgIdStatus2     {new TH1I{"h_pdgIdStatus2",     "Final state content - status code 2"           , nPdgIdsStatus2,    0, Double_t(nPdgIdsStatus2)    }};
@@ -739,7 +862,7 @@ int main(int argc, char* argv[])
     TH1I* h_outgoingStatus   {new TH1I{"h_outgoingStatus"  , "Number of outgoing particles - hardest subprocess"   , nOutgoingStatusMax+1   , -0.5, Double_t(nOutgoingStatusMax+0.5)   }};
     TH1I* h_outgoingStatus23 {new TH1I{"h_outgoingStatus23", "Number of outgoing particles - hardest subprocess"   , nOutgoingStatus23Max+1 , -0.5, Double_t(nOutgoingStatus23Max+0.5) }};
     TH1I* h_outgoingStatus33 {new TH1I{"h_outgoingStatus33", "Number of outgoing particles - hardest subprocess"   , nOutgoingStatus33Max+1 , -0.5, Double_t(nOutgoingStatus33Max+0.5) }};
-*/
+
     TH1I* h_jetsFromScalar   {new TH1I{"h_jetsFromScalar"  , "Number of jets per event from scalar decays"          , nJetsFromScalarMax+1   , -0.5, Double_t(nJetsFromScalarMax+0.5)   }}; 
     TH1I* h_jetsPerEvent     {new TH1I{"h_jetsPerEvent"    , "Number of jets per event"                             , nJetsPerEventMax+1     , -0.5, Double_t(nJetsPerEventMax+0.5)     }}; 
 
@@ -757,7 +880,7 @@ int main(int argc, char* argv[])
     TH1I* h_pdgIdMap5GenJetsFromScalar {new TH1I{"h_pdgIdMap5GenJetsFromScalar", "5 gen jets pid descended from generator scalar",  nPdgIds5GenJetsFromScalar+1, -0.5, Double_t(nPdgIds5GenJetsFromScalar+0.5) }};
     TH1I* h_pdgIdMap6GenJetsFromScalar {new TH1I{"h_pdgIdMap6GenJetsFromScalar", "6 gen jets pid descended from generator scalar",  nPdgIds6GenJetsFromScalar+1, -0.5, Double_t(nPdgIds6GenJetsFromScalar+0.5) }};
 
-/*
+
     uint binCounter {1};
     for (auto it = pdgIdMap.begin(); it != pdgIdMap.end(); ++it) {
 //        std::cout << "Add " << it->second << " to bin " << binCounter << " for pdgId " << it->first << std::endl;
@@ -878,7 +1001,6 @@ int main(int argc, char* argv[])
         h_outgoingStatus33->Fill(*it);
     }
 
-*/
     for (auto it = nJetsFromScalar.begin(); it != nJetsFromScalar.end(); ++it) {
         h_jetsFromScalar->Fill(*it);
     }
@@ -982,7 +1104,7 @@ int main(int argc, char* argv[])
 
     TFile* outFile{new TFile{outFileString.c_str(), "RECREATE"}};
     outFile->cd();
-/*
+
     h_pdgId->Write();
     h_pdgIdStatus1->Write();
     h_pdgIdStatus2->Write();
@@ -1000,7 +1122,7 @@ int main(int argc, char* argv[])
     h_outgoingStatus->Write();
     h_outgoingStatus23->Write();
     h_outgoingStatus33->Write();
-*/
+
     h_jetsFromScalar->Write();
     h_jetsPerEvent->Write();
     h_pdgIdMapJets->Write();
@@ -1019,6 +1141,46 @@ int main(int argc, char* argv[])
 
     h_pidsFromScalarDecays->Write();
     h_kaonsFromScalarDecays->Write();
+
+    h_genParKaonPt->Write();
+    h_genParKaonEta->Write();
+    h_genParKaonPhi->Write();
+    h_genParKaonE->Write();
+    h_genParChargedKaonPt->Write();
+    h_genParChargedKaonEta->Write();
+    h_genParChargedKaonPhi->Write();
+    h_genParChargedKaonE->Write();
+    h_genParNeutralKaonPt->Write();
+    h_genParNeutralKaonEta->Write();
+    h_genParNeutralKaonPhi->Write();
+    h_genParNeutralKaonE->Write();
+    h_genParKshortPt->Write();
+    h_genParKshortEta->Write();
+    h_genParKshortPhi->Write();
+    h_genParKshortE->Write();
+    h_genParKlongPt->Write();
+    h_genParKlongEta->Write();
+    h_genParKlongPhi->Write();
+    h_genParKlongE->Write();
+    h_genParPionPt->Write();
+    h_genParPionEta->Write();
+    h_genParPionPhi->Write();
+    h_genParPionE->Write();
+    h_genParChargedPionPt->Write();
+    h_genParChargedPionEta->Write();
+    h_genParChargedPionPhi->Write();
+    h_genParChargedPionE->Write();
+    h_genParNeutralPionPt->Write();
+    h_genParNeutralPionEta->Write();
+    h_genParNeutralPionPhi->Write();
+    h_genParNeutralPionE->Write();
+
+    h_packedCandDxy->Write();
+    h_packedCandDz->Write();
+    h_packedCandVx->Write();
+    h_packedCandVy->Write();
+    h_packedCandVxy->Write();
+    h_packedCandVz->Write();
 
     h_scalarDR->Write();
     h_scalarDPhi->Write();
