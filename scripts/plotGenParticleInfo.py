@@ -7,7 +7,7 @@ import sys
 def main():
 
   # input file - location set by user
-  infile = ROOT.TFile.Open("exampleInputs/ggH/HToSS_SmuonHadronFiltered/MS2_ctauS10/skimFile0.root")
+  infile = ROOT.TFile.Open("/pnfs/iihe/cms/store/user/almorton/MC/HToSS/MastersWork/exampleInputs/ggH/HToSS_SmuonHadronFiltered/MS2_ctauS10/skimFile0.root")
 
   # Histogram declarations
   genParPt  = ROOT.TH1F("h_genParPt", "genPar p_{T}", 1000, 0., 1000.)

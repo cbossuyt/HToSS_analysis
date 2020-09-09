@@ -1,6 +1,6 @@
 name: "ggH_HToSS_SmuonicFiltered_MS1_ctauS10"
 locations:
-    - "exampleInputs/ggH/HToSS_SmuonicFiltered/MS1_ctauS10/"
+    - "/pnfs/iihe/cms/store/user/almorton/MC/HToSS/MastersWork/exampleInputs/ggH/HToSS_SmuonicFiltered/MS1_ctauS10/"
 total_events: 5000
 cross_section: 21.46
 mc: true

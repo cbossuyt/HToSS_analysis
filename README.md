@@ -18,7 +18,7 @@ To simply get the example python script and executable program working, follow t
 git clone git@github.com:VUB-EOS-Searches/HToSS_analysis.git -b mastersWork
 ```
 
-2) setup the environmental variables required by the C++ program libraries (not required if using python scripts)
+2) setup the environmental variables required by the C++ program libraries and python script (i.e. it finds ROOT for you!)
 
 ```bash
 source setup.sh
@@ -59,6 +59,8 @@ a larger number of events in a more computationally efficient manner than python
 If this simple C++ program is built upon, it'll naturally lend itself to object-orientated programming and the uses of classes - just like the original version of this
 code was for the search of a rare single top quark process using 2016+2017 simulated and real data from the CMS experiment!
 
+Try running both the python script and the C++ program and see how long each one takes!
+
 The code consists of .hpp header files, one defining the nTuple tree structure (AnalysisEvent.hpp) and two declaring the configuration parser and the dataset classes (used for reading in configuration 
 files and processing the datasets in those configs that are read in by the program); two .cpp source code files that define the configuration parser and the dataset classes, and a .cxx source code file 
 that is used by the makefile to create an executable. The .cxx file contains the main() program function and, using the config parser and dataset classes, reads in the nTuple trees detailed in the
@@ -73,11 +75,13 @@ where you have yours. These files will need updating. I would recommend the use 
 # Running the program
 
 ```bash
-./bin/simpleAnalysis.exe -c configs/2017/ggH/ggH_SinclusiveFiltered_MS2_ctauS10_Conf.yaml -o ggH_Sinclusive_MS2_ctau10.root
+./bin/simpleAnalysis.exe -c configs/2017/ggH/ggH_SmuonHadronFiltered_MS2_ctauS10_Conf.yaml -o ggH_SmuonHadronFiltered_MS2_ctau10.root
 ```
 
 This first part is calling/running the program simpleAnalysis.exe. The part after '-c' is the command line arguement to use the configuration file.
 The part after '-o' is the output name/location of the output ROOT file containing the generator level particle histograms in the example program.
+
+There are several other config files which are provided which you can also use!
 
 # Help!
 Use the help arguement initially:
