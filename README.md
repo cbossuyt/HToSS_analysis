@@ -15,7 +15,7 @@ To simply get the example python script and executable program working, follow t
 1) download this branch of the repository in your prefered terminal interface:
 
 ```bash
-git clone git@github.com:VUB-EOS-Searches/NTupliser.git -b mastersWork
+git clone git@github.com:VUB-EOS-Searches/HToSS_analysis.git -b mastersWork
 ```
 
 2) setup the environmental variables required by the C++ program libraries (not required if using python scripts)
