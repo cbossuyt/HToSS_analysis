@@ -33,6 +33,7 @@
 
 
 std::string pdgIdCode (const Int_t pdgId, const bool unicode = false); // declaring function called below main(); pdgIdCode translate stored numerical pdgId code into a string: unicode for output to string, or latex style for ROOT plotting
+bool scalarGrandparent(const AnalysisEvent event, const Int_t k, const Int_t pdgId_);
 
 namespace fs = boost::filesystem;
 
@@ -359,4 +360,22 @@ std::string pdgIdCode (const Int_t parId, const bool unicode) {
    return particle;
 }
 
+
+bool scalarGrandparent (const AnalysisEvent event, const Int_t k, const Int_t grandparentId) {
+
+    const Int_t pdgId        { std::abs(event.genParId[k]) };
+    const Int_t numDaughters { event.genParNumDaughters[k] };
+    const Int_t motherId     { std::abs(event.genParMotherId[k]) };
+    const Int_t motherIndex  { std::abs(event.genParMotherIndex[k]) };
+
+
+    if (motherId == 0 || motherIndex == -1) return false; // if no parent, then mother Id is null and there's no index, quit search
+    else if (motherId == std::abs(grandparentId)) return true; // if mother is granparent being searched for, return true
+    else {
+//        std::cout << "Going up the ladder ... pdgId = " << pdgId << " : motherIndex = " << motherIndex << " : motherId = " << motherId << std::endl;
+//        debugCounter++;
+//        std::cout << "debugCounter: " << debugCounter << std::endl;
+        return scalarGrandparent(event, motherIndex, grandparentId); // otherwise check mother's mother ...
+    }
+}
 
